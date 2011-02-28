@@ -1,0 +1,5 @@
+N:\prog\dev\visual-studio\ICM\ICM\bin\ICM.dll
+N:\prog\dev\visual-studio\ICM\ICM\bin\ICM.pdb
+N:\prog\dev\visual-studio\ICM\ICM\obj\Debug\ResolveAssemblyReference.cache
+N:\prog\dev\visual-studio\ICM\ICM\obj\Debug\ICM.dll
+N:\prog\dev\visual-studio\ICM\ICM\obj\Debug\ICM.pdb
