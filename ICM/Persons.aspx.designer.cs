@@ -10,51 +10,42 @@
 namespace ICM {
     
     
-    public partial class _Default {
+    public partial class Persons {
         
         /// <summary>
-        /// TitleLabel control.
+        /// NameLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TitleLabel;
+        protected global::System.Web.UI.WebControls.TextBox NameLabel;
         
         /// <summary>
-        /// StartDateCalendar control.
+        /// FirstNameLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Calendar StartDateCalendar;
+        protected global::System.Web.UI.WebControls.TextBox FirstNameLabel;
         
         /// <summary>
-        /// EndDateCalendar control.
+        /// InstitutionList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Calendar EndDateCalendar;
+        protected global::System.Web.UI.WebControls.DropDownList InstitutionList;
         
         /// <summary>
-        /// Departement control.
+        /// SearchButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList Departement;
-        
-        /// <summary>
-        /// DropDownList1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
+        protected global::System.Web.UI.WebControls.Button SearchButton;
     }
 }
