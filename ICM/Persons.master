@@ -1,0 +1,14 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Persons.master.cs" Inherits="ICM.PersonsMaster" %>
+
+<asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
+</asp:Content>
+
+<asp:Content ID="Menu" runat="server" ContentPlaceHolderID="MainContent">
+    <div id="leftContent">
+        <a href="Persons.aspx">Recherche des personnes</a><br />
+        <a href="AddPerson.aspx">Ajouter une personne</a><br />
+    </div>
+    <div id="rightContent">
+        <asp:ContentPlaceHolder ID="PersonsContent" runat="server"/>
+    </div>
+</asp:Content>

@@ -11,7 +11,7 @@ namespace ICM
 {
 
 
-    public partial class About
+    public partial class AddPerson
     {
     }
 }

@@ -1,0 +1,15 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Contracts.master.cs" Inherits="ICM.ContractsMaster" %>
+
+<asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
+</asp:Content>
+
+<asp:Content ID="Menu" runat="server" ContentPlaceHolderID="MainContent">
+    <div id="leftContent">
+        <a href="Default.aspx">Recherche des contrats</a><br />
+        <a href="AddContract.aspx">Ajouter un contrat</a><br />
+        <a href="Histo.aspx">Historique</a><br />
+    </div>
+    <div id="rightContent">
+        <asp:ContentPlaceHolder ID="ContractsContent" runat="server"/>
+    </div>
+</asp:Content>

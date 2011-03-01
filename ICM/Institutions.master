@@ -1,0 +1,14 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Institutions.master.cs" Inherits="ICM.InstitutionsMaster" %>
+
+<asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
+</asp:Content>
+
+<asp:Content ID="Menu" runat="server" ContentPlaceHolderID="MainContent">
+    <div id="leftContent">
+        <a href="Institutions.aspx">Recherche des institutions</a><br />
+        <a href="AddInstitution.aspx">Ajouter une institution</a><br />
+    </div>
+    <div id="rightContent">
+        <asp:ContentPlaceHolder ID="InstitutionsContent" runat="server"/>
+    </div>
+</asp:Content>
