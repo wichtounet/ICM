@@ -55,6 +55,8 @@
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="AddContract.aspx" />
+    <Content Include="AddInstitution.aspx" />
+    <Content Include="AddPerson.aspx" />
     <Content Include="Histo.aspx" />
     <Content Include="Institutions.aspx" />
     <Content Include="Persons.aspx" />
@@ -107,6 +109,20 @@
     </Compile>
     <Compile Include="AddContract.aspx.designer.cs">
       <DependentUpon>AddContract.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AddInstitution.aspx.cs">
+      <DependentUpon>AddInstitution.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AddInstitution.aspx.designer.cs">
+      <DependentUpon>AddInstitution.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AddPerson.aspx.cs">
+      <DependentUpon>AddPerson.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AddPerson.aspx.designer.cs">
+      <DependentUpon>AddPerson.aspx</DependentUpon>
     </Compile>
     <Compile Include="Contracts.master.cs">
       <DependentUpon>Contracts.master</DependentUpon>
