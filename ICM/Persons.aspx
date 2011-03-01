@@ -7,6 +7,7 @@
     <p>
         Nom : <asp:TextBox ID="NameLabel" Columns="15" runat="server" /> <br />
         Prénom : <asp:TextBox ID="FirstNameLabel" Columns="15" runat="server" /> <br />
-        Institution : <asp:DropDownList ID="InstitutionList" runat="server" /> <asp:Button ID="SearchButton" runat="server" Text="Rechercher" />
+        Institution : <asp:DropDownList ID="InstitutionList" runat="server" /> 
+        <asp:Button ID="SearchButton" runat="server" Text="Rechercher" />
     </p>
 </asp:Content>

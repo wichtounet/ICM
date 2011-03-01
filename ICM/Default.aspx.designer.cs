@@ -22,39 +22,48 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.TextBox TitleLabel;
         
         /// <summary>
-        /// StartDateCalendar control.
+        /// DepartementList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Calendar StartDateCalendar;
+        protected global::System.Web.UI.WebControls.DropDownList DepartementList;
         
         /// <summary>
-        /// EndDateCalendar control.
+        /// UniversityList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Calendar EndDateCalendar;
+        protected global::System.Web.UI.WebControls.DropDownList UniversityList;
         
         /// <summary>
-        /// Departement control.
+        /// TypeList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList Departement;
+        protected global::System.Web.UI.WebControls.DropDownList TypeList;
         
         /// <summary>
-        /// DropDownList1 control.
+        /// PersonsList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
+        protected global::System.Web.UI.WebControls.DropDownList PersonsList;
+        
+        /// <summary>
+        /// SearchButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button SearchButton;
     }
 }
