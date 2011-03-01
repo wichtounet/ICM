@@ -5,8 +5,8 @@
 
 <asp:Content ID="Menu" runat="server" ContentPlaceHolderID="MainContent">
     <div id="leftContent">
-        Recherche des personnes<br />
-        Ajouter une personne<br />
+        <a href="Persons.aspx">Recherche des personnes</a><br />
+        <a href="AddPerson.aspx">Ajouter une personne</a><br />
     </div>
     <div id="rightContent">
         <asp:ContentPlaceHolder ID="PersonsContent" runat="server"/>

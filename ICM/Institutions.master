@@ -5,8 +5,8 @@
 
 <asp:Content ID="Menu" runat="server" ContentPlaceHolderID="MainContent">
     <div id="leftContent">
-        Recherche des institutions<br />
-        Ajouter une institution<br />
+        <a href="Institutions.aspx">Recherche des institutions</a><br />
+        <a href="AddInstitution.aspx">Ajouter une institution</a><br />
     </div>
     <div id="rightContent">
         <asp:ContentPlaceHolder ID="InstitutionsContent" runat="server"/>

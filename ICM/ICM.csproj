@@ -54,6 +54,8 @@
     <Content Include="Account\ChangePasswordSuccess.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
+    <Content Include="AddContract.aspx" />
+    <Content Include="Histo.aspx" />
     <Content Include="Institutions.aspx" />
     <Content Include="Persons.aspx" />
     <Content Include="Styles\Site.css" />
@@ -99,12 +101,26 @@
     <Compile Include="Account\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
+    <Compile Include="AddContract.aspx.cs">
+      <DependentUpon>AddContract.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AddContract.aspx.designer.cs">
+      <DependentUpon>AddContract.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Contracts.master.cs">
       <DependentUpon>Contracts.master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Contracts.master.designer.cs">
       <DependentUpon>Contracts.master</DependentUpon>
+    </Compile>
+    <Compile Include="Histo.aspx.cs">
+      <DependentUpon>Histo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Histo.aspx.designer.cs">
+      <DependentUpon>Histo.aspx</DependentUpon>
     </Compile>
     <Compile Include="Institutions.master.cs">
       <DependentUpon>Institutions.master</DependentUpon>
