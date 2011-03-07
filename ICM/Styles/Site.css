@@ -304,3 +304,14 @@ div.accountInfo
 {
     float: left;
 }
+
+/* Formulaire */
+.form span
+{
+    
+    padding-left:20px;
+    border:1px solid #000;
+    float:left;
+
+}
+
