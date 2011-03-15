@@ -10,25 +10,34 @@
 namespace ICM {
     
     
-    public partial class _Default {
+    public partial class ModifContract {
         
         /// <summary>
-        /// TitleLabel control.
+        /// nomText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TitleLabel;
+        protected global::System.Web.UI.WebControls.TextBox nomText;
         
         /// <summary>
-        /// dateDepart control.
+        /// descrText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dateDepart;
+        protected global::System.Web.UI.WebControls.TextBox descrText;
+        
+        /// <summary>
+        /// dateDebut control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox dateDebut;
         
         /// <summary>
         /// dateFin control.
@@ -40,48 +49,30 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.TextBox dateFin;
         
         /// <summary>
-        /// DepartementList control.
+        /// institutionList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DepartementList;
+        protected global::System.Web.UI.WebControls.DropDownList institutionList;
         
         /// <summary>
-        /// UniversityList control.
+        /// personneList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList UniversityList;
+        protected global::System.Web.UI.WebControls.DropDownList personneList;
         
         /// <summary>
-        /// TypeList control.
+        /// modifierButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList TypeList;
-        
-        /// <summary>
-        /// PersonsList control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList PersonsList;
-        
-        /// <summary>
-        /// SearchButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button SearchButton;
+        protected global::System.Web.UI.WebControls.Button modifierButton;
     }
 }

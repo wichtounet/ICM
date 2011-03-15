@@ -10,7 +10,7 @@
 namespace ICM {
     
     
-    public partial class AddContracts {
+    public partial class AddContract {
         
         /// <summary>
         /// nomText control.
