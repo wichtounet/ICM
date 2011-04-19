@@ -139,6 +139,8 @@
     <Compile Include="Dao\RolesDAO.cs" />
     <Compile Include="Dao\TypesDAO.cs" />
     <Compile Include="Dao\UsersDAO.cs" />
+    <Compile Include="Model\Continent.cs" />
+    <Compile Include="Model\Country.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Utils\DBManager.cs" />
     <Compile Include="Histo.aspx.cs">
