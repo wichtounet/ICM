@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Data.Sql;
 
-namespace ICM
+namespace ICM.Utils
 {
     public class DBManager
     {
