@@ -131,6 +131,7 @@
     <Compile Include="Contracts.master.designer.cs">
       <DependentUpon>Contracts.master</DependentUpon>
     </Compile>
+    <Compile Include="DBManager.cs" />
     <Compile Include="Histo.aspx.cs">
       <DependentUpon>Histo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
