@@ -1,11 +1,11 @@
-﻿<%@ Page Title="Ajouter contrat" Language="C#" MasterPageFile="~/Contracts.master" AutoEventWireup="true" CodeBehind="AddContract.aspx.cs" Inherits="ICM.AddContract" %>
+﻿<%@ Page Title="Modifier contrat" Language="C#" MasterPageFile="~/Contracts.master" AutoEventWireup="true" CodeBehind="ModifContract.aspx.cs" Inherits="ICM.ModifContract" %>
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContractsContent" runat="server">
    
 
     <h2>
-        Nouveau contrat
+        Modifier contrat
     </h2>
     <table>
         <tr>
@@ -34,7 +34,7 @@
         </tr>
         <tr>
             <td> </td>
-            <td><asp:Button ID="ajouterButton" runat="server" Text="Ajouter" /></td>
+            <td><asp:Button ID="modifierButton" runat="server" Text="Modifier" /></td>
         </tr>
     </table>        
     
@@ -47,7 +47,7 @@
          });
 
          $(function () {
-             $("[id$=ajouterButton]").button();
+             $("[id$=modifierButton]").button();
          });
 
     </script>
