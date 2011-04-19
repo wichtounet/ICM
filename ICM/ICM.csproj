@@ -131,7 +131,16 @@
     <Compile Include="Contracts.master.designer.cs">
       <DependentUpon>Contracts.master</DependentUpon>
     </Compile>
-    <Compile Include="DBManager.cs" />
+    <Compile Include="Dao\ContractsDAO.cs" />
+    <Compile Include="Dao\CountriesDAO.cs" />
+    <Compile Include="Dao\InstitutionsDAO.cs" />
+    <Compile Include="Dao\LanguagesDAO.cs" />
+    <Compile Include="Dao\PersonsDAO.cs" />
+    <Compile Include="Dao\RolesDAO.cs" />
+    <Compile Include="Dao\TypesDAO.cs" />
+    <Compile Include="Dao\UsersDAO.cs" />
+    <Compile Include="Model\Language.cs" />
+    <Compile Include="Utils\DBManager.cs" />
     <Compile Include="Histo.aspx.cs">
       <DependentUpon>Histo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

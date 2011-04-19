@@ -10,7 +10,14 @@ namespace ICM.Utils
 {
     public class DBManager
     {
+        private static DBManager instance = new DBManager();
+
         private SqlConnection connection;
+
+        private DBManager()
+        {
+            //Nothing to do more
+        }
 
         public SqlConnection getConnection()
         {
@@ -30,6 +37,11 @@ namespace ICM.Utils
             {
                 connection.Close();
             }
+        }
+
+        public static DBManager GetInstance()
+        {
+            return instance;
         }
     }
 }
