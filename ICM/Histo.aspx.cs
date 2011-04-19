@@ -14,19 +14,7 @@ namespace ICM
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            /*DBManager manager = new DBManager();
-
-            using (SqlConnection connection = manager.getConnection())
-            {
-                SqlCommand command = new SqlCommand("Select * from [User]", connection);
-
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    YearTextBox.Text += reader[0].ToString();
-                }
-            }*/
+            
         }
     }
 }
