@@ -19,7 +19,7 @@ namespace ICM.Utils
             //Nothing to do more
         }
 
-        public SqlConnection getConnection()
+        public SqlConnection GetConnection()
         {
             if (connection == null)
             {

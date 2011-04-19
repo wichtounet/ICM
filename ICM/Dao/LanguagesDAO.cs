@@ -10,7 +10,7 @@ namespace ICM.Dao
 {
     public class LanguagesDAO
     {
-        public List<Language> getAllLanguages()
+        public List<Language> GetAllLanguages()
         {
             List<Language> languages = new List<Language>();
 

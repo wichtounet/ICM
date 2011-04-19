@@ -18,7 +18,7 @@
         </tr>
         <tr>
             <td>linguistique : </td>
-            <td><asp:DropDownList ID="langueList" runat="server" /></td>
+            <td><asp:DropDownList ID="LanguageList" runat="server" /></td>
         </tr>
         <tr>
             <td>Intérêt : </td>
