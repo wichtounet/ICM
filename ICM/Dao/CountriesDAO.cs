@@ -16,19 +16,21 @@ namespace ICM.Dao
 
             SqlConnection connection = DBManager.GetInstance().GetConnection();
 
-            SqlTransaction transaction = connection.BeginTransaction();
-            transaction.IsolationLevel = System.Data.IsolationLevel.Chaos;
+            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("Select * from [Continent]", connection);
+            SqlCommand command = new SqlCommand("Select * from [Continent]", connection, transaction);
 
-            SqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            using (SqlDataReader reader = command.ExecuteReader())
             {
-                Continent continent = new Continent();
-                continent.Name = reader[0].ToString();
-                continents.Add(continent);
+                while (reader.Read())
+                {
+                    Continent continent = new Continent();
+                    continent.Name = reader[0].ToString();
+                    continents.Add(continent);
+                }
             }
+
+            transaction.Commit();
 
             return continents;
         }
@@ -39,17 +41,22 @@ namespace ICM.Dao
 
             SqlConnection connection = DBManager.GetInstance().GetConnection();
 
-            SqlCommand command = new SqlCommand("Select * from [Country] Where continentName = @continent", connection);
-            command.Parameters.Add("@continent", continent.Name);
+            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlDataReader reader = command.ExecuteReader();
+            SqlCommand command = new SqlCommand("Select * from [Country] Where continentName = @continent", connection, transaction);
+            command.Parameters.AddWithValue("@continent", continent.Name);
 
-            while (reader.Read())
+            using (SqlDataReader reader = command.ExecuteReader())
             {
-                Country country = new Country();
-                country.Name = reader[0].ToString();
-                countries.Add(country);
+                while (reader.Read())
+                {
+                    Country country = new Country();
+                    country.Name = reader[0].ToString();
+                    countries.Add(country);
+                }
             }
+
+            transaction.Commit();
 
             return countries;
         }
