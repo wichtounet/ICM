@@ -18,14 +18,14 @@ namespace ICM.Dao
 
             SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("Select * from [Continent]", connection, transaction);
+            SqlCommand command = new SqlCommand("SELECT * FROM [Continent]", connection, transaction);
 
             using (SqlDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
                     Continent continent = new Continent();
-                    continent.Name = reader[0].ToString();
+                    continent.Name = reader["name"].ToString();
                     continents.Add(continent);
                 }
             }
@@ -43,7 +43,7 @@ namespace ICM.Dao
 
             SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("Select * from [Country] Where continentName = @continent", connection, transaction);
+            SqlCommand command = new SqlCommand("SELECT * FROM [Country] WHERE continentName = @continent", connection, transaction);
             command.Parameters.AddWithValue("@continent", continent.Name);
 
             using (SqlDataReader reader = command.ExecuteReader())
@@ -51,7 +51,7 @@ namespace ICM.Dao
                 while (reader.Read())
                 {
                     Country country = new Country();
-                    country.Name = reader[0].ToString();
+                    country.Name = reader["name"].ToString();
                     countries.Add(country);
                 }
             }

@@ -18,14 +18,14 @@ namespace ICM.Dao
 
             SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("Select * from [Language]", connection, transaction);
+            SqlCommand command = new SqlCommand("SELECT * FROM [Language]", connection, transaction);
 
             using (SqlDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
                     Language language = new Language();
-                    language.Name = reader[0].ToString();
+                    language.Name = reader["name"].ToString();
                     languages.Add(language);
                 }
             }

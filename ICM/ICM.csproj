@@ -140,6 +140,9 @@
     <Compile Include="Dao\TypesDAO.cs" />
     <Compile Include="Dao\UsersDAO.cs" />
     <Compile Include="Model\Continent.cs" />
+    <Compile Include="Model\Department.cs" />
+    <Compile Include="Model\Person.cs" />
+    <Compile Include="Model\Role.cs" />
     <Compile Include="Model\Country.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Utils\DBManager.cs" />
@@ -196,6 +199,7 @@
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

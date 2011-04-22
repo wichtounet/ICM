@@ -25,7 +25,7 @@ namespace ICM.Dao
                 while (reader.Read())
                 {
                     Role role = new Role();
-                    role.Name = reader[0].ToString();
+                    role.Name = reader["name"].ToString();
                     roles.Add(role);
                 }
             }
