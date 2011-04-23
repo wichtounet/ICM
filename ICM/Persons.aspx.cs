@@ -24,7 +24,7 @@ namespace ICM
 
         private void SearchPersons()
         {
-            List<Person> persons = new PersonsDAO().SearchPersons(NameLabel.Text, FirstNameLabel.Text);
+            List<Person> persons = new PersonsDAO().SearchPersons(NameLabel.Text, FirstNameLabel.Text, ArchivedCheckBox.Checked);
 
             ResultsView.DataSource = persons;
             ResultsView.DataBind();

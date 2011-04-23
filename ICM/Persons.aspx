@@ -8,26 +8,24 @@
         Nom : <asp:TextBox ID="NameLabel" Columns="15" runat="server" /> <br />
         Prénom : <asp:TextBox ID="FirstNameLabel" Columns="15" runat="server" /> <br />
         Institution : <asp:DropDownList ID="InstitutionList" runat="server" /> 
-        <asp:CheckBox Text="Rechercher les personnes archivées ?" runat"server" ID="ArchivedCheckBox" />
+        <asp:CheckBox Text="Rechercher les personnes archivées ?" runat="server" ID="ArchivedCheckBox" />
         <asp:Button ID="SearchButton" runat="server" Text="Rechercher" OnClick="SearchPerson" />
     </p>
 
     <asp:ListView ID="ResultsView" runat="server" OnItemDeleting="PersonDeleting">
         <LayoutTemplate>
-            <table border="0">
-                <ul>
-                    <asp:PlaceHolder ID="itemPlaceholder" runat="server" />
-                </ul>
+            <ul>
+                <asp:PlaceHolder ID="itemPlaceholder" runat="server" />
+            </ul>
                 
-                <p>
-                    Page:
-                    <asp:DataPager ID="SaisieDataPager" runat="server" PageSize="5">
-                        <Fields>
-                            <asp:NumericPagerField ButtonCount="5" />
-                        </Fields>
-                    </asp:DataPager>
-                </p>
-            </table>
+            <p>
+                Page:
+                <asp:DataPager ID="SaisieDataPager" runat="server" PageSize="5">
+                    <Fields>
+                        <asp:NumericPagerField ButtonCount="5" />
+                    </Fields>
+                </asp:DataPager>
+            </p>
         </LayoutTemplate>
 
         <ItemTemplate>

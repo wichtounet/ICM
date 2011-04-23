@@ -24,7 +24,7 @@ namespace ICM.Dao
             transaction.Commit();
         }
 
-        public List<Person> SearchPersons(string name, string firstname)
+        public List<Person> SearchPersons(string name, string firstname, bool archived)
         {
             List<Person> persons = new List<Person>();
 
@@ -32,7 +32,14 @@ namespace ICM.Dao
 
             SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("SELECT * FROM [Person] WHERE name LIKE(@name) AND firstname LIKE(@firstname) AND archived = 0", connection, transaction);
+            string query = "SELECT * FROM [Person] WHERE name LIKE(@name) AND firstname LIKE(@firstname)";
+
+            if (!archived)
+            {
+                query += " AND archived = 0";
+            }
+
+            SqlCommand command = new SqlCommand(query, connection, transaction);
             command.Parameters.AddWithValue("@name", "%" + name + "%");
             command.Parameters.AddWithValue("@firstname", "%" + firstname + "%");
 
