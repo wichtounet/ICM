@@ -7,7 +7,7 @@
     <p>
         Nom : <asp:TextBox ID="NameLabel" Columns="15" runat="server" /> <br />
         Prénom : <asp:TextBox ID="FirstNameLabel" Columns="15" runat="server" /> <br />
-        Institution : <asp:DropDownList ID="InstitutionList" runat="server" /> 
+        Institution : <asp:DropDownList ID="InstitutionList" runat="server" />  <br />
         <asp:CheckBox Text="Rechercher les personnes archivées ?" runat="server" ID="ArchivedCheckBox" />
         <asp:Button ID="SearchButton" runat="server" Text="Rechercher" OnClick="SearchPerson" />
     </p>
@@ -31,7 +31,7 @@
         <ItemTemplate>
             <asp:Label ID="LabelID" runat="server" Visible="false" Text='<%# Eval("Id")%>' />
             <li>
-                <%# Eval("Name") %> <%# Eval("FirstName") %> 
+                <a href='ShowPerson.aspx?person=<%# Eval("Id")%>'><%# Eval("Name") %> <%# Eval("FirstName") %></a>
                     (Edit | 
                     <asp:LinkButton ID="ArchiveButton" runat="server" CommandName="Delete" Text="Archive" 
                         OnClientClick="return confirm('Are you sure you want to archive this person ?');" />)
@@ -44,4 +44,10 @@
             </p>
         </EmptyDataTemplate>
     </asp:ListView>
+
+     <script type="text/javascript">
+         $(function () {
+             $("[id$=SearchButton]").button();
+         });
+    </script>
 </asp:Content>

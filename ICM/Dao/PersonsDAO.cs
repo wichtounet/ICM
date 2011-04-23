@@ -57,6 +57,31 @@ namespace ICM.Dao
             return persons;
         }
 
+        public Person GetPersonByID(int id)
+        {
+            List<Person> persons = new List<Person>();
+
+            SqlConnection connection = DBManager.GetInstance().GetConnection();
+
+            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+
+            SqlCommand command = new SqlCommand("SELECT * FROM [Person] WHERE id = @id", connection, transaction);
+            command.Parameters.AddWithValue("@id", id);
+
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    Person person = BindPerson(reader);
+                    persons.Add(person);
+                }
+            }
+
+            transaction.Commit();
+
+            return persons.First();
+        }
+
         public List<Person> GetAllPersons()
         {
             List<Person> persons = new List<Person>();
@@ -90,9 +115,10 @@ namespace ICM.Dao
             person.FirstName = reader["firstname"].ToString();
             person.Email = reader["email"].ToString();
             person.Phone = reader["phone"].ToString();
+            person.Archived = reader["archived"].ToString().Equals("1") ? true : false;
 
             //TODO : Get department of person
-
+            
             return person;
         }
     }

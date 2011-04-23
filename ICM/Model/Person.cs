@@ -36,6 +36,12 @@ namespace ICM.Model
             set;
         }
 
+        public bool Archived
+        {
+            get;
+            set;
+        }
+
         public Department Department
         {
             get;

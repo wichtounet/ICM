@@ -57,6 +57,7 @@
     <Content Include="AddContract.aspx" />
     <Content Include="AddInstitution.aspx" />
     <Content Include="AddPerson.aspx" />
+    <Content Include="ShowPerson.aspx" />
     <Content Include="Histo.aspx" />
     <Content Include="Institutions.aspx" />
     <Content Include="Persons.aspx" />
@@ -130,6 +131,13 @@
     </Compile>
     <Compile Include="Contracts.master.designer.cs">
       <DependentUpon>Contracts.master</DependentUpon>
+    </Compile>
+    <Compile Include="ShowPerson.aspx.cs">
+      <DependentUpon>ShowPerson.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ShowPerson.aspx.designer.cs">
+      <DependentUpon>ShowPerson.aspx</DependentUpon>
     </Compile>
     <Compile Include="Dao\ContractsDAO.cs" />
     <Compile Include="Dao\CountriesDAO.cs" />
