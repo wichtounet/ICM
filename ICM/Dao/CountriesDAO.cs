@@ -17,7 +17,7 @@ namespace ICM.Dao
             SqlConnection connection = DBManager.GetInstance().GetConnection();
 
             SqlTransaction transaction = connection.BeginTransaction();
-            transaction.IsolationLevel = System.Data.IsolationLevel.Chaos;
+            //transaction.IsolationLevel = System.Data.IsolationLevel.Chaos;
 
             SqlCommand command = new SqlCommand("Select * from [Continent]", connection);
 

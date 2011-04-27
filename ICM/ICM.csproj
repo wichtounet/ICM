@@ -124,6 +124,7 @@
     <Compile Include="AddPerson.aspx.designer.cs">
       <DependentUpon>AddPerson.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Model\Continent.cs" />
     <Compile Include="Contracts.master.cs">
       <DependentUpon>Contracts.master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -131,6 +132,7 @@
     <Compile Include="Contracts.master.designer.cs">
       <DependentUpon>Contracts.master</DependentUpon>
     </Compile>
+    <Compile Include="Model\Country.cs" />
     <Compile Include="Dao\ContractsDAO.cs" />
     <Compile Include="Dao\CountriesDAO.cs" />
     <Compile Include="Dao\InstitutionsDAO.cs" />
@@ -139,6 +141,7 @@
     <Compile Include="Dao\RolesDAO.cs" />
     <Compile Include="Dao\TypesDAO.cs" />
     <Compile Include="Dao\UsersDAO.cs" />
+    <Compile Include="Model\Contract.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Utils\DBManager.cs" />
     <Compile Include="Histo.aspx.cs">
