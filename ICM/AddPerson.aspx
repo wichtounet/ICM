@@ -6,37 +6,33 @@
     <table>
         <tr>
             <td>Nom : </td>
-            <td><asp:TextBox ID="nomText" Columns="15" runat="server" /></td>
+            <td><asp:TextBox ID="NameTextBox" Columns="15" runat="server" /></td>
         </tr>
         <tr>
             <td>Prenom : </td>
-            <td><asp:TextBox ID="prenomText" Columns="15" runat="server" /></td>
+            <td><asp:TextBox ID="FirstNameTextBox" Columns="15" runat="server" /></td>
         </tr>
         <tr>
             <td>Institution : </td>
-            <td><asp:DropDownList ID="institutionList" runat="server" /></td>
-        </tr>
-        <tr>
-            <td>Filière : </td>
-            <td><asp:DropDownList ID="filiereList" runat="server" /></td>
+            <td><asp:DropDownList ID="InstitutionList" runat="server" /></td>
         </tr>
         <tr>
             <td>Département : </td>
-            <td><asp:TextBox ID="interetText" Columns="15" runat="server" /></td>
+            <td><asp:DropDownList ID="DepartmentList" runat="server" /></td>
         </tr>
         <tr>
             <td>Téléphone : </td>
-            <td><asp:TextBox ID="telText" Columns="15" runat="server" /></td>
+            <td><asp:TextBox ID="PhoneTextBox" Columns="15" runat="server" /></td>
         </tr>
         <tr>
             <td> </td>
-            <td><asp:Button ID="ajouterButton" runat="server" Text="Ajouter" /></td>
+            <td><asp:Button ID="AddButton" runat="server" Text="Ajouter" /></td>
         </tr>
-    </table>        
-    
+    </table>
+
      <script type="text/javascript">
          $(function () {
-             $("[id$=ajouterButton]").button();
+             $("[id$=AddButton]").button();
          });
 
     </script>

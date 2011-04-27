@@ -57,6 +57,7 @@
     <Content Include="AddContract.aspx" />
     <Content Include="AddInstitution.aspx" />
     <Content Include="AddPerson.aspx" />
+    <Content Include="ShowPerson.aspx" />
     <Content Include="Histo.aspx" />
     <Content Include="Institutions.aspx" />
     <Content Include="Persons.aspx" />
@@ -132,7 +133,13 @@
     <Compile Include="Contracts.master.designer.cs">
       <DependentUpon>Contracts.master</DependentUpon>
     </Compile>
-    <Compile Include="Model\Country.cs" />
+    <Compile Include="ShowPerson.aspx.cs">
+      <DependentUpon>ShowPerson.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ShowPerson.aspx.designer.cs">
+      <DependentUpon>ShowPerson.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Dao\ContractsDAO.cs" />
     <Compile Include="Dao\CountriesDAO.cs" />
     <Compile Include="Dao\InstitutionsDAO.cs" />
@@ -141,7 +148,11 @@
     <Compile Include="Dao\RolesDAO.cs" />
     <Compile Include="Dao\TypesDAO.cs" />
     <Compile Include="Dao\UsersDAO.cs" />
-    <Compile Include="Model\Contract.cs" />
+    <Compile Include="Model\Continent.cs" />
+    <Compile Include="Model\Department.cs" />
+    <Compile Include="Model\Person.cs" />
+    <Compile Include="Model\Role.cs" />
+    <Compile Include="Model\Country.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Utils\DBManager.cs" />
     <Compile Include="Histo.aspx.cs">
@@ -197,6 +208,7 @@
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -16,16 +16,21 @@ namespace ICM.Dao
 
             SqlConnection connection = DBManager.GetInstance().GetConnection();
 
-            SqlCommand command = new SqlCommand("Select * from [Language]", connection);
+            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlDataReader reader = command.ExecuteReader();
+            SqlCommand command = new SqlCommand("SELECT * FROM [Language]", connection, transaction);
 
-            while (reader.Read())
+            using (SqlDataReader reader = command.ExecuteReader())
             {
-                Language language = new Language();
-                language.Name = reader[0].ToString();
-                languages.Add(language);
+                while (reader.Read())
+                {
+                    Language language = new Language();
+                    language.Name = reader["name"].ToString();
+                    languages.Add(language);
+                }
             }
+
+            transaction.Commit();
 
             return languages;
         }
