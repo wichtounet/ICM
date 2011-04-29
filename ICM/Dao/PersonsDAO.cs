@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using ICM.Model;
 using System.Data.SqlClient;
 using ICM.Utils;
@@ -12,11 +10,11 @@ namespace ICM.Dao
     {
         public void CreatePerson(string firstname, string name, string phone, string email)
         {
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
+            var connection = DBManager.GetInstance().GetConnection();
 
-            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)", connection, transaction);
+            var command = new SqlCommand("INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)", connection, transaction);
             command.Parameters.AddWithValue("@firstname", firstname);
             command.Parameters.AddWithValue("@name", name);
             command.Parameters.AddWithValue("@phone", phone);
@@ -31,11 +29,11 @@ namespace ICM.Dao
 
         public void ArchivePerson(int person)
         {
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
+            var connection = DBManager.GetInstance().GetConnection();
 
-            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("UPDATE [Person] SET archived = 1 WHERE id = @id", connection, transaction);
+            var command = new SqlCommand("UPDATE [Person] SET archived = 1 WHERE id = @id", connection, transaction);
             command.Parameters.AddWithValue("@id", person);
 
             command.ExecuteNonQuery();
@@ -45,11 +43,11 @@ namespace ICM.Dao
 
         public List<Person> SearchPersons(string name, string firstname, bool archived)
         {
-            List<Person> persons = new List<Person>();
+            var persons = new List<Person>();
 
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
+            var connection = DBManager.GetInstance().GetConnection();
 
-            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
             string query = "SELECT * FROM [Person] WHERE name LIKE(@name) AND firstname LIKE(@firstname)";
 
@@ -58,16 +56,15 @@ namespace ICM.Dao
                 query += " AND archived = 0";
             }
 
-            SqlCommand command = new SqlCommand(query, connection, transaction);
+            var command = new SqlCommand(query, connection, transaction);
             command.Parameters.AddWithValue("@name", "%" + name + "%");
             command.Parameters.AddWithValue("@firstname", "%" + firstname + "%");
 
-            using (SqlDataReader reader = command.ExecuteReader())
+            using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    Person person = BindPerson(reader);
-                    persons.Add(person);
+                    persons.Add(BindPerson(reader));
                 }
             }
 
@@ -78,21 +75,20 @@ namespace ICM.Dao
 
         public Person GetPersonByID(int id)
         {
-            List<Person> persons = new List<Person>();
+            var persons = new List<Person>();
 
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
+            var connection = DBManager.GetInstance().GetConnection();
 
-            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("SELECT * FROM [Person] WHERE id = @id", connection, transaction);
+            var command = new SqlCommand("SELECT * FROM [Person] WHERE id = @id", connection, transaction);
             command.Parameters.AddWithValue("@id", id);
 
-            using (SqlDataReader reader = command.ExecuteReader())
+            using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    Person person = BindPerson(reader);
-                    persons.Add(person);
+                    persons.Add(BindPerson(reader));
                 }
             }
 
@@ -103,20 +99,19 @@ namespace ICM.Dao
 
         public List<Person> GetAllPersons()
         {
-            List<Person> persons = new List<Person>();
+            var persons = new List<Person>();
 
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
+            var connection = DBManager.GetInstance().GetConnection();
 
-            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("SELECT * FROM [Person]", connection, transaction);
+            var command = new SqlCommand("SELECT * FROM [Person]", connection, transaction);
 
-            using (SqlDataReader reader = command.ExecuteReader())
+            using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    Person person = BindPerson(reader);
-                    persons.Add(person);
+                    persons.Add(BindPerson(reader));
                 }
             }
 
@@ -127,14 +122,15 @@ namespace ICM.Dao
 
         private static Person BindPerson(SqlDataReader reader)
         {
-            Person person = new Person();
-
-            person.Id = reader["id"].ToString().ToInt();
-            person.Name = reader["name"].ToString();
-            person.FirstName = reader["firstname"].ToString();
-            person.Email = reader["email"].ToString();
-            person.Phone = reader["phone"].ToString();
-            person.Archived = reader["archived"].ToString().Equals("1") ? true : false;
+            var person = new Person
+            {
+                Id = reader["id"].ToString().ToInt(),
+                Name = reader["name"].ToString(),
+                FirstName = reader["firstname"].ToString(),
+                Email = reader["email"].ToString(),
+                Phone = reader["phone"].ToString(),
+                Archived = reader["archived"].ToString().Equals("1") ? true : false
+            };
 
             //TODO : Get department of person
             

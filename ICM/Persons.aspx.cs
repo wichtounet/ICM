@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using ICM.Model;
@@ -10,7 +8,7 @@ using ICM.Utils;
 
 namespace ICM
 {
-    public partial class Persons : System.Web.UI.Page
+    public partial class Persons : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -24,7 +22,7 @@ namespace ICM
 
         private void SearchPersons()
         {
-            List<Person> persons = new PersonsDAO().SearchPersons(NameLabel.Text, FirstNameLabel.Text, ArchivedCheckBox.Checked);
+            var persons = new PersonsDAO().SearchPersons(NameLabel.Text, FirstNameLabel.Text, ArchivedCheckBox.Checked);
 
             ResultsView.DataSource = persons;
             ResultsView.DataBind();

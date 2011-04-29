@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using ICM.Model;
 using System.Data.SqlClient;
 using ICM.Utils;
@@ -12,27 +9,30 @@ namespace ICM.Dao
     {
         public List<Language> GetAllLanguages()
         {
-            List<Language> languages = new List<Language>();
+            var languages = new List<Language>();
 
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
+            var connection = DBManager.GetInstance().GetConnection();
 
-            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("SELECT * FROM [Language]", connection, transaction);
+            var command = new SqlCommand("SELECT * FROM [Language]", connection, transaction);
 
-            using (SqlDataReader reader = command.ExecuteReader())
+            using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    Language language = new Language();
-                    language.Name = reader["name"].ToString();
-                    languages.Add(language);
+                    languages.Add(BindLanguage(reader));
                 }
             }
 
             transaction.Commit();
 
             return languages;
+        }
+
+        private static Language BindLanguage(SqlDataReader reader)
+        {
+            return new Language {Name = reader["name"].ToString()};
         }
     }
 }

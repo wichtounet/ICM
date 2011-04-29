@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data;
-using System.Data.SqlClient;
-using System.Data.Sql;
+﻿using System.Data.SqlClient;
 
 namespace ICM.Utils
 {
     public class DBManager
     {
-        private static DBManager instance = new DBManager();
+        private static readonly DBManager Instance = new DBManager();
 
         private SqlConnection connection;
 
@@ -41,7 +35,7 @@ namespace ICM.Utils
 
         public static DBManager GetInstance()
         {
-            return instance;
+            return Instance;
         }
     }
 }

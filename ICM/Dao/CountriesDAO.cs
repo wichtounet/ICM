@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using ICM.Model;
 using System.Data.SqlClient;
 using ICM.Utils;
@@ -12,23 +9,19 @@ namespace ICM.Dao
     {
         public List<Continent> GetAllContinents()
         {
-            List<Continent> continents = new List<Continent>();
+            var continents = new List<Continent>();
 
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
+            var connection = DBManager.GetInstance().GetConnection();
 
-            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
+            var command = new SqlCommand("SELECT * FROM [Continent]", connection, transaction);
 
-
-            SqlCommand command = new SqlCommand("SELECT * FROM [Continent]", connection, transaction);
-
-            using (SqlDataReader reader = command.ExecuteReader())
+            using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    Continent continent = new Continent();
-                    continent.Name = reader["name"].ToString();
-                    continents.Add(continent);
+                    continents.Add(BindContinent(reader));
                 }
             }
 
@@ -39,28 +32,42 @@ namespace ICM.Dao
 
         public List<Country> GetCountries(Continent continent)
         {
-            List<Country> countries = new List<Country>();
+            var countries = new List<Country>();
 
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
+            var connection = DBManager.GetInstance().GetConnection();
 
-            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("SELECT * FROM [Country] WHERE continentName = @continent", connection, transaction);
+            var command = new SqlCommand("SELECT * FROM [Country] WHERE continentName = @continent", connection, transaction);
             command.Parameters.AddWithValue("@continent", continent.Name);
 
-            using (SqlDataReader reader = command.ExecuteReader())
+            using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    Country country = new Country();
-                    country.Name = reader["name"].ToString();
-                    countries.Add(country);
+                    countries.Add(BindCountry(reader));
                 }
             }
 
             transaction.Commit();
 
             return countries;
+        }
+
+        private static Country BindCountry(SqlDataReader reader)
+        {
+            return new Country
+            {
+                Name = reader["name"].ToString()
+            };
+        }
+
+        private static Continent BindContinent(SqlDataReader reader)
+        {
+            return new Continent
+            {
+                Name = reader["name"].ToString()
+            };
         }
     }
 }

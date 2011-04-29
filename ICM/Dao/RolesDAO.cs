@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using ICM.Model;
 using System.Data.SqlClient;
 using ICM.Utils;
@@ -12,27 +9,33 @@ namespace ICM.Dao
     {
         public List<Role> GetAllRoles()
         {
-            List<Role> roles = new List<Role>();
+            var roles = new List<Role>();
 
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
+            var connection = DBManager.GetInstance().GetConnection();
 
-            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            SqlCommand command = new SqlCommand("Select * from [Role]", connection, transaction);
+            var command = new SqlCommand("Select * from [Role]", connection, transaction);
 
-            using (SqlDataReader reader = command.ExecuteReader())
+            using (var reader = command.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    Role role = new Role();
-                    role.Name = reader["name"].ToString();
-                    roles.Add(role);
+                    roles.Add(BindRole(reader));
                 }
             }
 
             transaction.Commit();
 
             return roles;
+        }
+
+        private static Role BindRole(SqlDataReader reader)
+        {
+            return new Role
+            {
+                Name = reader["name"].ToString()
+            };
         }
     }
 }
