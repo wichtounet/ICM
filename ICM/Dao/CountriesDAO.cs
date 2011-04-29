@@ -18,6 +18,8 @@ namespace ICM.Dao
 
             SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
+
+
             SqlCommand command = new SqlCommand("SELECT * FROM [Continent]", connection, transaction);
 
             using (SqlDataReader reader = command.ExecuteReader())

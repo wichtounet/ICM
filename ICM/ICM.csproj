@@ -125,6 +125,7 @@
     <Compile Include="AddPerson.aspx.designer.cs">
       <DependentUpon>AddPerson.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Model\Continent.cs" />
     <Compile Include="Contracts.master.cs">
       <DependentUpon>Contracts.master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
