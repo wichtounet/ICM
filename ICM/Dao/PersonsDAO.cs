@@ -10,6 +10,25 @@ namespace ICM.Dao
 {
     public class PersonsDAO
     {
+        public void CreatePerson(string firstname, string name, string phone, string email)
+        {
+            SqlConnection connection = DBManager.GetInstance().GetConnection();
+
+            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+
+            SqlCommand command = new SqlCommand("INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)", connection, transaction);
+            command.Parameters.AddWithValue("@firstname", firstname);
+            command.Parameters.AddWithValue("@name", name);
+            command.Parameters.AddWithValue("@phone", phone);
+            command.Parameters.AddWithValue("@email", email);
+            command.Parameters.AddWithValue("@archived", 0);
+            command.Parameters.AddWithValue("@department", 73);
+
+            command.ExecuteNonQuery();
+
+            transaction.Commit();
+        }
+
         public void ArchivePerson(int person)
         {
             SqlConnection connection = DBManager.GetInstance().GetConnection();

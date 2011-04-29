@@ -25,8 +25,12 @@
             <td><asp:TextBox ID="PhoneTextBox" Columns="15" runat="server" /></td>
         </tr>
         <tr>
+            <td>Email : </td>
+            <td><asp:TextBox ID="MailTextBox" Columns="15" runat="server" /></td>
+        </tr>
+        <tr>
             <td> </td>
-            <td><asp:Button ID="AddButton" runat="server" Text="Ajouter" /></td>
+            <td><asp:Button ID="AddButton" runat="server" Text="Ajouter" OnClick="CreatePerson" /></td>
         </tr>
     </table>
 
