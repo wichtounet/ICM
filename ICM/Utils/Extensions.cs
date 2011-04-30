@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 
 namespace ICM.Utils
 {
@@ -17,6 +18,14 @@ namespace ICM.Utils
             }
 
             return Convert.ToInt16(str);
+        }
+
+        public static SqlParameter[] ToArray(this SqlParameterCollection collection)
+        {
+            var array = new SqlParameter[collection.Count];
+            collection.CopyTo(array, 0);
+
+            return array;
         }
     }
 }

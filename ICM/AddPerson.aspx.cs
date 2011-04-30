@@ -38,7 +38,9 @@ namespace ICM
 
         protected void CreatePerson(object sender, EventArgs e)
         {
-            new PersonsDAO().CreatePerson(FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text);
+            var id = new PersonsDAO().CreatePerson(FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text);
+
+            Response.Redirect("ShowPerson.aspx?person=" + id);
         }
 
         protected void SavePerson(object sender, EventArgs e)

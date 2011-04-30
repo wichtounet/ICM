@@ -1,95 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data;
 using System.Linq;
 using ICM.Model;
-using System.Data.SqlClient;
 using ICM.Utils;
 
 namespace ICM.Dao
 {
     public class PersonsDAO
     {
-        public void CreatePerson(string firstname, string name, string phone, string email)
+        public int CreatePerson(string firstname, string name, string phone, string email)
         {
-            var connection = DBManager.GetInstance().GetConnection();
+            var parameters = new NameValueCollection
+            {
+                {"@firstname", firstname},
+                {"@name", name},
+                {"@phone", phone},
+                {"@email", email},
+                {"@archived", "0"},
+                {"@department", "73"}
+            };
 
-            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
-
-            var command = new SqlCommand("INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)", connection, transaction);
-            command.Parameters.AddWithValue("@firstname", firstname);
-            command.Parameters.AddWithValue("@name", name);
-            command.Parameters.AddWithValue("@phone", phone);
-            command.Parameters.AddWithValue("@email", email);
-            command.Parameters.AddWithValue("@archived", 0);
-            command.Parameters.AddWithValue("@department", 73);
-
-            command.ExecuteNonQuery();
-
-            transaction.Commit();
+            return DBUtils.ExecuteInsert(
+                "INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)",
+                IsolationLevel.ReadUncommitted, parameters, "Person");
         }
 
         public void SavePerson(int id, string firstname, string name, string phone, string email)
         {
-            var connection = DBManager.GetInstance().GetConnection();
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()},
+                {"@firstname", firstname},
+                {"@name", name},
+                {"@phone", phone},
+                {"@email", email},
+            };
 
-            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
-
-            var command = new SqlCommand("UPDATE [Person] SET firstname = @firstname, name = @name, phone = @phone, email = @email WHERE id = @id", connection, transaction);
-
-            command.Parameters.AddWithValue("@id", id);
-            command.Parameters.AddWithValue("@firstname", firstname);
-            command.Parameters.AddWithValue("@name", name);
-            command.Parameters.AddWithValue("@phone", phone);
-            command.Parameters.AddWithValue("@email", email);
-
-            command.ExecuteNonQuery();
-
-            transaction.Commit();
+            DBUtils.ExecuteUpdate(
+                "UPDATE [Person] SET firstname = @firstname, name = @name, phone = @phone, email = @email WHERE id = @id",
+                IsolationLevel.ReadUncommitted, parameters);
         }
 
         public void ArchivePerson(int id)
         {
-            var connection = DBManager.GetInstance().GetConnection();
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()},
+            };
 
-            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
-
-            var command = new SqlCommand("UPDATE [Person] SET archived = 1 WHERE id = @id", connection, transaction);
-            command.Parameters.AddWithValue("@id", id);
-
-            command.ExecuteNonQuery();
-
-            transaction.Commit();
+            DBUtils.ExecuteUpdate(
+                "UPDATE [Person] SET archived = 1 WHERE id = @id",
+                IsolationLevel.ReadUncommitted, parameters);
         }
 
         public List<Person> SearchPersons(string name, string firstname, bool archived)
         {
             var persons = new List<Person>();
 
-            var connection = DBManager.GetInstance().GetConnection();
-
-            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
-
-            string query = "SELECT * FROM [Person] WHERE name LIKE(@name) AND firstname LIKE(@firstname)";
+            var query = "SELECT * FROM [Person] WHERE name LIKE(@name) AND firstname LIKE(@firstname)";
 
             if (!archived)
             {
                 query += " AND archived = 0";
             }
 
-            var command = new SqlCommand(query, connection, transaction);
-            command.Parameters.AddWithValue("@name", "%" + name + "%");
-            command.Parameters.AddWithValue("@firstname", "%" + firstname + "%");
+            var parameters = new NameValueCollection
+            {
+                {"@name", "%" + name + "%"},
+                {"@firstname", "%" + firstname + "%"},
+            };
 
-            using (var reader = command.ExecuteReader())
+            using (var reader = DBUtils.ExecuteQuery(query, IsolationLevel.ReadUncommitted, parameters))
             {
                 while (reader.Read())
                 {
                     persons.Add(BindPerson(reader));
                 }
             }
-
-            transaction.Commit();
 
             return persons;
         }
@@ -98,22 +86,18 @@ namespace ICM.Dao
         {
             var persons = new List<Person>();
 
-            var connection = DBManager.GetInstance().GetConnection();
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()},
+            };
 
-            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
-
-            var command = new SqlCommand("SELECT * FROM [Person] WHERE id = @id", connection, transaction);
-            command.Parameters.AddWithValue("@id", id);
-
-            using (var reader = command.ExecuteReader())
+            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Person] WHERE id = @id", IsolationLevel.ReadUncommitted, parameters))
             {
                 while (reader.Read())
                 {
                     persons.Add(BindPerson(reader));
                 }
             }
-
-            transaction.Commit();
 
             return persons.First();
         }
@@ -122,13 +106,7 @@ namespace ICM.Dao
         {
             var persons = new List<Person>();
 
-            var connection = DBManager.GetInstance().GetConnection();
-
-            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
-
-            var command = new SqlCommand("SELECT * FROM [Person]", connection, transaction);
-
-            using (var reader = command.ExecuteReader())
+            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Person]", IsolationLevel.ReadUncommitted))
             {
                 while (reader.Read())
                 {
@@ -136,12 +114,10 @@ namespace ICM.Dao
                 }
             }
 
-            transaction.Commit();
-
             return persons;
         }
 
-        private static Person BindPerson(IDataRecord reader)
+        private static Person BindPerson(SqlResult reader)
         {
             var person = new Person
             {

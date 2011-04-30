@@ -221,6 +221,7 @@
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
+    <Compile Include="Utils\DBUtils.cs" />
     <Compile Include="Utils\Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
