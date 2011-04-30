@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using ICM.Model;
 using System.Data.SqlClient;
@@ -12,7 +14,7 @@ namespace ICM.Dao
         {
             var connection = DBManager.GetInstance().GetConnection();
 
-            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
             var command = new SqlCommand("INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)", connection, transaction);
             command.Parameters.AddWithValue("@firstname", firstname);
@@ -27,14 +29,33 @@ namespace ICM.Dao
             transaction.Commit();
         }
 
-        public void ArchivePerson(int person)
+        public void SavePerson(int id, string firstname, string name, string phone, string email)
         {
             var connection = DBManager.GetInstance().GetConnection();
 
-            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+            var command = new SqlCommand("UPDATE [Person] SET firstname = @firstname, name = @name, phone = @phone, email = @email WHERE id = @id", connection, transaction);
+
+            command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@firstname", firstname);
+            command.Parameters.AddWithValue("@name", name);
+            command.Parameters.AddWithValue("@phone", phone);
+            command.Parameters.AddWithValue("@email", email);
+
+            command.ExecuteNonQuery();
+
+            transaction.Commit();
+        }
+
+        public void ArchivePerson(int id)
+        {
+            var connection = DBManager.GetInstance().GetConnection();
+
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
             var command = new SqlCommand("UPDATE [Person] SET archived = 1 WHERE id = @id", connection, transaction);
-            command.Parameters.AddWithValue("@id", person);
+            command.Parameters.AddWithValue("@id", id);
 
             command.ExecuteNonQuery();
 
@@ -47,7 +68,7 @@ namespace ICM.Dao
 
             var connection = DBManager.GetInstance().GetConnection();
 
-            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
             string query = "SELECT * FROM [Person] WHERE name LIKE(@name) AND firstname LIKE(@firstname)";
 
@@ -79,7 +100,7 @@ namespace ICM.Dao
 
             var connection = DBManager.GetInstance().GetConnection();
 
-            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
             var command = new SqlCommand("SELECT * FROM [Person] WHERE id = @id", connection, transaction);
             command.Parameters.AddWithValue("@id", id);
@@ -103,7 +124,7 @@ namespace ICM.Dao
 
             var connection = DBManager.GetInstance().GetConnection();
 
-            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
             var command = new SqlCommand("SELECT * FROM [Person]", connection, transaction);
 
@@ -120,7 +141,7 @@ namespace ICM.Dao
             return persons;
         }
 
-        private static Person BindPerson(SqlDataReader reader)
+        private static Person BindPerson(IDataRecord reader)
         {
             var person = new Person
             {
@@ -129,7 +150,7 @@ namespace ICM.Dao
                 FirstName = reader["firstname"].ToString(),
                 Email = reader["email"].ToString(),
                 Phone = reader["phone"].ToString(),
-                Archived = reader["archived"].ToString().Equals("1") ? true : false
+                Archived = reader["archived"].ToString().Equals("True") ? true : false
             };
 
             //TODO : Get department of person

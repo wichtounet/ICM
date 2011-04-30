@@ -9,10 +9,10 @@ namespace ICM
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            var id = Request.QueryString["person"].ToInt();
-
-            if(id != null)
+            if (Request.QueryString["person"] != null)
             {
+                var id = Request.QueryString["person"].ToInt();
+
                 var person = new PersonsDAO().GetPersonByID(id);
 
                 IDLabel.Text = person.Id.ToString();
@@ -23,16 +23,27 @@ namespace ICM
 
                 StateLabel.Text = person.Archived ? "Oui" : "Non";
             } 
+            else
+            {
+                EditButton.Enabled = false;
+                DeleteButton.Enabled = false;
+            } 
         }
 
         protected void EditPerson(object sender, EventArgs e)
         {
+            var id = IDLabel.Text.ToInt();
 
+            Response.Redirect("AddPerson.aspx?person=" + id);
         }
 
         protected void DeletePerson(object sender, EventArgs e)
         {
+            var id = IDLabel.Text.ToInt();
 
+            new PersonsDAO().ArchivePerson(id);
+
+            Response.Redirect("ShowPerson.aspx?person=" + id);
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿<%@ Page Title="Ajouter une personne" Language="C#" MasterPageFile="~/Persons.master" AutoEventWireup="true" CodeBehind="AddPerson.aspx.cs" Inherits="ICM.AddPerson" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="PersonsContent" runat="server">
-        <h2>
-        Nouvelle personne
-    </h2>
     <table>
+        <asp:Label ID="IDLabel" Visible="false" runat="server" Text="-1" />
         <tr>
             <td>Nom : </td>
             <td><asp:TextBox ID="NameTextBox" Columns="15" runat="server" /></td>
@@ -29,14 +27,18 @@
             <td><asp:TextBox ID="MailTextBox" Columns="15" runat="server" /></td>
         </tr>
         <tr>
-            <td> </td>
-            <td><asp:Button ID="AddButton" runat="server" Text="Ajouter" OnClick="CreatePerson" /></td>
+            <td></td>
+            <td>
+                <asp:Button ID="AddButton" runat="server" Text="Ajouter" OnClick="CreatePerson" Visible="false" />
+                <asp:Button ID="SaveButton" runat="server" Text="Sauvegarder" OnClick="SavePerson" Visible="false" />
+            </td>
         </tr>
     </table>
 
      <script type="text/javascript">
          $(function () {
              $("[id$=AddButton]").button();
+             $("[id$=SaveButton]").button();
          });
 
     </script>

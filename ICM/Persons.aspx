@@ -32,7 +32,7 @@
             <asp:Label ID="LabelID" runat="server" Visible="false" Text='<%# Eval("Id")%>' />
             <li>
                 <a href='ShowPerson.aspx?person=<%# Eval("Id")%>'><%# Eval("Name") %> <%# Eval("FirstName") %></a>
-                    (Edit | 
+                    (<a href='AddPerson.aspx?person=<%# Eval("Id")%>'>Edit</a> | 
                     <asp:LinkButton ID="ArchiveButton" runat="server" CommandName="Delete" Text="Archive" 
                         OnClientClick="return confirm('Are you sure you want to archive this person ?');" />)
             </li>
