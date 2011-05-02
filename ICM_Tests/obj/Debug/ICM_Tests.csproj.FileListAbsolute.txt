@@ -1,0 +1,9 @@
+H:\prog\dev\visual-studio\ICM\ICM_Tests\bin\Debug\ICM_Tests.dll
+H:\prog\dev\visual-studio\ICM\ICM_Tests\bin\Debug\ICM_Tests.pdb
+H:\prog\dev\visual-studio\ICM\ICM_Tests\bin\Debug\ICM.dll
+H:\prog\dev\visual-studio\ICM\ICM_Tests\bin\Debug\itextsharp.dll
+H:\prog\dev\visual-studio\ICM\ICM_Tests\bin\Debug\ICM.pdb
+H:\prog\dev\visual-studio\ICM\ICM_Tests\bin\Debug\ICM.xml
+H:\prog\dev\visual-studio\ICM\ICM_Tests\obj\Debug\ResolveAssemblyReference.cache
+H:\prog\dev\visual-studio\ICM\ICM_Tests\obj\Debug\ICM_Tests.dll
+H:\prog\dev\visual-studio\ICM\ICM_Tests\obj\Debug\ICM_Tests.pdb

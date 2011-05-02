@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="b0848497-4c5b-430c-b7b6-1fd79c85ced4" name="wichtounet@VIKING-PORTABLE 2011-05-02 14:51:37" runUser="Viking-Portable\wichtounet" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Local" id="573452de-78b9-4284-97f5-fde8e5c78a8f">
+    <Description>These are default test settings for a local test run.</Description>
+    <Deployment enabled="false" runDeploymentRoot="wichtounet_VIKING-PORTABLE 2011-05-02 14_51_37" />
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2011-05-02T14:51:37.1099124+02:00" queuing="2011-05-02T14:51:38.0299650+02:00" start="2011-05-02T14:51:38.3759848+02:00" finish="2011-05-02T14:51:56.8090391+02:00" />
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" error="0" failed="1" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" passed="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="CreatePersonTest" storage="h:\prog\dev\visual-studio\icm\icm_tests\bin\debug\icm_tests.dll" id="1f091c73-195e-6be5-54fe-827d213032e0">
+      <Execution timeOut="1800000" id="eb27637c-0673-4c65-b467-45ee202acf4d" />
+      <TestMethod codeBase="H:/prog/dev/visual-studio/ICM/ICM_Tests/bin/Debug/ICM_Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="ICM_Tests.PersonsDAOTest, ICM_Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="CreatePersonTest" />
+      <AspNet webSiteUrl="http://localhost:37234/">
+        <Host pathToWebApp="H:\prog\dev\visual-studio\ICM\ICM" webAppRoot="/" />
+      </AspNet>
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="1f091c73-195e-6be5-54fe-827d213032e0" executionId="eb27637c-0673-4c65-b467-45ee202acf4d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="eb27637c-0673-4c65-b467-45ee202acf4d" testId="1f091c73-195e-6be5-54fe-827d213032e0" testName="CreatePersonTest" computerName="VIKING-PORTABLE" duration="00:00:01.3796153" startTime="2011-05-02T14:51:38.6880026+02:00" endTime="2011-05-02T14:51:51.5057357+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eb27637c-0673-4c65-b467-45ee202acf4d">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method ICM_Tests.PersonsDAOTest.CreatePersonTest threw exception: 
+System.Data.SqlClient.SqlException: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Person_departmentId". The conflict occurred in database "icm", table "dbo.Department", column 'id'.
+The statement has been terminated.</Message>
+          <StackTrace>    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning()
+   at System.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, DbAsyncResult result)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(DbAsyncResult result, String methodName, Boolean sendToPipe)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at ICM.Utils.DBUtils.ExecuteNonQuery(SqlConnection connection, String sql, SqlTransaction transaction, NameValueCollection parameters) in H:\prog\dev\visual-studio\ICM\ICM\Utils\DBUtils.cs:line 54
+   at ICM.Utils.DBUtils.ExecuteInsert(String sql, IsolationLevel level, NameValueCollection parameters, String tableName) in H:\prog\dev\visual-studio\ICM\ICM\Utils\DBUtils.cs:line 27
+   at ICM.Dao.PersonsDAO.CreatePerson(String firstname, String name, String phone, String email) in H:\prog\dev\visual-studio\ICM\ICM\Dao\PersonsDAO.cs:line 35
+   at ICM_Tests.PersonsDAOTest.CreatePersonTest() in H:\prog\dev\visual-studio\ICM\ICM_Tests\PersonsDAOTest.cs:line 65
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+</TestRun>
