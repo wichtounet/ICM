@@ -31,6 +31,15 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.TextBox NameTextBox;
         
         /// <summary>
+        /// RequiredNameValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredNameValidator;
+        
+        /// <summary>
         /// FirstNameTextBox control.
         /// </summary>
         /// <remarks>
@@ -38,6 +47,15 @@ namespace ICM {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox FirstNameTextBox;
+        
+        /// <summary>
+        /// RequiredFirstNameValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFirstNameValidator;
         
         /// <summary>
         /// InstitutionList control.
@@ -67,6 +85,24 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.TextBox PhoneTextBox;
         
         /// <summary>
+        /// RequiredPhoneValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredPhoneValidator;
+        
+        /// <summary>
+        /// ValidPhoneValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator ValidPhoneValidator;
+        
+        /// <summary>
         /// MailTextBox control.
         /// </summary>
         /// <remarks>
@@ -74,6 +110,24 @@ namespace ICM {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox MailTextBox;
+        
+        /// <summary>
+        /// RequiredMailValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredMailValidator;
+        
+        /// <summary>
+        /// ValidEmailValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator ValidEmailValidator;
         
         /// <summary>
         /// AddButton control.

@@ -38,18 +38,24 @@ namespace ICM
 
         protected void CreatePerson(object sender, EventArgs e)
         {
-            var id = new PersonsDAO().CreatePerson(FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text);
+            if(Page.IsValid)
+            {
+                var id = new PersonsDAO().CreatePerson(FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text);
 
-            Response.Redirect("ShowPerson.aspx?person=" + id);
+                Response.Redirect("ShowPerson.aspx?person=" + id);
+            }
         }
 
         protected void SavePerson(object sender, EventArgs e)
         {
-            var id = IDLabel.Text.ToInt();
+            if (Page.IsValid)
+            {
+                var id = IDLabel.Text.ToInt();
 
-            new PersonsDAO().SavePerson(id, FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text);
+                new PersonsDAO().SavePerson(id, FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text);
 
-            Response.Redirect("ShowPerson.aspx?person=" + id);
+                Response.Redirect("ShowPerson.aspx?person=" + id);
+            }
         }
     }
 }
