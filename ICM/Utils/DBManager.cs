@@ -40,7 +40,5 @@ namespace ICM.Utils
         {
             return Instance;
         }
-
-        
     }
 }

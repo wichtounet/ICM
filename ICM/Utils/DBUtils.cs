@@ -36,7 +36,7 @@ namespace ICM.Utils
 
             var reader = command.ExecuteReader();
 
-            return new SqlResult(transaction, reader);
+            return new SqlResult(null, reader);
         }
 
         public static SqlResult ExecuteTransactionQuery(string sql, SqlTransaction transaction)
@@ -139,7 +139,11 @@ namespace ICM.Utils
         public void Dispose()
         {
             reader.Close();
-            transaction.Commit();
+
+            if(transaction != null)
+            {
+                transaction.Commit();
+            }
         }
     }
 }

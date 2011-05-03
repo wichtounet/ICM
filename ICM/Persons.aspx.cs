@@ -10,10 +10,10 @@ namespace ICM
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            InstitutionList.DataSource = new InstitutionsDAO().GetInstitutions();
+            /*InstitutionList.DataSource = new InstitutionsDAO().GetInstitutions();
             InstitutionList.DataValueField = "Id";
             InstitutionList.DataTextField = "Name";
-            InstitutionList.DataBind();
+            InstitutionList.DataBind();*/
         }
 
         protected void SearchPerson(object sender, EventArgs e)
