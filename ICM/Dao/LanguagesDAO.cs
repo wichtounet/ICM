@@ -9,6 +9,7 @@ namespace ICM.Dao
     /// <summary>
     ///  This class enables the user to search the database for languages. 
     /// </summary>
+    /// <remarks>Baptiste Wicht</remarks>
     public class LanguagesDAO
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();

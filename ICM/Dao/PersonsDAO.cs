@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Data;
 using System.Linq;
 using ICM.Model;
 using ICM.Utils;
 using NLog;
-using NLog.Targets;
 
 namespace ICM.Dao
 {
     /// <summary>
     ///  This class enables the user to make operations on the "Person" table. With this DAO, you can create, update, delete and search for persons. 
     /// </summary>
+    /// <remarks>Baptiste Wicht</remarks>
     public class PersonsDAO
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();

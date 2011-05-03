@@ -1,6 +1,5 @@
 ﻿using System;
 using ICM.Dao;
-using ICM.Model;
 using ICM.Utils;
 
 namespace ICM
@@ -25,15 +24,36 @@ namespace ICM
                     PhoneTextBox.Text = person.Phone;
 
                     SaveButton.Visible = true;
+
+                    LoadLists();
                 }
-                
             } 
             else
             {
                 AddButton.Visible = true;
-            }
 
-            //TODO Load drop down lists
+                LoadLists();
+            }
+        }
+
+        private void LoadLists()
+        {
+            var institutionsDao = new InstitutionsDAO();
+
+            var dataSource = institutionsDao.GetInstitutions();
+
+            InstitutionList.DataSource = dataSource;
+            InstitutionList.DataValueField = "Id";
+            InstitutionList.DataTextField = "Name";
+            InstitutionList.DataBind();
+            
+            if(dataSource.Count > 0)
+            {
+                DepartmentList.DataSource = dataSource[0].Departments;
+                DepartmentList.DataValueField = "Id";
+                DepartmentList.DataTextField = "Name";
+                DepartmentList.DataBind();
+            }
         }
 
         protected void CreatePerson(object sender, EventArgs e)
@@ -55,6 +75,21 @@ namespace ICM
                 new PersonsDAO().SavePerson(id, FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text);
 
                 Response.Redirect("ShowPerson.aspx?person=" + id);
+            }
+        }
+
+        protected void InstitutionSelected(object sender, EventArgs e)
+        {
+            var id = InstitutionList.SelectedValue.ToInt();
+
+            var institution = new InstitutionsDAO().GetInstitution(id);
+
+            if (institution != null)
+            {
+                DepartmentList.DataSource = institution.Departments;
+                DepartmentList.DataValueField = "Id";
+                DepartmentList.DataTextField = "Name";
+                DepartmentList.DataBind();
             }
         }
     }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using ICM.Model;
 using ICM.Dao;
 using ICM.Utils;
 
@@ -12,7 +10,10 @@ namespace ICM
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            InstitutionList.DataSource = new InstitutionsDAO().GetInstitutions();
+            InstitutionList.DataValueField = "Id";
+            InstitutionList.DataTextField = "Name";
+            InstitutionList.DataBind();
         }
 
         protected void SearchPerson(object sender, EventArgs e)

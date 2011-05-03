@@ -3,6 +3,10 @@ using System.Data.SqlClient;
 
 namespace ICM.Utils
 {
+    /// <summary>
+    ///  Contains several extensions methods useful to make easier the development. 
+    /// </summary>
+    /// <remarks>Baptiste Wicht</remarks>
     public static class Extensions
     {
         public static int ToInt(this String str)

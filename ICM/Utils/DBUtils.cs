@@ -5,6 +5,10 @@ using System.Data.SqlClient;
 
 namespace ICM.Utils
 {
+    /// <summary>
+    ///  This utility class contains several methods that aims to simplify the use of database. 
+    /// </summary>
+    /// <remarks>Baptiste Wicht</remarks>
     public class DBUtils
     {
         public static void ExecuteUpdate(string sql, IsolationLevel level, NameValueCollection parameters)
