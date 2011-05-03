@@ -10,7 +10,7 @@
 namespace ICM {
     
     
-    public partial class ShowPerson {
+    public partial class ShowContract {
         
         /// <summary>
         /// Contrôle IDLabel.
@@ -22,22 +22,13 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.Label IDLabel;
         
         /// <summary>
-        /// Contrôle NameLabel.
+        /// Contrôle TitreLabel.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label NameLabel;
-        
-        /// <summary>
-        /// Contrôle FirstNameLabel.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label FirstNameLabel;
+        protected global::System.Web.UI.WebControls.Label TitreLabel;
         
         /// <summary>
         /// Contrôle InstitutionLabel.
@@ -58,22 +49,49 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.Label DepartmentLabel;
         
         /// <summary>
-        /// Contrôle PhoneLabel.
+        /// Contrôle dateDebutLabel.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label PhoneLabel;
+        protected global::System.Web.UI.WebControls.Label dateDebutLabel;
         
         /// <summary>
-        /// Contrôle MailLabel.
+        /// Contrôle dateFinLabel.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label MailLabel;
+        protected global::System.Web.UI.WebControls.Label dateFinLabel;
+        
+        /// <summary>
+        /// Contrôle downloadFile.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink downloadFile;
+        
+        /// <summary>
+        /// Contrôle typeLabel.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label typeLabel;
+        
+        /// <summary>
+        /// Contrôle userLabel.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label userLabel;
         
         /// <summary>
         /// Contrôle StateLabel.
