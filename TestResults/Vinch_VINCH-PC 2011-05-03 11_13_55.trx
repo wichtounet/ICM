@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="68194c67-0bb7-4170-8dbf-da5e922211b9" name="Vinch@VINCH-PC 2011-05-03 11:13:55" runUser="Vinch-PC\Vinch" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Local" id="573452de-78b9-4284-97f5-fde8e5c78a8f">
+    <Description>These are default test settings for a local test run.</Description>
+    <Deployment enabled="false" runDeploymentRoot="Vinch_VINCH-PC 2011-05-03 11_13_55">
+      <DeploymentItem filename="C:\Users\Vinch\Documents\Visual Studio 2010\Projects\ICM\ICM\Lib\itextsharp.dll" />
+      <DeploymentItem filename="C:\Users\Vinch\Documents\Visual Studio 2010\Projects\ICM\ICM\bin\ICM.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2011-05-03T11:13:55.0444453+02:00" queuing="2011-05-03T11:13:57.2765730+02:00" start="2011-05-03T11:13:57.4165810+02:00" finish="2011-05-03T11:13:57.8136037+02:00" />
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" error="0" failed="1" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" passed="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="CreatePersonTest" storage="c:\users\vinch\documents\visual studio 2010\projects\icm\icm_tests\bin\debug\icm_tests.dll" id="1f091c73-195e-6be5-54fe-827d213032e0">
+      <Execution id="d1ea65cb-6f9a-43a6-bffc-70792fb1696d" />
+      <TestMethod codeBase="C:/Users/Vinch/Documents/Visual Studio 2010/Projects/ICM/ICM_Tests/bin/Debug/ICM_Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="ICM_Tests.PersonsDAOTest, ICM_Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="CreatePersonTest" />
+      <AspNet webSiteUrl="http://localhost:37234/">
+        <Host pathToWebApp="H:\prog\dev\visual-studio\ICM\ICM" webAppRoot="/" />
+      </AspNet>
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Les résultats ne figurent pas dans une liste" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tous les résultats chargés" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="1f091c73-195e-6be5-54fe-827d213032e0" executionId="d1ea65cb-6f9a-43a6-bffc-70792fb1696d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="d1ea65cb-6f9a-43a6-bffc-70792fb1696d" testId="1f091c73-195e-6be5-54fe-827d213032e0" testName="CreatePersonTest" computerName="VINCH-PC" startTime="2011-05-03T11:13:57.7025974+02:00" endTime="2011-05-03T11:13:57.7766016+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d1ea65cb-6f9a-43a6-bffc-70792fb1696d">
+      <Output>
+        <ErrorInfo>
+          <Message>Le chemin de site Web 'H:\prog\dev\visual-studio\ICM\ICM' n'existe pas. Les tests configurés pour s'exécuter sur le serveur de développement ASP.NET doivent spécifier un chemin d'accès au site Web valide. Corrigez l'attribut AspNetDevelopmentServerHost pour le test. Pour plus d'informations sur les tests unitaires ASP.NET, consultez "Comment : créer un test unitaire ASP.NET" (http://go.microsoft.com/fwlink/?LinkId=62608) et "Test des services Web" (http://go.microsoft.com/fwlink/?LinkId=62609) dans MSDN Library.</Message>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+</TestRun>

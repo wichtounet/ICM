@@ -7,3 +7,12 @@ H:\prog\dev\visual-studio\ICM\ICM_Tests\bin\Debug\ICM.xml
 H:\prog\dev\visual-studio\ICM\ICM_Tests\obj\Debug\ResolveAssemblyReference.cache
 H:\prog\dev\visual-studio\ICM\ICM_Tests\obj\Debug\ICM_Tests.dll
 H:\prog\dev\visual-studio\ICM\ICM_Tests\obj\Debug\ICM_Tests.pdb
+C:\Users\Vinch\Documents\Visual Studio 2010\Projects\ICM\ICM_Tests\bin\Debug\ICM_Tests.dll
+C:\Users\Vinch\Documents\Visual Studio 2010\Projects\ICM\ICM_Tests\bin\Debug\ICM_Tests.pdb
+C:\Users\Vinch\Documents\Visual Studio 2010\Projects\ICM\ICM_Tests\bin\Debug\ICM.dll
+C:\Users\Vinch\Documents\Visual Studio 2010\Projects\ICM\ICM_Tests\bin\Debug\itextsharp.dll
+C:\Users\Vinch\Documents\Visual Studio 2010\Projects\ICM\ICM_Tests\bin\Debug\ICM.pdb
+C:\Users\Vinch\Documents\Visual Studio 2010\Projects\ICM\ICM_Tests\bin\Debug\ICM.xml
+C:\Users\Vinch\Documents\Visual Studio 2010\Projects\ICM\ICM_Tests\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Vinch\Documents\Visual Studio 2010\Projects\ICM\ICM_Tests\obj\Debug\ICM_Tests.dll
+C:\Users\Vinch\Documents\Visual Studio 2010\Projects\ICM\ICM_Tests\obj\Debug\ICM_Tests.pdb

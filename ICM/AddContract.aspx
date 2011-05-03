@@ -2,7 +2,7 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContractsContent" runat="server">
-   
+   <asp:Label ID="stateForm" Visible="false" runat="server" Text="-1" />
 
     <h2>
         Nouveau contrat
@@ -30,12 +30,25 @@
         </tr>
         <tr>
             <td>Institution : </td>
-            <td><asp:DropDownList ID="institutionList" runat="server" /></td>
+            <td>
+                <asp:DropDownList ID="institutionList" runat="server" />
+                <asp:Button ID="addInstitution" runat="server" Text="Ajouter" OnClick="addInstitution_Click" />    
+                <asp:DropDownList ID="institutionChooseList" runat="server" />
+                <asp:Button ID="deleteInstitution" runat="server" Text="Supprimer" OnClick="deleteInstitution_Click" />    
+                <asp:Label ID="institutionLabel" runat="server" />
+            </td>
             
         </tr>
         <tr>
             <td>Personne de contact : </td>
-            <td><asp:DropDownList ID="personneList" runat="server" /></td>
+            <td>
+                <asp:DropDownList ID="personneList" runat="server" />
+                Rôle : <asp:DropDownList ID="roleList" runat="server" />
+                <asp:Button ID="addPerson" runat="server" Text="Ajouter" OnClick="addPerson_Click" />    
+                <asp:DropDownList ID="choosePersonsList" runat="server" />
+                <asp:Button ID="deletePerson" runat="server" Text="Supprimer" OnClick="deletePerson_Click" />    
+                <asp:Label ID="personLabel" runat="server" />
+            </td>
             
         </tr>
         <tr>

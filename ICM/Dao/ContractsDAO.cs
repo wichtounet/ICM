@@ -9,6 +9,7 @@ using ICM.Utils;
 using System.Collections.Specialized;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.Collections;
 
 namespace ICM.Dao
 {
@@ -96,7 +97,7 @@ namespace ICM.Dao
             return contractsList;
         }
 
-        public int addContract(string title, string start, string end, string typeContractName, string userName, int departmentId, int destinationId, int institutionId, int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
+        public int addContract(string title, string start, string end, string typeContractName, string userName, SortedList persons, int destinationId, int institutionId, int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
         {
             int contractFileId = addFile(fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
             
