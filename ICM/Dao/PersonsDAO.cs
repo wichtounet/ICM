@@ -15,7 +15,7 @@ namespace ICM.Dao
     /// </summary>
     public class PersonsDAO
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Create a new person with the given values
@@ -27,9 +27,7 @@ namespace ICM.Dao
         /// <returns>the id of the inserted person</returns>
         public int CreatePerson(string firstname, string name, string phone, string email)
         {
-           
-
-            logger.Debug("Creating person");
+            Logger.Debug("Creating person");
 
             var parameters = new NameValueCollection
             {
@@ -41,9 +39,13 @@ namespace ICM.Dao
                 {"@department", "2"}
             };
 
-            return DBUtils.ExecuteInsert(
+            int id = DBUtils.ExecuteInsert(
                 "INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)",
                 IsolationLevel.ReadUncommitted, parameters, "Person");
+
+            Logger.Debug("Created person with id {0}", id);
+
+            return id;
         }
 
         /// <summary>
@@ -56,7 +58,7 @@ namespace ICM.Dao
         /// <param name="phone">The name of the person</param>
         public void SavePerson(int id, string firstname, string name, string phone, string email)
         {
-            logger.Debug("Saving person");
+            Logger.Debug("Saving person {0}", id);
 
             var parameters = new NameValueCollection
             {
@@ -70,6 +72,8 @@ namespace ICM.Dao
             DBUtils.ExecuteUpdate(
                 "UPDATE [Person] SET firstname = @firstname, name = @name, phone = @phone, email = @email WHERE id = @id",
                 IsolationLevel.ReadUncommitted, parameters);
+
+            Logger.Debug("Saved person {0}", id);
         }
 
         /// <summary>
@@ -78,7 +82,7 @@ namespace ICM.Dao
         /// <param name="id">The id of the person to save</param>
         public void ArchivePerson(int id)
         {
-            logger.Debug("Archive person");
+            Logger.Debug("Archiving person {0}", id);
 
             var parameters = new NameValueCollection
             {
@@ -88,6 +92,8 @@ namespace ICM.Dao
             DBUtils.ExecuteUpdate(
                 "UPDATE [Person] SET archived = 1 WHERE id = @id",
                 IsolationLevel.ReadUncommitted, parameters);
+
+            Logger.Debug("Archived person {0}", id);
         }
 
         /// <summary>
@@ -99,9 +105,7 @@ namespace ICM.Dao
         /// <returns>all the persons matching the criterias</returns>
         public List<Person> SearchPersons(string name, string firstname, bool archived)
         {
-            ReadOnlyCollection<Target> targets = logger.Factory.Configuration.AllTargets;
-
-            logger.Debug("Search person");
+            Logger.Debug("Searching persons");
 
             var persons = new List<Person>();
 
@@ -126,6 +130,8 @@ namespace ICM.Dao
                 }
             }
 
+            Logger.Debug("Found {0} persons", persons.Count);
+
             return persons;
         }
 
@@ -136,7 +142,7 @@ namespace ICM.Dao
         /// <returns>the person with the given ID or null if there is no person with this person</returns>
         public Person GetPersonByID(int id)
         {
-            logger.Debug("Search person by ID");
+            Logger.Debug("Search person by ID ({0})", id);
 
             var persons = new List<Person>();
 
@@ -153,7 +159,12 @@ namespace ICM.Dao
                 }
             }
 
-            return persons.First();
+
+            Person person = persons.First();
+
+            Logger.Debug("Found {0}", person == null ? null : person.ToString());
+
+            return person;
         }
 
         /// <summary>
@@ -162,7 +173,7 @@ namespace ICM.Dao
         /// <returns>a List containing all the persons</returns>
         public List<Person> GetAllPersons()
         {
-            logger.Debug("Get all persons");
+            Logger.Debug("Get all persons");
 
             var persons = new List<Person>();
 
@@ -173,6 +184,8 @@ namespace ICM.Dao
                     persons.Add(BindPerson(reader));
                 }
             }
+
+            Logger.Debug("Found {0} persons", persons.Count);
 
             return persons;
         }
