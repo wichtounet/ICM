@@ -169,15 +169,15 @@ namespace ICM.Dao
         private static Institution GetInstitutionWithoutDepartments(SqlResult institutionReader)
         {
             //Instantiate institution
-            return new Institution( institutionReader["id"].ToString().ToInt(),
-                                    institutionReader["name"].ToString(),
-                                    institutionReader["description"].ToString(),
-                                    institutionReader["city"].ToString(),
-                                    institutionReader["Interest"].ToString(),
-                                    new Language { Name = institutionReader["languageName"].ToString() },
-                                    new Country { Name = institutionReader["countryName"].ToString() }, 
+            return new Institution( (int) institutionReader["id"],
+                                    (string) institutionReader["name"],
+                                    (string) institutionReader["description"],
+                                    (string) institutionReader["city"],
+                                    (string) institutionReader["Interest"],
+                                    new Language { Name = (string) institutionReader["languageName"] },
+                                    new Country { Name = (string) institutionReader["countryName"] }, 
                                     null,
-                                    institutionReader["archived"].ToString().ToInt()==0 ? false : true);
+                                    (bool) institutionReader["archived"]);
         }
     }
 }
