@@ -6,15 +6,23 @@
     <table>
         <tr>
             <td>Nom : </td>
-            <td><asp:TextBox ID="nomText" Columns="15" runat="server" /></td>
+            <td><asp:TextBox ID="NameText" Columns="15" runat="server" /></td>
         </tr>
         <tr>
             <td>Description : </td>
-            <td><asp:TextBox ID="descrText" Columns="15" runat="server" /></td>
+            <td><asp:TextBox ID="DescriptionText" Columns="15" runat="server" /></td>
         </tr>
         <tr>
-            <td>Emplacement : </td>
-            <td><asp:DropDownList ID="continentList" runat="server" /><asp:DropDownList ID="countryList" runat="server" /></td>
+            <td>Ville : </td>
+            <td><asp:TextBox ID="CityText" Columns="15" runat="server" /></td>
+        </tr>
+        <tr>
+            <td>Pays : </td>
+            <td><asp:DropDownList ID="ContinentList" runat="server" AutoPostBack="True" 
+                    onselectedindexchanged="ContinentList_SelectedIndexChanged" /><asp:DropDownList ID="CountryList" runat="server" />
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" 
+                    ControlToValidate="CountryList" ErrorMessage="Pays doit être spécifié"></asp:RequiredFieldValidator>
+            </td>
         </tr>
         <tr>
             <td>linguistique : </td>
@@ -22,11 +30,37 @@
         </tr>
         <tr>
             <td>Intérêt : </td>
-            <td><asp:TextBox ID="interetText" Columns="15" runat="server" /></td>
+            <td><asp:TextBox ID="InterestText" Columns="15" runat="server" /></td>
+        </tr>
+        <tr>
+            <td>Nouveau département : </td>
+            <td>
+                <asp:TextBox ID="DepartmentText" runat="server" Width="150px"></asp:TextBox>
+            &nbsp;&nbsp;
+                <asp:Button ID="AddDepartmentButton" runat="server" 
+                    Text="Ajouter" onclick="AddDepartmentButton_Click" />
+            </td>
+        </tr>
+        <tr>
+            <td>Départements : </td>
+            <td>
+                
+                <asp:DropDownList ID="DepartmentList" runat="server" Width="150px">
+                </asp:DropDownList>
+&nbsp;&nbsp;
+                <asp:Button ID="RemoveDepartmentButton" runat="server" Text="Supprimer" 
+                    onclick="RemoveDepartmentButton_Click" />
+                
+            </td>
         </tr>
         <tr>
             <td> </td>
-            <td><asp:Button ID="ajouterButton" runat="server" Text="Ajouter" /></td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td> </td>
+            <td><asp:Button ID="AddButton" runat="server" Text="Ajouter institution" 
+                    onclick="AddButton_Click" /></td>
         </tr>
     </table>        
     

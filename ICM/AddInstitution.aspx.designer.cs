@@ -13,40 +13,58 @@ namespace ICM {
     public partial class AddInstitution {
         
         /// <summary>
-        /// nomText control.
+        /// NameText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox nomText;
+        protected global::System.Web.UI.WebControls.TextBox NameText;
         
         /// <summary>
-        /// descrText control.
+        /// DescriptionText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox descrText;
+        protected global::System.Web.UI.WebControls.TextBox DescriptionText;
         
         /// <summary>
-        /// continentList control.
+        /// CityText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList continentList;
+        protected global::System.Web.UI.WebControls.TextBox CityText;
         
         /// <summary>
-        /// countryList control.
+        /// ContinentList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList countryList;
+        protected global::System.Web.UI.WebControls.DropDownList ContinentList;
+        
+        /// <summary>
+        /// CountryList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList CountryList;
+        
+        /// <summary>
+        /// RequiredFieldValidator1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
         
         /// <summary>
         /// LanguageList control.
@@ -58,21 +76,57 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.DropDownList LanguageList;
         
         /// <summary>
-        /// interetText control.
+        /// InterestText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox interetText;
+        protected global::System.Web.UI.WebControls.TextBox InterestText;
         
         /// <summary>
-        /// ajouterButton control.
+        /// DepartmentText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button ajouterButton;
+        protected global::System.Web.UI.WebControls.TextBox DepartmentText;
+        
+        /// <summary>
+        /// AddDepartmentButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button AddDepartmentButton;
+        
+        /// <summary>
+        /// DepartmentList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DepartmentList;
+        
+        /// <summary>
+        /// RemoveDepartmentButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button RemoveDepartmentButton;
+        
+        /// <summary>
+        /// AddButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button AddButton;
     }
 }

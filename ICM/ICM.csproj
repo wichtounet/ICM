@@ -157,6 +157,7 @@
       <DependentUpon>Contracts.master</DependentUpon>
     </Compile>
     <Compile Include="Model\Contract.cs" />
+    <Compile Include="Model\Institution.cs" />
     <Compile Include="Model\TypeContract.cs" />
     <Compile Include="ShowContract.aspx.cs">
       <DependentUpon>ShowContract.aspx</DependentUpon>
