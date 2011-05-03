@@ -21,9 +21,9 @@ namespace ICM.Dao
         /// Create a new person with the given values
         /// </summary>
         /// <param name="name">The name of the person</param>
-        /// <param name="firstname">The name of the person</param>
-        /// <param name="email">The name of the person</param>
-        /// <param name="phone">The name of the person</param>
+        /// <param name="firstname">The firstname of the person</param>
+        /// <param name="email">The email of the person</param>
+        /// <param name="phone">The phone of the person</param>
         /// <returns>the id of the inserted person</returns>
         public int CreatePerson(string firstname, string name, string phone, string email)
         {
