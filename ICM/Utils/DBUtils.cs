@@ -135,7 +135,6 @@ namespace ICM.Utils
         public void Dispose()
         {
             reader.Close();
-            transaction.Commit();
         }
     }
 }
