@@ -7,12 +7,12 @@
             <td><asp:Label ID="TitreLabel" runat="server" /></td>
         </tr>
         <tr>
-            <td>Institution : </td>
-            <td><asp:Label ID="InstitutionLabel" runat="server" /></td>
+            <td>Personne de contact : </td>
+            <td><asp:DropDownList ID="personList" runat="server" /></td>
         </tr>
         <tr>
             <td>Département : </td>
-            <td><asp:Label ID="DepartmentLabel" runat="server" /></td>
+            <td><asp:DropDownList ID="departmentList" runat="server" /></td>
         </tr>
         <tr>
             <td>Date début : </td>

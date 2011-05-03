@@ -32,9 +32,9 @@
             <td>Institution : </td>
             <td>
                 <asp:DropDownList ID="institutionList" runat="server" />
-                <asp:Button ID="addInstitution" runat="server" Text="Ajouter" OnClick="addInstitution_Click" />    
+                <asp:Button ID="addInstitution" runat="server" Text="+" OnClick="addInstitution_Click" />    
                 <asp:DropDownList ID="institutionChooseList" runat="server" />
-                <asp:Button ID="deleteInstitution" runat="server" Text="Supprimer" OnClick="deleteInstitution_Click" />    
+                <asp:Button ID="deleteInstitution" runat="server" Text="-" OnClick="deleteInstitution_Click" />    
                 <asp:Label ID="institutionLabel" runat="server" />
             </td>
             
@@ -44,9 +44,9 @@
             <td>
                 <asp:DropDownList ID="personneList" runat="server" />
                 Rôle : <asp:DropDownList ID="roleList" runat="server" />
-                <asp:Button ID="addPerson" runat="server" Text="Ajouter" OnClick="addPerson_Click" />    
+                <asp:Button ID="addPerson" runat="server" Text="+" OnClick="addPerson_Click" />    
                 <asp:DropDownList ID="choosePersonsList" runat="server" />
-                <asp:Button ID="deletePerson" runat="server" Text="Supprimer" OnClick="deletePerson_Click" />    
+                <asp:Button ID="deletePerson" runat="server" Text="-" OnClick="deletePerson_Click" />    
                 <asp:Label ID="personLabel" runat="server" />
             </td>
             

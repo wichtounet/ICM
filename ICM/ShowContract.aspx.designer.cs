@@ -31,22 +31,22 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.Label TitreLabel;
         
         /// <summary>
-        /// Contrôle InstitutionLabel.
+        /// Contrôle personList.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label InstitutionLabel;
+        protected global::System.Web.UI.WebControls.DropDownList personList;
         
         /// <summary>
-        /// Contrôle DepartmentLabel.
+        /// Contrôle departmentList.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label DepartmentLabel;
+        protected global::System.Web.UI.WebControls.DropDownList departmentList;
         
         /// <summary>
         /// Contrôle dateDebutLabel.

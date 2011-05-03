@@ -4,6 +4,24 @@
         <name>ICM</name>
     </assembly>
     <members>
+        <member name="T:ICM.Dao.LanguagesDAO">
+            <summary>
+             This class enables the user to search the database for languages. 
+            </summary>
+        </member>
+        <member name="M:ICM.Dao.LanguagesDAO.GetAllLanguages">
+            <summary>
+            Returns all the languages of the database. 
+            </summary>
+            <returns>a List containing all the languages</returns>
+        </member>
+        <member name="M:ICM.Dao.LanguagesDAO.BindLanguage(ICM.Utils.SqlResult)">
+            <summary>
+            Bind the SQL Result to a Language object
+            </summary>
+            <param name="result">The result of a SQL query</param>
+            <returns>a new instance of Language with the values of the SQL Result</returns>
+        </member>
         <member name="F:ICM.SiteMaster.HeadContent">
             <summary>
             HeadContent control.
@@ -58,36 +76,54 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:ICM.AddInstitution.nomText">
+        <member name="F:ICM.AddInstitution.NameText">
             <summary>
-            nomText control.
+            NameText control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:ICM.AddInstitution.descrText">
+        <member name="F:ICM.AddInstitution.DescriptionText">
             <summary>
-            descrText control.
+            DescriptionText control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:ICM.AddInstitution.continentList">
+        <member name="F:ICM.AddInstitution.CityText">
             <summary>
-            continentList control.
+            CityText control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:ICM.AddInstitution.countryList">
+        <member name="F:ICM.AddInstitution.ContinentList">
             <summary>
-            countryList control.
+            ContinentList control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:ICM.AddInstitution.CountryList">
+            <summary>
+            CountryList control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:ICM.AddInstitution.RequiredFieldValidator1">
+            <summary>
+            RequiredFieldValidator1 control.
             </summary>
             <remarks>
             Auto-generated field.
@@ -103,18 +139,54 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:ICM.AddInstitution.interetText">
+        <member name="F:ICM.AddInstitution.InterestText">
             <summary>
-            interetText control.
+            InterestText control.
             </summary>
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:ICM.AddInstitution.ajouterButton">
+        <member name="F:ICM.AddInstitution.DepartmentText">
             <summary>
-            ajouterButton control.
+            DepartmentText control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:ICM.AddInstitution.AddDepartmentButton">
+            <summary>
+            AddDepartmentButton control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:ICM.AddInstitution.DepartmentList">
+            <summary>
+            DepartmentList control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:ICM.AddInstitution.RemoveDepartmentButton">
+            <summary>
+            RemoveDepartmentButton control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:ICM.AddInstitution.AddButton">
+            <summary>
+            AddButton control.
             </summary>
             <remarks>
             Auto-generated field.
@@ -194,9 +266,9 @@
             Create a new person with the given values
             </summary>
             <param name="name">The name of the person</param>
-            <param name="firstname">The name of the person</param>
-            <param name="email">The name of the person</param>
-            <param name="phone">The name of the person</param>
+            <param name="firstname">The firstname of the person</param>
+            <param name="email">The email of the person</param>
+            <param name="phone">The phone of the person</param>
             <returns>the id of the inserted person</returns>
         </member>
         <member name="M:ICM.Dao.PersonsDAO.SavePerson(System.Int32,System.String,System.String,System.String,System.String)">
@@ -289,18 +361,18 @@
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.ShowContract.InstitutionLabel">
+        <member name="F:ICM.ShowContract.personList">
             <summary>
-            Contrôle InstitutionLabel.
+            Contrôle personList.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.ShowContract.DepartmentLabel">
+        <member name="F:ICM.ShowContract.departmentList">
             <summary>
-            Contrôle DepartmentLabel.
+            Contrôle departmentList.
             </summary>
             <remarks>
             Champ généré automatiquement.
@@ -559,6 +631,38 @@
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
+        <member name="T:ICM.Dao.CountriesDAO">
+            <summary>
+             This class enables the user to search the database for countries and continents. 
+            </summary>
+        </member>
+        <member name="M:ICM.Dao.CountriesDAO.GetAllContinents">
+            <summary>
+            Returns all the continents of the database. 
+            </summary>
+            <returns>a List containing all the contients</returns>
+        </member>
+        <member name="M:ICM.Dao.CountriesDAO.GetCountries(ICM.Model.Continent)">
+            <summary>
+            Returns all the countries of the specified continent of the database. 
+            </summary>
+            <param name="continent">The contient to search country for</param>
+            <returns>a List containing all the countries of the specified continent</returns>
+        </member>
+        <member name="M:ICM.Dao.CountriesDAO.BindCountry(ICM.Utils.SqlResult)">
+            <summary>
+            Bind the SQL Result to a Country object
+            </summary>
+            <param name="result">The result of a SQL query</param>
+            <returns>a new instance of Country with the values of the SQL Result</returns>
+        </member>
+        <member name="M:ICM.Dao.CountriesDAO.BindContinent(ICM.Utils.SqlResult)">
+            <summary>
+            Bind the SQL Result to a Continent object
+            </summary>
+            <param name="result">The result of a SQL query</param>
+            <returns>a new instance of Continent with the values of the SQL Result</returns>
+        </member>
         <member name="F:ICM.Account.Register.RegisterUser">
             <summary>
             RegisterUser control.
@@ -629,6 +733,15 @@
             <remarks>
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:ICM.AddContract.stateForm">
+            <summary>
+            Contrôle stateForm.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
         <member name="F:ICM.AddContract.titleText">
@@ -963,6 +1076,24 @@
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
+        </member>
+        <member name="T:ICM.Dao.RolesDAO">
+            <summary>
+             This class enables the user to search the database for roles. 
+            </summary>
+        </member>
+        <member name="M:ICM.Dao.RolesDAO.GetAllRoles">
+            <summary>
+            Returns all the roles of the database. 
+            </summary>
+            <returns>a List containing all the roles</returns>
+        </member>
+        <member name="M:ICM.Dao.RolesDAO.BindRole(ICM.Utils.SqlResult)">
+            <summary>
+            Bind the SQL Result to a Role object
+            </summary>
+            <param name="result">The result of a SQL query</param>
+            <returns>a new instance of Role with the values of the SQL Result</returns>
         </member>
     </members>
 </doc>

@@ -27,11 +27,14 @@ namespace ICM
                 PersonsDAO personsDAO = new PersonsDAO();
                 TypesDAO typesDAO = new TypesDAO();
                 RolesDAO roleDAO = new RolesDAO();
+                InstitutionsDAO institutionsDAO = new InstitutionsDAO();
 
                 List<TypeContract> types = typesDAO.GetAllPersons();
                 List<Role> roles = roleDAO.GetAllRoles();
+                //List<Institution> institutions = institutionsDAO.GetInstitutions();
 
-                personnes = new List<Person>();//personsDAO.GetAllPersons();
+                personnes = personsDAO.GetAllPersons();
+                /*
                 Person p1 = new Person();
                 p1.Id = 1;
                 p1.Name = "Vincent";
@@ -47,7 +50,7 @@ namespace ICM
                 p3.Name = "Ta";
                 p3.FirstName = "mère";
                 personnes.Add(p3);
-
+                */
 
                 personneList.DataSource = personnes;
                 personneList.DataValueField = "Id";

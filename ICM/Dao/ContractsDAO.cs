@@ -24,7 +24,8 @@ namespace ICM.Dao
                 {"@id", id.ToString()},
             };
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Contract] WHERE id = @id", IsolationLevel.ReadUncommitted, parameters))
+            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Contract] WHERE id = @id"
+                                                    , IsolationLevel.ReadUncommitted, parameters))
             {
                 while (reader.Read())
                 {
@@ -100,7 +101,7 @@ namespace ICM.Dao
         public int addContract(string title, string start, string end, string typeContractName, string userName, SortedList persons, int destinationId, int institutionId, int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
         {
             int contractFileId = addFile(fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
-            
+
             var parameters = new NameValueCollection
             {
                 {"@title", title},
@@ -113,9 +114,27 @@ namespace ICM.Dao
                 {"@archived", "0"}
             };
             
-            return DBUtils.ExecuteInsert(
+            int contractId = DBUtils.ExecuteInsert(
                 "INSERT INTO [Contract] (title, start, [end], fileId, xmlContent, userLogin, typeContractName, archived) VALUES (@title, @start, @end, @fileId, @xmlContent, @userLogin, @typeContractName, @archived)",
                 IsolationLevel.ReadUncommitted, parameters, "Contract");
+
+            for (int i = 0; i < persons.Count; i++)
+            {
+                var parametersContact = new NameValueCollection
+                {
+                    {"@person", persons.GetKey(i).ToString()},
+                    {"@roleName", persons.GetByIndex(i).ToString()},
+                    {"@contractId", contractId.ToString()},
+                };
+                DBUtils.ExecuteInsert(
+                "INSERT INTO [Association] VALUES (@person, @roleName, @contractId)",
+                IsolationLevel.ReadUncommitted, parametersContact, "Association");
+                
+                
+
+            }
+
+            return contractId;
         }
 
         public List<Contract> GetAllContracts()
