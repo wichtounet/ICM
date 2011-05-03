@@ -29,7 +29,7 @@ namespace ICM.Dao
                 {"@phone", phone},
                 {"@email", email},
                 {"@archived", "0"},
-                {"@department", "73"}
+                {"@department", "2"}
             };
 
             return DBUtils.ExecuteInsert(
