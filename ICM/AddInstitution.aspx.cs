@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using ICM.Dao;
-using ICM.Model;
 
 namespace ICM
 {
-    public partial class AddInstitution : System.Web.UI.Page
+    public partial class AddInstitution : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            LanguagesDAO languagesDAO = new LanguagesDAO();
-
-            List<Language> languages = languagesDAO.GetAllLanguages();
+            var languages = new LanguagesDAO().GetAllLanguages();
 
             LanguageList.DataSource = languages;
             LanguageList.DataBind();

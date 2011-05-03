@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 
 namespace ICM.Utils
 {
@@ -15,7 +16,7 @@ namespace ICM.Utils
 
         public SqlConnection GetConnection()
         {
-            if (connection == null)
+            if (connection == null || connection.State == ConnectionState.Closed || connection.State == ConnectionState.Broken)
             {
                 connection = new SqlConnection(@"Data Source=160.98.60.35\MSSQLSERVER,1433;Initial Catalog=ICM;Integrated Security=False;User ID=sa;Password=International3");
                 
@@ -30,6 +31,8 @@ namespace ICM.Utils
             if (connection != null)
             {
                 connection.Close();
+
+                connection = null;
             }
         }
 
@@ -37,5 +40,7 @@ namespace ICM.Utils
         {
             return Instance;
         }
+
+        
     }
 }

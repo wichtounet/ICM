@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using ICM.Model;
-using System.Data.SqlClient;
 using ICM.Utils;
 
 namespace ICM.Dao
@@ -11,13 +11,7 @@ namespace ICM.Dao
         {
             var roles = new List<Role>();
 
-            var connection = DBManager.GetInstance().GetConnection();
-
-            var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
-
-            var command = new SqlCommand("Select * from [Role]", connection, transaction);
-
-            using (var reader = command.ExecuteReader())
+            using (var reader = DBUtils.ExecuteQuery("Select * from [Role]", IsolationLevel.ReadUncommitted))
             {
                 while (reader.Read())
                 {
@@ -25,12 +19,10 @@ namespace ICM.Dao
                 }
             }
 
-            transaction.Commit();
-
             return roles;
         }
 
-        private static Role BindRole(SqlDataReader reader)
+        private static Role BindRole(SqlResult reader)
         {
             return new Role
             {
