@@ -61,8 +61,10 @@
     <Content Include="AddContract.aspx" />
     <Content Include="AddInstitution.aspx" />
     <Content Include="AddPerson.aspx" />
+    <Content Include="ContractFile.aspx" />
     <Content Include="HistoPDF.aspx" />
     <Content Include="Lib\itextsharp.dll" />
+    <Content Include="ShowContract.aspx" />
     <Content Include="ShowPerson.aspx" />
     <Content Include="Histo.aspx" />
     <Content Include="Institutions.aspx" />
@@ -131,6 +133,13 @@
     <Compile Include="AddPerson.aspx.designer.cs">
       <DependentUpon>AddPerson.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ContractFile.aspx.cs">
+      <DependentUpon>ContractFile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ContractFile.aspx.designer.cs">
+      <DependentUpon>ContractFile.aspx</DependentUpon>
+    </Compile>
     <Compile Include="HistoPDF.aspx.cs">
       <DependentUpon>HistoPDF.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -147,6 +156,14 @@
       <DependentUpon>Contracts.master</DependentUpon>
     </Compile>
     <Compile Include="Model\Contract.cs" />
+    <Compile Include="Model\TypeContract.cs" />
+    <Compile Include="ShowContract.aspx.cs">
+      <DependentUpon>ShowContract.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ShowContract.aspx.designer.cs">
+      <DependentUpon>ShowContract.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ShowPerson.aspx.cs">
       <DependentUpon>ShowPerson.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
