@@ -4,11 +4,6 @@ namespace ICM.Model
 {
     public class Contract
     {
-        DateTime startDate;
-        DateTime endDate;
-        string file;
-        string xmlContent;
-
         public Contract()
         {
             //Nothing to do
@@ -18,7 +13,47 @@ namespace ICM.Model
             get;
             set;
         }
-        public int id
+        public int Id
+        {
+            get;
+            set;
+        }
+        public string Start
+        {
+            get;
+            set;
+        }
+        public string End
+        {
+            get;
+            set;
+        }
+        public string XmlContent
+        {
+            get;
+            set;
+        }
+        public string File
+        {
+            get;
+            set;
+        }
+        public string User
+        {
+            get;
+            set;
+        }
+        public string Type
+        {
+            get;
+            set;
+        }
+        public Boolean Archived
+        {
+            get;
+            set;
+        }
+        public int fileId
         {
             get;
             set;
