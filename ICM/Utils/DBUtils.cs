@@ -7,6 +7,34 @@ namespace ICM.Utils
 {
     public class DBUtils
     {
+        public static SqlTransaction BeginTransaction(IsolationLevel level)
+        {
+            var connection = DBManager.GetInstance().GetConnection();
+            var transaction = connection.BeginTransaction(level);
+            return transaction;
+        }
+
+        public static void CommitTransaction(SqlTransaction transaction)
+        {
+            transaction.Commit();
+        }
+
+        public static SqlResult ExecuteTransactionQuery(string sql, SqlTransaction transaction, NameValueCollection parameters)
+        {
+            var connection = DBManager.GetInstance().GetConnection();
+
+            var command = new SqlCommand(sql, connection, transaction);
+
+            foreach (var key in parameters.AllKeys)
+            {
+                command.Parameters.AddWithValue(key, parameters.Get(key));
+            }
+
+            var reader = command.ExecuteReader();
+
+            return new SqlResult(transaction, reader);
+        }
+
         public static void ExecuteUpdate(string sql, IsolationLevel level, NameValueCollection parameters)
         {
             var connection = DBManager.GetInstance().GetConnection();
@@ -42,7 +70,7 @@ namespace ICM.Utils
             return id;
         }
 
-        private static void ExecuteNonQuery(SqlConnection connection, string sql, SqlTransaction transaction, NameValueCollection parameters)
+        public static void ExecuteNonQuery(SqlConnection connection, string sql, SqlTransaction transaction, NameValueCollection parameters)
         {
             var command = new SqlCommand(sql, connection, transaction);
 
