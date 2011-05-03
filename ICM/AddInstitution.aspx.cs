@@ -78,5 +78,18 @@ namespace ICM
             DepartmentList.Items.Remove(DepartmentList.SelectedItem);
         }
 
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            InstitutionsDAO institutionsDAO = new InstitutionsDAO();
+            List<Institution> institutions = institutionsDAO.GetInstitutions();
+
+            foreach(Institution i in institutions)
+            {
+                Response.Write("id: " + i.Id + " name: " + i.Name +"\n");
+                foreach (Department d in i.Departments)
+                    Response.Write("Department: " + d.Name);
+            }
+        }
+
     }
 }
