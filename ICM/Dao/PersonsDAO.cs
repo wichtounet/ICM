@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Data;
 using System.Linq;
 using ICM.Model;
 using ICM.Utils;
 using NLog;
-using NLog.Targets;
 
 namespace ICM.Dao
 {
     /// <summary>
     ///  This class enables the user to make operations on the "Person" table. With this DAO, you can create, update, delete and search for persons. 
     /// </summary>
+    /// <remarks>Baptiste Wicht</remarks>
     public class PersonsDAO
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -39,7 +38,7 @@ namespace ICM.Dao
                 {"@department", "2"}
             };
 
-            int id = DBUtils.ExecuteInsert(
+            var id = DBUtils.ExecuteInsert(
                 "INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)",
                 IsolationLevel.ReadUncommitted, parameters, "Person");
 
@@ -160,7 +159,7 @@ namespace ICM.Dao
             }
 
 
-            Person person = persons.First();
+            var person = persons.First();
 
             Logger.Debug("Found {0}", person == null ? null : person.ToString());
 
@@ -199,12 +198,12 @@ namespace ICM.Dao
         {
             var person = new Person
             {
-                Id = result["id"].ToString().ToInt(),
-                Name = result["name"].ToString(),
-                FirstName = result["firstname"].ToString(),
-                Email = result["email"].ToString(),
-                Phone = result["phone"].ToString(),
-                Archived = result["archived"].ToString().Equals("True") ? true : false
+                Id = (int) result["id"],
+                Name = (string) result["name"],
+                FirstName = (string) result["firstname"],
+                Email = (string) result["email"],
+                Phone = (string) result["phone"],
+                Archived = (bool) result["archived"]
             };
 
             //TODO : Get department of person

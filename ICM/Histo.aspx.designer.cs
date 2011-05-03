@@ -13,6 +13,15 @@ namespace ICM {
     public partial class Histo {
         
         /// <summary>
+        /// IDLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label IDLabel;
+        
+        /// <summary>
         /// YearTextBox control.
         /// </summary>
         /// <remarks>
@@ -20,6 +29,24 @@ namespace ICM {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox YearTextBox;
+        
+        /// <summary>
+        /// RequiredNameValidator control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredNameValidator;
+        
+        /// <summary>
+        /// CompareValidator1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CompareValidator CompareValidator1;
         
         /// <summary>
         /// InstitutionList control.
@@ -31,13 +58,13 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.DropDownList InstitutionList;
         
         /// <summary>
-        /// DepartementList control.
+        /// DepartmentList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DepartementList;
+        protected global::System.Web.UI.WebControls.DropDownList DepartmentList;
         
         /// <summary>
         /// SearchButton control.

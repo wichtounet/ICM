@@ -5,6 +5,10 @@ using System.Data.SqlClient;
 
 namespace ICM.Utils
 {
+    /// <summary>
+    ///  This utility class contains several methods that aims to simplify the use of database. 
+    /// </summary>
+    /// <remarks>Baptiste Wicht</remarks>
     public class DBUtils
     {
         public static SqlTransaction BeginTransaction(IsolationLevel level)
@@ -32,7 +36,7 @@ namespace ICM.Utils
 
             var reader = command.ExecuteReader();
 
-            return new SqlResult(transaction, reader);
+            return new SqlResult(null, reader);
         }
 
         public static SqlResult ExecuteTransactionQuery(string sql, SqlTransaction transaction)
@@ -135,6 +139,11 @@ namespace ICM.Utils
         public void Dispose()
         {
             reader.Close();
+
+            if(transaction != null)
+            {
+                transaction.Commit();
+            }
         }
     }
 }

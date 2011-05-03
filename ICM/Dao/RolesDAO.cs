@@ -9,6 +9,7 @@ namespace ICM.Dao
     /// <summary>
     ///  This class enables the user to search the database for roles. 
     /// </summary>
+    /// <remarks>Baptiste Wicht</remarks>
     public class RolesDAO
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();

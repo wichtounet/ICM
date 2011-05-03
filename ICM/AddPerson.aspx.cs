@@ -1,6 +1,5 @@
 ﻿using System;
 using ICM.Dao;
-using ICM.Model;
 using ICM.Utils;
 
 namespace ICM
@@ -25,15 +24,28 @@ namespace ICM
                     PhoneTextBox.Text = person.Phone;
 
                     SaveButton.Visible = true;
+
+                    LoadLists();
                 }
-                
             } 
             else
             {
                 AddButton.Visible = true;
-            }
 
-            //TODO Load drop down lists
+                LoadLists();
+            }
+        }
+
+        private void LoadLists()
+        {
+            var dataSource = new InstitutionsDAO().GetInstitutions();
+
+            InstitutionList.DataBind(dataSource, "Name", "Id");
+
+            if (dataSource.Count > 0)
+            {
+                DepartmentList.DataBind(dataSource[0].Departments, "Name", "Id");
+            }
         }
 
         protected void CreatePerson(object sender, EventArgs e)
@@ -55,6 +67,18 @@ namespace ICM
                 new PersonsDAO().SavePerson(id, FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text);
 
                 Response.Redirect("ShowPerson.aspx?person=" + id);
+            }
+        }
+
+        protected void InstitutionSelected(object sender, EventArgs e)
+        {
+            var id = InstitutionList.SelectedValue.ToInt();
+
+            var institution = new InstitutionsDAO().GetInstitution(id);
+
+            if (institution != null)
+            {
+                DepartmentList.DataBind(institution.Departments, "Name", "Id");
             }
         }
     }
