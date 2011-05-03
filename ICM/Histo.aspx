@@ -4,13 +4,32 @@
     <h2>
         Historique
     </h2>
-    <p>
-        Année : <asp:TextBox ID="YearTextBox" runat="server" /> <br />
-        Institution : <asp:DropDownList ID="InstitutionList" runat="server" /> <br />
-        Département : <asp:DropDownList ID="DepartementList" runat="server" /> 
-        <asp:Button ID="SearchButton" runat="server" Text="Rechercher" OnClick="SearchHisto" /><br /> 
-        <br />
-    </p>
+
+    <table>
+        <asp:Label ID="IDLabel" Visible="false" runat="server" Text="-1" />
+        <tr>
+            <td>Année : </td>
+            <td><asp:TextBox ID="YearTextBox" runat="server" /></td>
+            <td>
+                <asp:RequiredFieldValidator runat="server" id="RequiredNameValidator" ControlToValidate="YearTextBox" errormessage="Veuillez entrer une année valide !" />
+                <asp:CompareValidator id="CompareValidator1" runat="server" ErrorMessage="Veuillez entrer une année valide !" ControlToValidate="YearTextBox" Type="Integer" Operator="DataTypeCheck"></asp:CompareValidator>
+            </td>
+        </tr>
+        <tr>
+            <td>Institution : </td>
+            <td><asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected" /></td>
+        </tr>
+        <tr>
+            <td>Département : </td>
+            <td><asp:DropDownList ID="DepartmentList" runat="server" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <asp:Button ID="SearchButton" runat="server" Text="Rechercher" OnClick="SearchHisto" />
+            </td>
+        </tr>
+    </table>
 
     <asp:Panel ID="HistoPanel" runat="server" Visible="false">
         <asp:ListView ID="ContractsView" runat="server">

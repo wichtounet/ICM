@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Web.UI.WebControls;
 
 namespace ICM.Utils
 {
@@ -30,6 +32,24 @@ namespace ICM.Utils
             collection.CopyTo(array, 0);
 
             return array;
+        }
+
+        public static void DataBind<T>(this DropDownList list, List<T> dataSource, string textField, string valueField )
+        {
+            list.DataSource = dataSource;
+            list.DataTextField = textField;
+            list.DataValueField = valueField;
+            list.DataBind();
+        }
+
+        public static void DataBindWithEmptyElement<T>(this DropDownList list, List<T> dataSource, string textField, string valueField)
+        {
+            list.Items.Add(new ListItem(string.Empty, string.Empty));
+            list.AppendDataBoundItems = true;
+            list.DataSource = dataSource;
+            list.DataTextField = textField;
+            list.DataValueField = valueField;
+            list.DataBind();
         }
     }
 }

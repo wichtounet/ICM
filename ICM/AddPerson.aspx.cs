@@ -38,21 +38,13 @@ namespace ICM
 
         private void LoadLists()
         {
-            var institutionsDao = new InstitutionsDAO();
+            var dataSource = new InstitutionsDAO().GetInstitutions();
 
-            var dataSource = institutionsDao.GetInstitutions();
+            InstitutionList.DataBind(dataSource, "Name", "Id");
 
-            InstitutionList.DataSource = dataSource;
-            InstitutionList.DataValueField = "Id";
-            InstitutionList.DataTextField = "Name";
-            InstitutionList.DataBind();
-            
-            if(dataSource.Count > 0)
+            if (dataSource.Count > 0)
             {
-                DepartmentList.DataSource = dataSource[0].Departments;
-                DepartmentList.DataValueField = "Id";
-                DepartmentList.DataTextField = "Name";
-                DepartmentList.DataBind();
+                DepartmentList.DataBind(dataSource[0].Departments, "Name", "Id");
             }
         }
 
@@ -86,10 +78,7 @@ namespace ICM
 
             if (institution != null)
             {
-                DepartmentList.DataSource = institution.Departments;
-                DepartmentList.DataValueField = "Id";
-                DepartmentList.DataTextField = "Name";
-                DepartmentList.DataBind();
+                DepartmentList.DataBind(institution.Departments, "Name", "Id");
             }
         }
     }
