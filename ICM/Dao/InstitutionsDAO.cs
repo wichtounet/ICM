@@ -70,6 +70,7 @@ namespace ICM.Dao
             return institution;
         }
 
+        //TODO: test
         public void UpdateInstitution(Institution institution)
         {
             var parameters = new NameValueCollection
