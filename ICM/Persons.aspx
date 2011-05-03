@@ -5,9 +5,11 @@
         Rechercher une personne
     </h2>
     <p>
+        <asp:Label Visible="false" ID="IDLabel" Text="-1" runat="server" />
         Nom : <asp:TextBox ID="NameLabel" Columns="15" runat="server" /> <br />
         Prénom : <asp:TextBox ID="FirstNameLabel" Columns="15" runat="server" /> <br />
-        Institution : <asp:DropDownList ID="InstitutionList" runat="server" />  <br />
+        Institution : <asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected" AutoPostBack="true" />  <br />
+        Départment : <asp:DropDownList ID="DepartmentList" runat="server" />  <br />
         <asp:CheckBox Text="Rechercher les personnes archivées ?" runat="server" ID="ArchivedCheckBox" />
         <asp:Button ID="SearchButton" runat="server" Text="Rechercher" OnClick="SearchPerson" />
     </p>

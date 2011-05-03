@@ -52,20 +52,29 @@ namespace ICM.Dao
         //TODO: test
         public Institution GetInstitution(int id)
         {
-            Institution institution;
+            Institution institution = null;
 
             var parameters = new NameValueCollection
             {
                 {"@id", id.ToString()},
             };
 
-            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+            var transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
 
-            using (SqlResult institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution] WHERE id = @id", transaction, parameters))
+            using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution] WHERE id = @id", transaction, parameters))
             {
-                institution = BindInstitution(institutionReader, transaction);
-                DBUtils.CommitTransaction(transaction);
+                if(institutionReader.Read())
+                {
+                    institution = BindInstitution(institutionReader);
+                }
             }
+
+            if(institution != null)
+            {
+                institution.Departments = GetDepartments(institution.Id, transaction);
+            }
+            
+            DBUtils.CommitTransaction(transaction);
 
             return institution;
         }
@@ -99,14 +108,7 @@ namespace ICM.Dao
             {
                 while (institutionReader.Read())
                 {
-                    institutions.Add(new Institution(   institutionReader["id"].ToString().ToInt(),
-                                                        institutionReader["name"].ToString(),
-                                                        institutionReader["description"].ToString(),
-                                                        institutionReader["city"].ToString(),
-                                                        institutionReader["Interest"].ToString(),
-                                                        new Language() { Name = institutionReader["languageName"].ToString() },
-                                                        new Country() { Name = institutionReader["countryName"].ToString() },
-                                                        null));
+                    institutions.Add(BindInstitution(institutionReader));
                 }
             }
 
@@ -174,22 +176,17 @@ namespace ICM.Dao
                 IsolationLevel.ReadUncommitted, parameters);
         }
 
-        private Institution BindInstitution(SqlResult institutionReader, SqlTransaction transaction)
+        private static Institution BindInstitution(SqlResult institutionReader)
         {
-            if (!institutionReader.Read())
-                return null;
-
-            List<Department> departments = GetDepartments((int)institutionReader["id"], transaction);
-
             //Instantiate institution
             return new Institution(institutionReader["id"].ToString().ToInt(),
                                     institutionReader["name"].ToString(),
                                     institutionReader["description"].ToString(),
                                     institutionReader["city"].ToString(),
                                     institutionReader["Interest"].ToString(),
-                                    new Language() { Name = institutionReader["languageName"].ToString() },
-                                    new Country() { Name = institutionReader["countryName"].ToString() },
-                                    departments);
+                                    new Language { Name = institutionReader["languageName"].ToString() },
+                                    new Country { Name = institutionReader["countryName"].ToString() }, 
+                                    null);
         }
     }
 }

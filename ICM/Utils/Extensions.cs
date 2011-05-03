@@ -44,6 +44,7 @@ namespace ICM.Utils
         ///<typeparam name="T">Type of data in the data source</typeparam>
         public static void DataBind<T>(this DropDownList list, List<T> dataSource, string textField, string valueField )
         {
+            list.Items.Clear();
             list.DataSource = dataSource;
             list.DataTextField = textField;
             list.DataValueField = valueField;
@@ -60,9 +61,13 @@ namespace ICM.Utils
         ///<typeparam name="T">Type of data in the data source</typeparam>
         public static void DataBindWithEmptyElement<T>(this DropDownList list, List<T> dataSource, string textField, string valueField)
         {
+            list.Items.Clear();
             list.Items.Add(new ListItem(string.Empty, string.Empty));
             list.AppendDataBoundItems = true;
-            list.DataBind(dataSource, textField, valueField);
+            list.DataSource = dataSource;
+            list.DataTextField = textField;
+            list.DataValueField = valueField;
+            list.DataBind();
         }
     }
 }
