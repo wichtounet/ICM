@@ -35,6 +35,11 @@ namespace ICM.Utils
             return new SqlResult(transaction, reader);
         }
 
+        public static SqlResult ExecuteTransactionQuery(string sql, SqlTransaction transaction)
+        {
+            return ExecuteTransactionQuery(sql, transaction, new NameValueCollection());
+        }
+
         public static void ExecuteUpdate(string sql, IsolationLevel level, NameValueCollection parameters)
         {
             var connection = DBManager.GetInstance().GetConnection();
