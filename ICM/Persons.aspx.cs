@@ -10,10 +10,12 @@ namespace ICM
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            /*InstitutionList.DataSource = new InstitutionsDAO().GetInstitutions();
-            InstitutionList.DataValueField = "Id";
-            InstitutionList.DataTextField = "Name";
-            InstitutionList.DataBind();*/
+            if("-1".Equals(IDLabel.Text))
+            {
+                InstitutionList.DataBindWithEmptyElement(new InstitutionsDAO().GetInstitutions(), "Name", "Id");
+
+                IDLabel.Text = "1";
+            }
         }
 
         protected void SearchPerson(object sender, EventArgs e)
@@ -38,6 +40,18 @@ namespace ICM
             new PersonsDAO().ArchivePerson(labelId.Text.ToInt());
 
             SearchPersons();
+        }
+
+        protected void InstitutionSelected(object sender, EventArgs e)
+        {
+            int id = InstitutionList.SelectedValue.ToInt();
+
+            var institution = new InstitutionsDAO().GetInstitution(id);
+
+            if (institution != null)
+            {
+                DepartmentList.DataBindWithEmptyElement(institution.Departments, "Name", "Id");
+            }
         }
     }
 }
