@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.UI;
 using ICM.Dao;
+using ICM.Model;
 using ICM.Utils;
 
 namespace ICM
@@ -30,19 +31,44 @@ namespace ICM
             {
                 HistoPanel.Visible = true;
 
-                int year = YearTextBox.Text.ToInt();
+                var year = YearTextBox.Text.ToInt();
+                Institution institution = null;
+                Department department = null;
+
+                if(!"".Equals(InstitutionList.SelectedValue))
+                {
+                    var institutionId = InstitutionList.SelectedValue.ToInt();
+
+                    institution = new InstitutionsDAO().GetInstitution(institutionId);
+
+                    if(!"".Equals(DepartmentList.SelectedValue))
+                    {
+                        var departmentId = DepartmentList.SelectedValue.ToInt();
+
+                        //TODO get the good department
+                    }
+                }
+
+                //TODO Make the search of contracts
             }
         }
 
         protected void InstitutionSelected(object sender, EventArgs e)
         {
-            var id = InstitutionList.SelectedValue.ToInt();
-
-            var institution = new InstitutionsDAO().GetInstitution(id);
-
-            if (institution != null)
+            if("".Equals(InstitutionList.SelectedValue))
             {
-                DepartmentList.DataBindWithEmptyElement(institution.Departments, "Name", "Id");
+                DepartmentList.Items.Clear();
+            } 
+            else
+            {
+                var id = InstitutionList.SelectedValue.ToInt();
+
+                var institution = new InstitutionsDAO().GetInstitution(id);
+
+                if (institution != null)
+                {
+                    DepartmentList.DataBindWithEmptyElement(institution.Departments, "Name", "Id");
+                }
             }
         }
     }
