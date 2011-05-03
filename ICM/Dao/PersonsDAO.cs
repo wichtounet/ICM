@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Data;
 using System.Linq;
 using ICM.Model;
 using ICM.Utils;
+using NLog;
+using NLog.Targets;
 
 namespace ICM.Dao
 {
@@ -12,6 +15,8 @@ namespace ICM.Dao
     /// </summary>
     public class PersonsDAO
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Create a new person with the given values
         /// </summary>
@@ -22,6 +27,10 @@ namespace ICM.Dao
         /// <returns>the id of the inserted person</returns>
         public int CreatePerson(string firstname, string name, string phone, string email)
         {
+           
+
+            logger.Debug("Creating person");
+
             var parameters = new NameValueCollection
             {
                 {"@firstname", firstname},
@@ -47,6 +56,8 @@ namespace ICM.Dao
         /// <param name="phone">The name of the person</param>
         public void SavePerson(int id, string firstname, string name, string phone, string email)
         {
+            logger.Debug("Saving person");
+
             var parameters = new NameValueCollection
             {
                 {"@id", id.ToString()},
@@ -67,6 +78,8 @@ namespace ICM.Dao
         /// <param name="id">The id of the person to save</param>
         public void ArchivePerson(int id)
         {
+            logger.Debug("Archive person");
+
             var parameters = new NameValueCollection
             {
                 {"@id", id.ToString()},
@@ -86,6 +99,10 @@ namespace ICM.Dao
         /// <returns>all the persons matching the criterias</returns>
         public List<Person> SearchPersons(string name, string firstname, bool archived)
         {
+            ReadOnlyCollection<Target> targets = logger.Factory.Configuration.AllTargets;
+
+            logger.Debug("Search person");
+
             var persons = new List<Person>();
 
             var query = "SELECT * FROM [Person] WHERE name LIKE(@name) AND firstname LIKE(@firstname)";
@@ -119,6 +136,8 @@ namespace ICM.Dao
         /// <returns>the person with the given ID or null if there is no person with this person</returns>
         public Person GetPersonByID(int id)
         {
+            logger.Debug("Search person by ID");
+
             var persons = new List<Person>();
 
             var parameters = new NameValueCollection
@@ -143,6 +162,8 @@ namespace ICM.Dao
         /// <returns>a List containing all the persons</returns>
         public List<Person> GetAllPersons()
         {
+            logger.Debug("Get all persons");
+
             var persons = new List<Person>();
 
             using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Person]", IsolationLevel.ReadUncommitted))
