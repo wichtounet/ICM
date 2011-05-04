@@ -18,7 +18,7 @@ namespace ICM.Utils
         {
             foreach (Department department in departments)
             {
-                if (department.Name == name)
+                if (department.Name.Equals(name))
                     return true;
             }
             return false;

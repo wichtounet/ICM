@@ -4,6 +4,7 @@ using System.Web.UI.WebControls;
 using System.Collections.Generic;
 using ICM.Dao;
 using ICM.Model;
+using ICM.Utils;
 
 namespace ICM
 {
@@ -26,10 +27,44 @@ namespace ICM
             ContinentList.DataSource = continents;
             ContinentList.DataBind();
 
-            //Contries databound
-            List<Country> countries = countriesDAO.GetCountries(continents[0]);
-            CountryList.DataSource = countries;
-            CountryList.DataBind();
+            //Add institution
+            if (Request.QueryString["institution"] == null)
+            {
+                EditButton.Visible = false;
+                AddButton.Visible = true;
+
+                //Contries databound
+                List<Country> countries = countriesDAO.GetCountries(continents[0]);
+                CountryList.DataSource = countries;
+                CountryList.DataBind();
+            }
+            //Edit institution
+            else
+            {
+                //TODO: start transaction to commit add button click
+                EditButton.Visible = true;
+                AddButton.Visible = false;
+
+                int institutionId = Request.QueryString["institution"].ToInt();
+                Institution institution = new InstitutionsDAO().GetInstitution(institutionId);
+                
+                NameText.Text = institution.Name;
+                DescriptionText.Text = institution.Description;
+                CityText.Text = institution.City;
+                ContinentList.SelectedValue = institution.Country.Continent.Name;
+
+                //Contries databound
+                List<Country> countries = countriesDAO.GetCountries(institution.Country.Continent);
+                CountryList.DataSource = countries;
+                CountryList.DataBind();
+
+                LanguageList.SelectedValue = institution.Language.Name;
+                InterestText.Text = institution.Interest;
+
+                //Departments databound
+                DepartmentList.DataSource = institution.Departments;
+                DepartmentList.DataBind();
+            }
         }
 
         //Update CountryList contents
@@ -79,5 +114,32 @@ namespace ICM
             DepartmentList.Items.Remove(DepartmentList.SelectedItem);
         }
 
+        protected void EditButton_Click(object sender, EventArgs e)
+        {
+            int institutionId = Request.QueryString["institution"].ToInt();
+            InstitutionsDAO institutionsDAO = new InstitutionsDAO();
+
+            //Instantiate and fill department list
+            List<Department> departments = new List<Department>();
+            foreach (ListItem department in DepartmentList.Items)
+            {
+                departments.Add(new Department() { Name = department.Text });
+            }
+
+            //Intantiate institution
+            Language language = new Language() { Name = LanguageList.SelectedValue };
+            Continent continent = new Continent() { Name = ContinentList.SelectedValue };
+            Country country = new Country() { Name = CountryList.SelectedValue, Continent = continent };
+            Institution institution = new Institution(  institutionId,
+                                                        NameText.Text,
+                                                        DescriptionText.Text,
+                                                        CityText.Text,
+                                                        InterestText.Text,
+                                                        language,
+                                                        country,
+                                                        departments,
+                                                        false);
+            institutionsDAO.UpdateInstitution(institution);
+        }
     }
 }
