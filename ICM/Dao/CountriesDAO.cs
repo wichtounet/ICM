@@ -10,6 +10,7 @@ namespace ICM.Dao
     /// <summary>
     ///  This class enables the user to search the database for countries and continents. 
     /// </summary>
+    /// <remarks>Baptiste Wicht</remarks>
     public class CountriesDAO
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();

@@ -63,7 +63,8 @@ namespace ICM
                                                         InterestText.Text,
                                                         language,
                                                         country,
-                                                        departments);
+                                                        departments,
+                                                        false);
             institutionsDAO.AddInstitution(institution);
         }
 

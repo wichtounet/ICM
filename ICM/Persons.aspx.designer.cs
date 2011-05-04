@@ -13,6 +13,15 @@ namespace ICM {
     public partial class Persons {
         
         /// <summary>
+        /// IDLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label IDLabel;
+        
+        /// <summary>
         /// NameLabel control.
         /// </summary>
         /// <remarks>
@@ -38,6 +47,15 @@ namespace ICM {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList InstitutionList;
+        
+        /// <summary>
+        /// DepartmentList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DepartmentList;
         
         /// <summary>
         /// ArchivedCheckBox control.
