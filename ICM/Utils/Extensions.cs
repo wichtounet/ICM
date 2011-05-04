@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NLog;
+using ICM.Model;
 
 namespace ICM.Utils
 {
