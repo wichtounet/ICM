@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ICM.Model
 {
@@ -54,6 +55,11 @@ namespace ICM.Model
             set;
         }
         public int fileId
+        {
+            get;
+            set;
+        }
+        public List<Person> persons
         {
             get;
             set;

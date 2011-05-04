@@ -24,15 +24,37 @@ namespace ICM.Dao
                 {"@id", id.ToString()},
             };
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Contract] WHERE id = @id"
+            using (var reader = DBUtils.ExecuteQuery("SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived, A.roleName, P.name, P.firstname "+
+                                                     "FROM [Contract] C "+
+                                                     "INNER JOIN Association A "+
+                                                     "ON C.id = A.contractId "+
+                                                     "INNER JOIN Person P " +
+                                                     "ON A.person = P.id "+
+                                                     "WHERE C.id = @id"
                                                     , IsolationLevel.ReadUncommitted, parameters))
             {
-                while (reader.Read())
+
+                if (reader.Read())
                 {
-                    contracts.Add(BindContract(reader));
+                    Contract c = BindContract(reader);/*
+                    using (var readerAssoc = DBUtils.ExecuteQuery("SELECT A.roleName, P.name, P.firstname " +
+                                                     "FROM [Association] A " +
+                                                     "INNER JOIN Person P " +
+                                                     "ON A.person = P.id " +
+                                                     "WHERE A.contractId = @id"
+                                                    , IsolationLevel.ReadUncommitted, parameters))
+                    {
+                        while (readerAssoc.Read())
+                        {
+                            Person p = new Person();
+                            p.Name = readerAssoc["name"].ToString();
+                            p.FirstName = readerAssoc["firstname"].ToString();
+                            c.persons.Add(p);
+                        }
+                    }*/
+                    contracts.Add(c);
                 }
             }
-
             return contracts.First();
         }
 
@@ -118,25 +140,11 @@ namespace ICM.Dao
                 "INSERT INTO [Contract] (title, start, [end], fileId, xmlContent, userLogin, typeContractName, archived) VALUES (@title, @start, @end, @fileId, @xmlContent, @userLogin, @typeContractName, @archived)",
                 IsolationLevel.ReadUncommitted, parameters, "Contract");
 
-            for (int i = 0; i < persons.Count; i++)
-            {
-                var parametersContact = new NameValueCollection
-                {
-                    {"@person", persons.GetKey(i).ToString()},
-                    {"@roleName", persons.GetByIndex(i).ToString()},
-                    {"@contractId", contractId.ToString()},
-                };
-                DBUtils.ExecuteInsert(
-                "INSERT INTO [Association] VALUES (@person, @roleName, @contractId)",
-                IsolationLevel.ReadUncommitted, parametersContact, "Association");
-                
-                
-
-            }
+            addContacts(contractId, persons);
 
             return contractId;
         }
-
+        
         public List<Contract> GetAllContracts()
         {
             List<Contract> contractsList = new List<Contract>();
@@ -194,6 +202,29 @@ namespace ICM.Dao
             transaction.Commit();
 
             return id;
+        }
+
+
+        private void addContacts(int contractId, SortedList persons)
+        {
+            for (int i = 0; i < persons.Count; i++)
+            {
+                var parametersContact = new NameValueCollection
+                {
+                    {"@person", persons.GetKey(i).ToString()},
+                    {"@roleName", persons.GetByIndex(i).ToString()},
+                    {"@contractId", contractId.ToString()},
+                };
+
+                var connection = DBManager.GetInstance().GetConnection();
+
+                var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+                DBUtils.ExecuteNonQuery(connection, "INSERT INTO [Association] VALUES (@person, @roleName, @contractId)", transaction, parametersContact);
+
+                transaction.Commit();
+
+            }
         }
 
         private static Contract BindContract(SqlResult reader)
