@@ -101,25 +101,29 @@ namespace ICM.Dao
         /// <param name="name">The name to search persons for</param>
         /// <param name="firstname">The first name to search persons for</param>
         /// <param name="archived">Indicate if we must search for the archived persons to</param>
+        /// <param name="institution">The institution we must search for, or -1 if this is not a criteria</param>
+        /// <param name="department">The department we must search for, or -1 if this is not a criteria</param>
         /// <returns>all the persons matching the criterias</returns>
         public List<Person> SearchPersons(string name, string firstname, bool archived, int institution, int department)
         {
             var persons = new List<Person>();
+            
+            var query = GetBaseQuery();
 
-            var query = "SELECT * FROM [Person] WHERE name LIKE(@name) AND firstname LIKE(@firstname)";
+            query += " WHERE P.name LIKE(@name) AND P.firstname LIKE(@firstname)";
 
             if (!archived)
             {
-                query += " AND archived = 0";
+                query += " AND P.archived = 0";
             }
 
             if(department != -1)
             {
-                query += " AND departmentId = @department";
+                query += " AND P.departmentId = @department";
             } 
             else if(institution != -1)
             {
-                query += " AND departmentId IN (SELECT id FROM Department WHERE institutionId = @institution)";
+                query += " AND D.institutionId = @institution";
             }
 
             var parameters = new NameValueCollection
@@ -145,6 +149,13 @@ namespace ICM.Dao
             return persons;
         }
 
+        private static string GetBaseQuery()
+        {
+            return "SELECT P.id, P.name, P.firstname, P.email, P.phone, P.archived, P.departmentId, D.Name AS departmentName " +
+                   "FROM Person P " + 
+                   "INNER JOIN Department D ON P.departmentId = D.id";
+        }
+
         /// <summary>
         /// Return the person with the given id
         /// </summary>
@@ -161,14 +172,13 @@ namespace ICM.Dao
                 {"@id", id.ToString()},
             };
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Person] WHERE id = @id", IsolationLevel.ReadUncommitted, parameters))
+            using (var reader = DBUtils.ExecuteQuery(GetBaseQuery() + " WHERE id = @id", IsolationLevel.ReadUncommitted, parameters))
             {
                 while (reader.Read())
                 {
                     persons.Add(BindPerson(reader));
                 }
             }
-
 
             var person = persons.First();
 
@@ -187,7 +197,7 @@ namespace ICM.Dao
 
             var persons = new List<Person>();
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Person]", IsolationLevel.ReadUncommitted))
+            using (var reader = DBUtils.ExecuteQuery(GetBaseQuery(), IsolationLevel.ReadUncommitted))
             {
                 while (reader.Read())
                 {
@@ -207,6 +217,12 @@ namespace ICM.Dao
         /// <returns>a new instance of Person with the values of the SQL Result</returns>
         private static Person BindPerson(SqlResult result)
         {
+            var department = new Department
+            {
+                Id = (int)result["departmentId"],
+                Name = (string)result["departmentName"]
+            };
+
             var person = new Person
             {
                 Id = (int) result["id"],
@@ -214,11 +230,10 @@ namespace ICM.Dao
                 FirstName = (string) result["firstname"],
                 Email = (string) result["email"],
                 Phone = (string) result["phone"],
-                Archived = (bool) result["archived"]
+                Archived = (bool) result["archived"],
+                Department = department
             };
 
-            //TODO : Get department of person
-            
             return person;
         }
     }
