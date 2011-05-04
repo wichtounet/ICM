@@ -102,7 +102,7 @@ namespace ICM.Dao
         /// <param name="firstname">The first name to search persons for</param>
         /// <param name="archived">Indicate if we must search for the archived persons to</param>
         /// <returns>all the persons matching the criterias</returns>
-        public List<Person> SearchPersons(string name, string firstname, bool archived)
+        public List<Person> SearchPersons(string name, string firstname, bool archived, int institution, int department)
         {
             Logger.Debug("Searching persons");
 
@@ -115,10 +115,21 @@ namespace ICM.Dao
                 query += " AND archived = 0";
             }
 
+            if(department != -1)
+            {
+                query += " AND departmentId = @department";
+            } 
+            else if(institution != -1)
+            {
+                query += " AND departmentId IN (SELECT id FROM Department WHERE institutionId = @institution)";
+            }
+
             var parameters = new NameValueCollection
             {
                 {"@name", "%" + name + "%"},
                 {"@firstname", "%" + firstname + "%"},
+                {"@department", department.ToString()},
+                {"@institution", institution.ToString()},
             };
 
             using (var reader = DBUtils.ExecuteQuery(query, IsolationLevel.ReadUncommitted, parameters))

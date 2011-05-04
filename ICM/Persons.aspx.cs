@@ -25,7 +25,13 @@ namespace ICM
 
         private void SearchPersons()
         {
-            var persons = new PersonsDAO().SearchPersons(NameLabel.Text, FirstNameLabel.Text, ArchivedCheckBox.Checked);
+            var institution = InstitutionList.SelectedValue;
+            var department = DepartmentList.SelectedValue;
+
+            var institutionId = "".Equals(institution) ? -1 : institution.ToInt();
+            var departmentId = "".Equals(department) ? -1 : department.ToInt();
+
+            var persons = new PersonsDAO().SearchPersons(NameLabel.Text, FirstNameLabel.Text, ArchivedCheckBox.Checked, institutionId, departmentId);
 
             ResultsView.DataSource = persons;
             ResultsView.DataBind();

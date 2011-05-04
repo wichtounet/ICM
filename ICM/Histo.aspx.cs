@@ -10,7 +10,13 @@ namespace ICM
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            LoadLists();
+            //In order to not refill the form at postback
+            if ("-1".Equals(IDLabel.Text))
+            {
+                LoadLists();
+
+                IDLabel.Text = "1";
+            }
         }
 
         private void LoadLists()
