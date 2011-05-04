@@ -94,7 +94,7 @@ namespace ICM.Dao
             //Delete all the old departments
             foreach(Department oldDepartment in oldDepartments)
             {
-                if (!institution.Departments.containsDepartmentWithName(oldDepartment.Name))
+                if (!institution.Departments.ContainsDepartmentWithName(oldDepartment.Name))
                 {
                     parameters = new NameValueCollection
                     {
@@ -110,7 +110,7 @@ namespace ICM.Dao
             //Add all the new departments
             foreach(Department department in institution.Departments)
             {
-                if (!oldDepartments.containsDepartmentWithName(department.Name))
+                if (!oldDepartments.ContainsDepartmentWithName(department.Name))
                 {
                     parameters = new NameValueCollection
                     {

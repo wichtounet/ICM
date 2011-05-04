@@ -7,90 +7,117 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ICM.Account {
+namespace ICM {
     
     
-    public partial class Login {
+    public partial class ShowInstitution {
         
         /// <summary>
-        /// FailureLiteral control.
+        /// IDLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal FailureLiteral;
+        protected global::System.Web.UI.WebControls.Label IDLabel;
         
         /// <summary>
-        /// LoginUserValidationSummary control.
+        /// NameLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ValidationSummary LoginUserValidationSummary;
+        protected global::System.Web.UI.WebControls.Label NameLabel;
         
         /// <summary>
-        /// UserName control.
+        /// DescriptionLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox UserName;
+        protected global::System.Web.UI.WebControls.Label DescriptionLabel;
         
         /// <summary>
-        /// UserNameRequired control.
+        /// CityLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator UserNameRequired;
+        protected global::System.Web.UI.WebControls.Label CityLabel;
         
         /// <summary>
-        /// Password control.
+        /// InterestLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Password;
+        protected global::System.Web.UI.WebControls.Label InterestLabel;
         
         /// <summary>
-        /// PasswordRequired control.
+        /// LanguageLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator PasswordRequired;
+        protected global::System.Web.UI.WebControls.Label LanguageLabel;
         
         /// <summary>
-        /// RememberCheckBox control.
+        /// CountryLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox RememberCheckBox;
+        protected global::System.Web.UI.WebControls.Label CountryLabel;
         
         /// <summary>
-        /// RememberMeLabel control.
+        /// ContinentLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label RememberMeLabel;
+        protected global::System.Web.UI.WebControls.Label ContinentLabel;
         
         /// <summary>
-        /// LoginButton control.
+        /// StateLabel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button LoginButton;
+        protected global::System.Web.UI.WebControls.Label StateLabel;
+        
+        /// <summary>
+        /// DepartmentsListView control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ListView DepartmentsListView;
+        
+        /// <summary>
+        /// EditButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button EditButton;
+        
+        /// <summary>
+        /// ArchiveButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ArchiveButton;
     }
 }

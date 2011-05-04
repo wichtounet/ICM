@@ -14,7 +14,7 @@ namespace ICM.Utils
     /// <remarks>Baptiste Wicht</remarks>
     public static class Extensions
     {
-        public static bool containsDepartmentWithName(this List<Department> departments, string name)
+        public static bool ContainsDepartmentWithName(this List<Department> departments, string name)
         {
             foreach (Department department in departments)
             {
@@ -22,6 +22,16 @@ namespace ICM.Utils
                     return true;
             }
             return false;
+        }
+
+        public static User GetUserByLogin(this List<User> users, string login)
+        {
+            foreach (User user in users)
+            {
+                if (user.Login.Equals(login))
+                    return user;
+            }
+            return null;
         }
 
         public static int ToInt(this String str)
