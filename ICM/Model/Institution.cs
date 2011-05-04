@@ -55,6 +55,12 @@ namespace ICM.Model
             set;
         }
 
+        public bool IsArchived
+        {
+            get;
+            set;
+        }
+
         public override string ToString()
         {
             return Name;
@@ -67,7 +73,8 @@ namespace ICM.Model
                             string Interest,
                             Language Language,
                             Country Country,
-                            List<Department> Departments)
+                            List<Department> Departments,
+                            bool IsArchived)
         {
             this.Id = Id;
             this.Name = Name;
@@ -77,6 +84,7 @@ namespace ICM.Model
             this.Language = Language;
             this.Country = Country;
             this.Departments = Departments;
+            this.IsArchived = IsArchived;
         }
     }
 }

@@ -44,6 +44,25 @@ namespace ICM.Utils
             return ExecuteTransactionQuery(sql, transaction, new NameValueCollection());
         }
 
+        public static int ExecuteTransactionInsert(string sql, SqlTransaction transaction, NameValueCollection parameters, string tableName)
+        {
+            var connection = DBManager.GetInstance().GetConnection();
+
+            ExecuteNonQuery(connection, sql, transaction, parameters);
+
+            var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", connection, transaction);
+            getCommand.Parameters.AddWithValue("table", tableName);
+
+            int id;
+            using (var reader = getCommand.ExecuteReader())
+            {
+                reader.Read();
+                id = reader["ID"].ToString().ToInt();
+            }
+
+            return id;
+        }
+
         public static void ExecuteUpdate(string sql, IsolationLevel level, NameValueCollection parameters)
         {
             var connection = DBManager.GetInstance().GetConnection();

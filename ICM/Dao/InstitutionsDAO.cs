@@ -25,12 +25,13 @@ namespace ICM.Dao
                 {"@archived", "0"}
             };
 
-            //TODO: transaction needed (what about department insertion fails???)
+            //TODO: is the right isolation level for christ's sake??? and check all the rest of the document!
+            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
 
             //Insert institution
-            institutionId = DBUtils.ExecuteInsert(
+            institutionId = DBUtils.ExecuteTransactionInsert(
                 "INSERT INTO [Institution] (name,description,city,interest,languageName,countryName,archived) VALUES (@name,@description,@city,@interest,@languageName,@countryName,@archived)",
-                IsolationLevel.ReadUncommitted, parametersInstitution, "Institution");
+                transaction, parametersInstitution, "Institution");
 
             //Insert departments
             foreach (Department department in institution.Departments)
@@ -41,15 +42,16 @@ namespace ICM.Dao
                     {"@institutionId", institutionId.ToString()},
                     {"@archived", "0"}
                 };
-                DBUtils.ExecuteInsert(
+                DBUtils.ExecuteTransactionInsert(
                     "INSERT INTO [Department] (name,institutionId,archived) VALUES (@name,@institutionId,@archived)",
-                    IsolationLevel.ReadUncommitted, parametersDepartment, "Department");
+                    transaction, parametersDepartment, "Department");
             }
+
+            DBUtils.CommitTransaction(transaction);
 
             return institutionId;
         }
 
-        //TODO: test
         public Institution GetInstitution(int id)
         {
             Institution institution = null;
@@ -65,7 +67,7 @@ namespace ICM.Dao
             {
                 if(institutionReader.Read())
                 {
-                    institution = BindInstitution(institutionReader);
+                    institution = GetInstitutionWithoutDepartments(institutionReader);
                 }
             }
 
@@ -79,6 +81,7 @@ namespace ICM.Dao
             return institution;
         }
 
+        //TODO: test
         public void UpdateInstitution(Institution institution)
         {
             var parameters = new NameValueCollection
@@ -108,7 +111,7 @@ namespace ICM.Dao
             {
                 while (institutionReader.Read())
                 {
-                    institutions.Add(BindInstitution(institutionReader));
+                    institutions.Add(GetInstitutionWithoutDepartments(institutionReader));
                 }
             }
 
@@ -124,26 +127,13 @@ namespace ICM.Dao
         }
 
         public List<Department> GetDepartments(int institutionId) {
-            List<Department> departments = new List<Department>();
-
-            var parameters = new NameValueCollection
-            {
-                {"@institutionId", institutionId.ToString()}
-            };
-
-            using (SqlResult departmentReader = DBUtils.ExecuteQuery("SELECT * FROM [Department] WHERE institutionId = @institutionId", IsolationLevel.ReadUncommitted, parameters))
-            {
-                //Fill departments list
-                while (departmentReader.Read())
-                {
-                    departments.Add(new Department() { Name = departmentReader["name"].ToString() });
-                }
-            }
-
+            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+            List<Department> departments = GetDepartments(institutionId, transaction);
+            DBUtils.CommitTransaction(transaction);
             return departments;
         }
 
-        public List<Department> GetDepartments(int institutionId, SqlTransaction transaction)
+        private List<Department> GetDepartments(int institutionId, SqlTransaction transaction)
         {
             List<Department> departments = new List<Department>();
 
@@ -157,7 +147,10 @@ namespace ICM.Dao
                 //Fill departments list
                 while (departmentReader.Read())
                 {
-                    departments.Add(new Department() { Name = departmentReader["name"].ToString() });
+                    Department department = new Department();
+                    department.Id = (int) departmentReader["id"];
+                    department.Name = (string) departmentReader["name"];
+                    departments.Add(department);
                 }
             }
 
@@ -176,17 +169,69 @@ namespace ICM.Dao
                 IsolationLevel.ReadUncommitted, parameters);
         }
 
-        private static Institution BindInstitution(SqlResult institutionReader)
+        private static Institution GetInstitutionWithoutDepartments(SqlResult institutionReader)
         {
             //Instantiate institution
-            return new Institution(institutionReader["id"].ToString().ToInt(),
-                                    institutionReader["name"].ToString(),
-                                    institutionReader["description"].ToString(),
-                                    institutionReader["city"].ToString(),
-                                    institutionReader["Interest"].ToString(),
-                                    new Language { Name = institutionReader["languageName"].ToString() },
-                                    new Country { Name = institutionReader["countryName"].ToString() }, 
-                                    null);
+            return new Institution( (int) institutionReader["id"],
+                                    (string) institutionReader["name"],
+                                    (string) institutionReader["description"],
+                                    (string) institutionReader["city"],
+                                    (string) institutionReader["Interest"],
+                                    new Language { Name = (string) institutionReader["languageName"] },
+                                    new Country { Name = (string) institutionReader["countryName"] }, 
+                                    null,
+                                    (bool) institutionReader["archived"]);
+        }
+
+        /// <summary>
+        /// Search for institutions in the database using the given arguments as criteria
+        /// </summary>
+        /// <param name="name">Instution name</param>
+        /// <param name="language">Institution language</param>
+        /// <param name="continent">Institution country</param>
+        /// <param name="country">Institution country</param>
+        /// <param name="archived">Institution state (archived or not)</param>
+        /// <returns>All the institutions matching the search criteria</returns>
+        public List<Institution> SearchInstitutions(string name, string language, string continent, string country, bool archived)
+        {
+            List<Institution> institutions = new List<Institution>();
+            var parameters = new NameValueCollection
+            {
+                {"@name", "%" + name + "%"},
+                {"@language", "%" + language + "%"},
+                {"@continent", "%" + continent + "%"},
+                {"@country", "%" + country + "%"}
+            };
+
+            // Create query string
+            string query = "SELECT * FROM [Institution] WHERE name LIKE(@name) AND language LIKE(@language)";
+            if (!archived)
+            {
+                query += " AND archived = 0";
+            }
+
+            //Start transaction
+            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+            //Instantiate institutions without department list
+            using (SqlResult institutionReader = DBUtils.ExecuteTransactionQuery(query, transaction, parameters))
+            {
+                while (institutionReader.Read())
+                {
+                    institutions.Add(GetInstitutionWithoutDepartments(institutionReader));
+                }
+            }
+
+            //Add department list to the institutions
+            foreach (Institution institution in institutions)
+            {
+                institution.Departments = GetDepartments(institution.Id, transaction);
+            }
+
+            //End transaction
+            DBUtils.CommitTransaction(transaction);
+
+            return institutions;
         }
     }
 }
