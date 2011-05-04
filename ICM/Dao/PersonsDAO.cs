@@ -104,8 +104,6 @@ namespace ICM.Dao
         /// <returns>all the persons matching the criterias</returns>
         public List<Person> SearchPersons(string name, string firstname, bool archived, int institution, int department)
         {
-            Logger.Debug("Searching persons");
-
             var persons = new List<Person>();
 
             var query = "SELECT * FROM [Person] WHERE name LIKE(@name) AND firstname LIKE(@firstname)";
@@ -131,6 +129,8 @@ namespace ICM.Dao
                 {"@department", department.ToString()},
                 {"@institution", institution.ToString()},
             };
+
+            Logger.Debug("Searching persons, with query {0}", query);
 
             using (var reader = DBUtils.ExecuteQuery(query, IsolationLevel.ReadUncommitted, parameters))
             {
