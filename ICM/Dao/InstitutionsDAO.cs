@@ -92,7 +92,6 @@ namespace ICM.Dao
             List<Department> oldDepartments = GetDepartments(institution.Id, transaction);  //Department already present in DB
 
             //Delete all the old departments
-            //TODO: add special exception when a person references this department
             foreach(Department oldDepartment in oldDepartments)
             {
                 if (!institution.Departments.containsDepartmentWithName(oldDepartment.Name))
