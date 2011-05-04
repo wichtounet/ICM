@@ -147,7 +147,10 @@ namespace ICM.Dao
                 //Fill departments list
                 while (departmentReader.Read())
                 {
-                    departments.Add(new Department() { Name = departmentReader["name"].ToString() });
+                    Department department = new Department();
+                    department.Id = (int) departmentReader["id"];
+                    department.Name = (string) departmentReader["name"];
+                    departments.Add(department);
                 }
             }
 
@@ -178,6 +181,57 @@ namespace ICM.Dao
                                     new Country { Name = (string) institutionReader["countryName"] }, 
                                     null,
                                     (bool) institutionReader["archived"]);
+        }
+
+        /// <summary>
+        /// Search for institutions in the database using the given arguments as criteria
+        /// </summary>
+        /// <param name="name">Instution name</param>
+        /// <param name="language">Institution language</param>
+        /// <param name="continent">Institution country</param>
+        /// <param name="country">Institution country</param>
+        /// <param name="archived">Institution state (archived or not)</param>
+        /// <returns>All the institutions matching the search criteria</returns>
+        public List<Institution> SearchInstitutions(string name, string language, string continent, string country, bool archived)
+        {
+            List<Institution> institutions = new List<Institution>();
+            var parameters = new NameValueCollection
+            {
+                {"@name", "%" + name + "%"},
+                {"@language", "%" + language + "%"},
+                {"@continent", "%" + continent + "%"},
+                {"@country", "%" + country + "%"}
+            };
+
+            // Create query string
+            string query = "SELECT * FROM [Institution] WHERE name LIKE(@name) AND language LIKE(@language)";
+            if (!archived)
+            {
+                query += " AND archived = 0";
+            }
+
+            //Start transaction
+            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+            //Instantiate institutions without department list
+            using (SqlResult institutionReader = DBUtils.ExecuteTransactionQuery(query, transaction, parameters))
+            {
+                while (institutionReader.Read())
+                {
+                    institutions.Add(GetInstitutionWithoutDepartments(institutionReader));
+                }
+            }
+
+            //Add department list to the institutions
+            foreach (Institution institution in institutions)
+            {
+                institution.Departments = GetDepartments(institution.Id, transaction);
+            }
+
+            //End transaction
+            DBUtils.CommitTransaction(transaction);
+
+            return institutions;
         }
     }
 }

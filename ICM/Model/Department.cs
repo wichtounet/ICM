@@ -5,7 +5,7 @@
         public int Id
         {
             get;
-            private set;
+            set;
         }
 
         public string Name {
