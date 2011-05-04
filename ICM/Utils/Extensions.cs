@@ -13,6 +13,16 @@ namespace ICM.Utils
     /// <remarks>Baptiste Wicht</remarks>
     public static class Extensions
     {
+        public static bool containsDepartmentWithName(this List<Department> departments, string name)
+        {
+            foreach (Department department in departments)
+            {
+                if (department.Name == name)
+                    return true;
+            }
+            return false;
+        }
+
         public static int ToInt(this String str)
         {
             return Convert.ToInt16(str);
