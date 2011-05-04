@@ -34,8 +34,10 @@
 
     <p>
         <asp:Button ID="EditButton" runat="server" Text="Modifier" OnClick="EditPerson" /> 
-        <asp:Button ID="DeleteButton" runat="server" Text="Archiver" OnClick="DeletePerson" />
+        <asp:Button ID="DeleteButton" runat="server" Text="Archiver" OnClick="ArchivePerson" />
     </p>
+
+    <asp:Label ID="ErrorLabel" ForeColor="Red" runat="server" Visible="false" />
 
      <script type="text/javascript">
          $(function () {

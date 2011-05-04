@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using ICM.Dao;
@@ -23,9 +22,12 @@ namespace ICM
         /// <param name="e">The args of the event</param>
         protected void Page_Load(object sender, EventArgs e)
         {
-            if("-1".Equals(IDLabel.Text))
+            if ("-1".Equals(IDLabel.Text))
             {
-                InstitutionList.DataBindWithEmptyElement(new InstitutionsDAO().GetInstitutions(), "Name", "Id");
+                this.Verified(
+                    () =>
+                    InstitutionList.DataBindWithEmptyElement(new InstitutionsDAO().GetInstitutions(), "Name", "Id"),
+                    ErrorLabel);
 
                 IDLabel.Text = "1";
             }
@@ -54,7 +56,7 @@ namespace ICM
             var institutionId = "".Equals(institution) ? -1 : institution.ToInt();
             var departmentId = "".Equals(department) ? -1 : department.ToInt();
 
-            try
+            Extensions.SqlOperation operation = () =>
             {
                 var persons = new PersonsDAO().SearchPersons(NameLabel.Text, FirstNameLabel.Text, ArchivedCheckBox.Checked, institutionId, departmentId);
 
@@ -62,14 +64,9 @@ namespace ICM
 
                 ResultsView.DataSource = persons;
                 ResultsView.DataBind();
-            } 
-            catch(SqlException e)
-            {
-                ErrorLabel.Visible = true;
-                ErrorLabel.Text = "Erreur de base de données : " + e.Message;
+            };
 
-                Logger.DebugException("SQL Exception during search", e);
-            }
+            this.Verified(operation, ErrorLabel);
         }
 
         /// <summary>
@@ -83,7 +80,9 @@ namespace ICM
 
             var labelId = myItem.FindControl("LabelID") as Label;
 
-            new PersonsDAO().ArchivePerson(labelId.Text.ToInt());
+            this.Verified(
+                () => new PersonsDAO().ArchivePerson(labelId.Text.ToInt()),
+                ErrorLabel);
 
             SearchPersons();
         }
@@ -95,14 +94,20 @@ namespace ICM
         /// <param name="e">The args of the event</param>
         protected void InstitutionSelected(object sender, EventArgs e)
         {
-            var id = InstitutionList.SelectedValue.ToInt();
-
-            var institution = new InstitutionsDAO().GetInstitution(id);
-
-            if (institution != null)
+            Extensions.SqlOperation operation = () =>
             {
-                DepartmentList.DataBindWithEmptyElement(institution.Departments, "Name", "Id");
-            }
+                var id = InstitutionList.SelectedValue.ToInt();
+
+                var institution = new InstitutionsDAO().GetInstitution(id);
+
+                if (institution != null)
+                {
+                    DepartmentList.DataBindWithEmptyElement(
+                        institution.Departments, "Name", "Id");
+                }
+            };
+
+            this.Verified(operation, ErrorLabel);
         }
     }
 }

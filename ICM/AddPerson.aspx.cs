@@ -4,8 +4,17 @@ using ICM.Utils;
 
 namespace ICM
 {
+    /// <summary>
+    ///  This page enable the users to add or edit a person. 
+    /// </summary>
+    /// <remarks>Baptiste Wicht</remarks>
     public partial class AddPerson : System.Web.UI.Page
     {
+        /// <summary>
+        /// Load the informations about the person, load the lists and fill the page. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if(Request.QueryString["person"] != null)
@@ -13,21 +22,36 @@ namespace ICM
                 //In order to not refill the form at postback
                 if("-1".Equals(IDLabel.Text) )
                 {
-                    var id = Request.QueryString["person"].ToInt();
+                    Extensions.SqlOperation operation = () =>
+                    {
+                        var id = Request.QueryString["person"].ToInt();
 
-                    var person = new PersonsDAO().GetPersonByID(id);
+                        var person = new PersonsDAO().GetPersonByID(id);
 
-                    IDLabel.Text = person.Id.ToString();
-                    NameTextBox.Text = person.Name;
-                    FirstNameTextBox.Text = person.FirstName;
-                    MailTextBox.Text = person.Email;
-                    PhoneTextBox.Text = person.Phone;
+                        IDLabel.Text = person.Id.ToString();
+                        NameTextBox.Text = person.Name;
+                        FirstNameTextBox.Text = person.FirstName;
+                        MailTextBox.Text = person.Email;
+                        PhoneTextBox.Text = person.Phone;
 
-                    SaveButton.Visible = true;
+                        SaveButton.Visible = true;
 
-                    LoadLists();
+                        var dataSource = new InstitutionsDAO().GetInstitutions();
 
-                    IDLabel.Text = "1";
+                        InstitutionList.DataBind(dataSource, "Name", "Id");
+
+                        InstitutionList.SelectedValue = person.Department.InstitutionId.ToString();
+
+                        var institution = new InstitutionsDAO().GetInstitution(person.Department.InstitutionId);
+
+                        DepartmentList.DataBind(institution.Departments, "Name", "Id");
+                        
+                        DepartmentList.SelectedValue = person.Department.Id.ToString();
+
+                        IDLabel.Text = id.ToString();
+                    };
+
+                    this.Verified(operation, ErrorLabel);
                 }
             } 
             else
@@ -37,7 +61,7 @@ namespace ICM
                 {
                     AddButton.Visible = true;
 
-                    LoadLists();
+                    this.Verified(LoadLists, ErrorLabel);
 
                     IDLabel.Text = "1";
                 }
@@ -56,38 +80,72 @@ namespace ICM
             }
         }
 
+        /// <summary>
+        /// Create a person with the given informations. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void CreatePerson(object sender, EventArgs e)
         {
             if(Page.IsValid)
             {
-                var id = new PersonsDAO().CreatePerson(FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text);
+                Extensions.SqlOperation operation = () =>
+                {
+                    var departmentId = DepartmentList.SelectedValue.ToInt();
 
-                Response.Redirect("ShowPerson.aspx?person=" + id);
+                    var id = new PersonsDAO().CreatePerson(FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text, departmentId);
+
+                    Response.Redirect("ShowPerson.aspx?person=" + id);
+                };
+
+                this.Verified(operation, ErrorLabel);
             }
         }
 
+        /// <summary>
+        /// Save the current person. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void SavePerson(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
-                var id = IDLabel.Text.ToInt();
+                Extensions.SqlOperation operation = () => 
+                {
+                    var id = IDLabel.Text.ToInt();
 
-                new PersonsDAO().SavePerson(id, FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text);
+                    var departmentId = DepartmentList.SelectedValue.ToInt();
 
-                Response.Redirect("ShowPerson.aspx?person=" + id);
+                    new PersonsDAO().SavePerson(id, FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text, departmentId);
+
+                    Response.Redirect("ShowPerson.aspx?person=" + id);
+                };
+
+                this.Verified(operation, ErrorLabel);
             }
         }
 
+        /// <summary>
+        /// An institution has been selected
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void InstitutionSelected(object sender, EventArgs e)
         {
-            var id = InstitutionList.SelectedValue.ToInt();
-
-            var institution = new InstitutionsDAO().GetInstitution(id);
-
-            if (institution != null)
+            Extensions.SqlOperation operation = () =>
             {
-                DepartmentList.DataBind(institution.Departments, "Name", "Id");
-            }
+                var id = InstitutionList.SelectedValue.ToInt();
+
+                var institution = new InstitutionsDAO().GetInstitution(id);
+
+                if (institution != null)
+                {
+                    DepartmentList.DataBind(institution.Departments, "Name", "Id");
+                }
+            };
+
+            this.Verified(operation, ErrorLabel);
         }
     }
 }

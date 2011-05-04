@@ -23,8 +23,9 @@ namespace ICM.Dao
         /// <param name="firstname">The firstname of the person</param>
         /// <param name="email">The email of the person</param>
         /// <param name="phone">The phone of the person</param>
+        /// <param name="department">The department of the person</param>
         /// <returns>the id of the inserted person</returns>
-        public int CreatePerson(string firstname, string name, string phone, string email)
+        public int CreatePerson(string firstname, string name, string phone, string email, int department)
         {
             Logger.Debug("Creating person");
 
@@ -35,7 +36,7 @@ namespace ICM.Dao
                 {"@phone", phone},
                 {"@email", email},
                 {"@archived", "0"},
-                {"@department", "2"}
+                {"@department", department.ToString()}
             };
 
             var id = DBUtils.ExecuteInsert(
@@ -55,7 +56,8 @@ namespace ICM.Dao
         /// <param name="firstname">The name of the person</param>
         /// <param name="email">The name of the person</param>
         /// <param name="phone">The name of the person</param>
-        public void SavePerson(int id, string firstname, string name, string phone, string email)
+        /// <param name="department">The department of the person</param>
+        public void SavePerson(int id, string firstname, string name, string phone, string email, int department)
         {
             Logger.Debug("Saving person {0}", id);
 
@@ -66,10 +68,11 @@ namespace ICM.Dao
                 {"@name", name},
                 {"@phone", phone},
                 {"@email", email},
+                {"@department", department.ToString()},
             };
 
             DBUtils.ExecuteUpdate(
-                "UPDATE [Person] SET firstname = @firstname, name = @name, phone = @phone, email = @email WHERE id = @id",
+                "UPDATE [Person] SET firstname = @firstname, name = @name, phone = @phone, email = @email, departmentId = @department WHERE id = @id",
                 IsolationLevel.ReadUncommitted, parameters);
 
             Logger.Debug("Saved person {0}", id);
@@ -151,9 +154,10 @@ namespace ICM.Dao
 
         private static string GetBaseQuery()
         {
-            return "SELECT P.id, P.name, P.firstname, P.email, P.phone, P.archived, P.departmentId, D.Name AS departmentName " +
+            return "SELECT P.id, P.name, P.firstname, P.email, P.phone, P.archived, P.departmentId, D.name AS departmentName, I.name AS institutionName, I.id AS institutionId " +
                    "FROM Person P " + 
-                   "INNER JOIN Department D ON P.departmentId = D.id";
+                   "INNER JOIN Department D ON P.departmentId = D.id " + 
+                   "INNER JOIN Institution I ON D.institutionId = I.id";
         }
 
         /// <summary>
@@ -172,7 +176,7 @@ namespace ICM.Dao
                 {"@id", id.ToString()},
             };
 
-            using (var reader = DBUtils.ExecuteQuery(GetBaseQuery() + " WHERE id = @id", IsolationLevel.ReadUncommitted, parameters))
+            using (var reader = DBUtils.ExecuteQuery(GetBaseQuery() + " WHERE P.id = @id", IsolationLevel.ReadUncommitted, parameters))
             {
                 while (reader.Read())
                 {
@@ -219,8 +223,10 @@ namespace ICM.Dao
         {
             var department = new Department
             {
-                Id = (int)result["departmentId"],
-                Name = (string)result["departmentName"]
+                Id = (int) result["departmentId"],
+                Name = (string) result["departmentName"],
+                InstitutionName = (string) result["institutionName"],
+                InstitutionId = (int) result["institutionId"]
             };
 
             var person = new Person

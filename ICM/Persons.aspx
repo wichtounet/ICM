@@ -47,7 +47,7 @@
         </EmptyDataTemplate>
     </asp:ListView>
 
-    <asp:Label ID="ErrorLabel" runat="server" Visible="false"></asp:Label>
+    <asp:Label ID="ErrorLabel" ForeColor="Red" runat="server" Visible="false"></asp:Label>
 
      <script type="text/javascript">
          $(function () {
