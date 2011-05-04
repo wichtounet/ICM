@@ -26,13 +26,21 @@ namespace ICM
                     SaveButton.Visible = true;
 
                     LoadLists();
+
+                    IDLabel.Text = "1";
                 }
             } 
             else
             {
-                AddButton.Visible = true;
+                //In order to not refill the form at postback
+                if ("-1".Equals(IDLabel.Text))
+                {
+                    AddButton.Visible = true;
 
-                LoadLists();
+                    LoadLists();
+
+                    IDLabel.Text = "1";
+                }
             }
         }
 

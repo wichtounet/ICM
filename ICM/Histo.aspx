@@ -17,7 +17,7 @@
         </tr>
         <tr>
             <td>Institution : </td>
-            <td><asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected" /></td>
+            <td><asp:DropDownList ID="InstitutionList" runat="server" AutoPostBack="true" OnSelectedIndexChanged="InstitutionSelected" /></td>
         </tr>
         <tr>
             <td>Département : </td>
