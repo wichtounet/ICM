@@ -30,6 +30,8 @@
             </td>
         </tr>
     </table>
+    
+    <asp:Label ID="ErrorLabel" ForeColor="Red" runat="server" Visible="false"></asp:Label>
 
     <asp:Panel ID="HistoPanel" runat="server" Visible="false">
         <asp:ListView ID="ContractsView" runat="server">
