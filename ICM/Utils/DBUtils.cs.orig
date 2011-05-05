@@ -44,25 +44,6 @@ namespace ICM.Utils
             return ExecuteTransactionQuery(sql, transaction, new NameValueCollection());
         }
 
-        public static int ExecuteTransactionInsert(string sql, SqlTransaction transaction, NameValueCollection parameters, string tableName)
-        {
-            var connection = DBManager.GetInstance().GetConnection();
-
-            ExecuteNonQuery(connection, sql, transaction, parameters);
-
-            var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", connection, transaction);
-            getCommand.Parameters.AddWithValue("table", tableName);
-
-            int id;
-            using (var reader = getCommand.ExecuteReader())
-            {
-                reader.Read();
-                id = reader["ID"].ToString().ToInt();
-            }
-
-            return id;
-        }
-
         public static void ExecuteUpdate(string sql, IsolationLevel level, NameValueCollection parameters)
         {
             var connection = DBManager.GetInstance().GetConnection();
@@ -94,46 +75,6 @@ namespace ICM.Utils
             }
 
             transaction.Commit();
-
-            return id;
-        }
-
-        public static int ExecuteInsert(string sql, IsolationLevel level, NameValueCollection parameters, string tableName, SqlTransaction transaction)
-        {
-            ExecuteNonQuery(transaction.Connection, sql, transaction, parameters);
-
-            var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", transaction.Connection, transaction);
-            getCommand.Parameters.AddWithValue("table", tableName);
-
-            int id;
-            using (var reader = getCommand.ExecuteReader())
-            {
-                reader.Read();
-
-                id = reader["ID"].ToString().ToInt();
-            }
-
-            transaction.Commit();
-
-            return id;
-        }
-
-        public static int ExecuteInsertWithoutCommit(string sql, IsolationLevel level, NameValueCollection parameters, string tableName, SqlTransaction transaction)
-        {
-            ExecuteNonQuery(transaction.Connection, sql, transaction, parameters);
-
-            var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", transaction.Connection, transaction);
-            getCommand.Parameters.AddWithValue("table", tableName);
-
-            int id;
-            using (var reader = getCommand.ExecuteReader())
-            {
-                reader.Read();
-
-                id = reader["ID"].ToString().ToInt();
-            }
-
-            //transaction.Commit();
 
             return id;
         }
@@ -198,11 +139,14 @@ namespace ICM.Utils
         public void Dispose()
         {
             reader.Close();
+<<<<<<< HEAD
+=======
 
             if(transaction != null)
             {
                 transaction.Commit();
             }
+>>>>>>> 35fd5911ad2ba01d2170c981af3fdc8e3f971a0b
         }
     }
 }

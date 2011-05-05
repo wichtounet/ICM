@@ -13,58 +13,157 @@ namespace ICM {
     public partial class AddContract {
         
         /// <summary>
-        /// Contrôle titleText.
+        /// Contrôle stateForm.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox titleText;
+        protected global::System.Web.UI.WebControls.Label stateForm;
         
         /// <summary>
-        /// Contrôle typeContractList.
+        /// Contrôle TitleText.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList typeContractList;
+        protected global::System.Web.UI.WebControls.TextBox TitleText;
         
         /// <summary>
-        /// Contrôle dateDebut.
+        /// Contrôle ContractTypeList.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dateDebut;
+        protected global::System.Web.UI.WebControls.DropDownList ContractTypeList;
         
         /// <summary>
-        /// Contrôle dateFin.
+        /// Contrôle StartDate.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dateFin;
+        protected global::System.Web.UI.WebControls.TextBox StartDate;
         
         /// <summary>
-        /// Contrôle institutionList.
+        /// Contrôle EndDate.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList institutionList;
+        protected global::System.Web.UI.WebControls.TextBox EndDate;
         
         /// <summary>
-        /// Contrôle personneList.
+        /// Contrôle InstitutionList.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList personneList;
+        protected global::System.Web.UI.WebControls.DropDownList InstitutionList;
+        
+        /// <summary>
+        /// Contrôle DepartmentList.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DepartmentList;
+        
+        /// <summary>
+        /// Contrôle AddDepartment.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button AddDepartment;
+        
+        /// <summary>
+        /// Contrôle DepartmentSelectedList.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DepartmentSelectedList;
+        
+        /// <summary>
+        /// Contrôle DeleteDepartment.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button DeleteDepartment;
+        
+        /// <summary>
+        /// Contrôle DepartmentLabel.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label DepartmentLabel;
+        
+        /// <summary>
+        /// Contrôle PersonList.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList PersonList;
+        
+        /// <summary>
+        /// Contrôle RoleList.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList RoleList;
+        
+        /// <summary>
+        /// Contrôle AddPerson.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button AddPerson;
+        
+        /// <summary>
+        /// Contrôle PersonSelectedList.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList PersonSelectedList;
+        
+        /// <summary>
+        /// Contrôle DeletePerson.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button DeletePerson;
+        
+        /// <summary>
+        /// Contrôle PersonLabel.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label PersonLabel;
         
         /// <summary>
         /// Contrôle UploadImageFile.
@@ -76,12 +175,21 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.FileUpload UploadImageFile;
         
         /// <summary>
-        /// Contrôle submitForm.
+        /// Contrôle Add.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button submitForm;
+        protected global::System.Web.UI.WebControls.Button Add;
+        
+        /// <summary>
+        /// Contrôle Save.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Save;
     }
 }

@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NLog;
+using ICM.Model;
 
 namespace ICM.Utils
 {
@@ -13,6 +14,26 @@ namespace ICM.Utils
     /// <remarks>Baptiste Wicht</remarks>
     public static class Extensions
     {
+        public static bool ContainsDepartmentWithName(this List<Department> departments, string name)
+        {
+            foreach (Department department in departments)
+            {
+                if (department.Name.Equals(name))
+                    return true;
+            }
+            return false;
+        }
+
+        public static User GetUserByLogin(this List<User> users, string login)
+        {
+            foreach (User user in users)
+            {
+                if (user.Login.Equals(login))
+                    return user;
+            }
+            return null;
+        }
+
         public static int ToInt(this String str)
         {
             return Convert.ToInt16(str);

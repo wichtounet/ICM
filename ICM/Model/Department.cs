@@ -25,6 +25,11 @@
             set; 
         }
 
+        public string departementInstitution
+        {
+            get { return InstitutionName + ": " + Name; }
+        }
+
         public override string ToString()
         {
             return Name;

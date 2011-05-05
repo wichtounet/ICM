@@ -21,13 +21,19 @@ namespace ICM
 
                 IDLabel.Text = contract.Id.ToString();
                 TitreLabel.Text = contract.Title;
-                dateDebutLabel.Text = contract.Start;
-                dateFinLabel.Text = contract.End;
+                dateDebutLabel.Text = contract.Start.ToString("d");
+                dateFinLabel.Text = contract.End.ToString("d");
                 userLabel.Text = contract.User;
                 typeLabel.Text = contract.Type;
                 userLabel.Text  = contract.User;
                 StateLabel.Text = contract.Archived ? "Oui" : "Non";
                 downloadFile.NavigateUrl = "ContractFile.aspx?id=" + contract.fileId.ToString();
+
+                PersonList.DataSource = contract.persons;
+                PersonList.DataBind();
+
+                DestinationList.DataSource = contract.departments;
+                DestinationList.DataBind();
             }
             else{
                 EditButton.Enabled = false;
@@ -36,12 +42,12 @@ namespace ICM
         }
         protected void EditContract(object sender, EventArgs e)
         {
-            
+            Response.Redirect("AddContract.aspx?contract=" + Request.QueryString["contract"].ToInt()); 
         }
 
-        protected void DeleteContract(object sender, EventArgs e)
+        protected void ArchiveContract(object sender, EventArgs e)
         {
-            
+            new ContractsDAO().ArchiveContract(Request.QueryString["contract"].ToInt());
         }
 
     }

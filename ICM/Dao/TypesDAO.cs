@@ -7,7 +7,7 @@ namespace ICM.Dao
 {
     public class TypesDAO
     {
-        public List<TypeContract> GetAllPersons()
+        public List<TypeContract> GetAllTypes()
         {
             var types = new List<TypeContract>();
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ICM.Model
 {
@@ -18,12 +19,12 @@ namespace ICM.Model
             get;
             set;
         }
-        public string Start
+        public DateTime Start
         {
             get;
             set;
         }
-        public string End
+        public DateTime End
         {
             get;
             set;
@@ -54,6 +55,16 @@ namespace ICM.Model
             set;
         }
         public int fileId
+        {
+            get;
+            set;
+        }
+        public List<Person> persons
+        {
+            get;
+            set;
+        }
+        public List<Department> departments
         {
             get;
             set;
