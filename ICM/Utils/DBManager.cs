@@ -5,6 +5,9 @@ using NLog;
 
 namespace ICM.Utils
 {
+    ///<summary>
+    /// A little utility class to open connections to the database and manage them. This class is a singleton, you cannot instantiate it, you must use GetInstance to use it. 
+    ///</summary>
     public class DBManager
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -22,21 +25,21 @@ namespace ICM.Utils
         {
             if (connection == null || connection.State == ConnectionState.Closed || connection.State == ConnectionState.Broken)
             {
-                Logger.Debug("Open connection");
-
-                connection = new SqlConnection(@"Data Source=160.98.60.35\MSSQLSERVER,1433;Initial Catalog=ICM;Integrated Security=False;User ID=sa;Password=International3");
-                
-                connection.Open();
+                connection = GetNewConnection();
             }
 
             return connection;
         }
 
+        ///<summary>
+        /// Create a new connection to the database. 
+        ///</summary>
+        ///<returns>A new connection to the database, already in open state</returns>
         public SqlConnection GetNewConnection()
         {
             Logger.Debug("Open connection");
 
-            var newConnection = new SqlConnection(@"Data Source=160.98.60.35\MSSQLSERVER,1433;Initial Catalog=ICM;Integrated Security=False;User ID=sa;Password=International3;Connect Timeout=5");
+            var newConnection = new SqlConnection(@"Data Source=160.98.60.35\MSSQLSERVER,1433;Initial Catalog=ICM;Integrated Security=False;User ID=sa;Password=International3;");
 
             newConnection.Open();
 
@@ -62,6 +65,10 @@ namespace ICM.Utils
             }
         }
 
+        ///<summary>
+        /// Returns the unique instance of the class. 
+        ///</summary>
+        ///<returns>The singleton instance of the class. </returns>
         public static DBManager GetInstance()
         {
             return Instance;

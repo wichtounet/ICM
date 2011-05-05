@@ -15,11 +15,23 @@ namespace ICM.Utils
     /// <remarks>Baptiste Wicht</remarks>
     public static class Extensions
     {
+        ///<summary>
+        /// Indicate if the given list of departments contains a department with the given name
+        ///</summary>
+        ///<param name="departments">The departments to search in</param>
+        ///<param name="name">The department name to search for</param>
+        ///<returns>true if the departments contains a department with the given name otherwise false</returns>
         public static bool ContainsDepartmentWithName(this List<Department> departments, string name)
         {
             return departments.Any(department => department.Name.Equals(name));
         }
 
+        ///<summary>
+        /// Returns the user with the given login in the given list of users. 
+        ///</summary>
+        ///<param name="users">The users to search in. </param>
+        ///<param name="login">The login to search for. </param>
+        ///<returns>The user with the given login</returns>
         public static User GetUserByLogin(this List<User> users, string login)
         {
             return users.FirstOrDefault(user => user.Login.Equals(login));

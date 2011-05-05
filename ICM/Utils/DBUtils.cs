@@ -25,9 +25,7 @@ namespace ICM.Utils
 
         public static SqlResult ExecuteTransactionQuery(string sql, SqlTransaction transaction, NameValueCollection parameters)
         {
-            var connection = DBManager.GetInstance().GetConnection();
-
-            var command = new SqlCommand(sql, connection, transaction);
+            var command = new SqlCommand(sql, transaction.Connection, transaction);
 
             foreach (var key in parameters.AllKeys)
             {
@@ -60,11 +58,9 @@ namespace ICM.Utils
 
         public static int ExecuteTransactionInsert(string sql, SqlTransaction transaction, NameValueCollection parameters, string tableName)
         {
-            var connection = DBManager.GetInstance().GetConnection();
+            ExecuteNonQuery(transaction.Connection, sql, transaction, parameters);
 
-            ExecuteNonQuery(connection, sql, transaction, parameters);
-
-            var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", connection, transaction);
+            var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", transaction.Connection, transaction);
             getCommand.Parameters.AddWithValue("table", tableName);
 
             int id;
