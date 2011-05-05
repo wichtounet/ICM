@@ -28,6 +28,7 @@ namespace ICM.Dao
 
             Contract c = new Contract();
             List<Person> persons = new List<Person>();
+            List<Department> departments = new List<Department>();
 
             using (var reader = DBUtils.ExecuteTransactionQuery("SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived "+
                                                      "FROM [Contract] C "+
@@ -41,7 +42,7 @@ namespace ICM.Dao
                 }
             }
 
-            using (var readerAssoc = DBUtils.ExecuteTransactionQuery("SELECT A.roleName, P.name, P.firstname " +
+            using (var readerAssoc = DBUtils.ExecuteTransactionQuery("SELECT A.roleName, P.id AS personId, P.name, P.firstname " +
                                                      "FROM [Association] A " +
                                                      "INNER JOIN Person P " +
                                                      "ON A.person = P.id " +
@@ -51,11 +52,33 @@ namespace ICM.Dao
                 while (readerAssoc.Read())
                 {
                     Person p = new Person();
-                    p.Name = readerAssoc["roleName"].ToString()+": "+readerAssoc["firstname"].ToString() + " " + readerAssoc["name"].ToString();
+                    p.Id = (int)readerAssoc["personId"];
+                    p.Role = (string) readerAssoc["roleName"];
+                    p.FirstName = (string) readerAssoc["firstname"];
+                    p.Name = (string) readerAssoc["name"];
                     persons.Add(p);
                 }
             }
+            using (var readerDestination = DBUtils.ExecuteTransactionQuery("SELECT P.name AS depName, I.id AS institutionId, I.name AS insName" +
+                                                     " FROM [Destination] D" +
+                                                     " INNER JOIN [Department] P" +
+                                                     " ON D.department = P.id" +
+                                                     " INNER JOIN [Institution] I" +
+                                                     " ON P.institutionId = I.id" +
+                                                     " WHERE D.contract = @id"
+                                                    , transaction, parameters))
+            {
+                while (readerDestination.Read())
+                {
+                    Department d = new Department();
+                    d.Name = (string) readerDestination["depName"];
+                    d.InstitutionName = (string) readerDestination["insName"];
+                    d.InstitutionId = (int) readerDestination["institutionId"];
+                    departments.Add(d);
+                }
+            }
             c.persons = persons;
+            c.departments = departments;
             contracts.Add(c);
 
             transaction.Connection.Close();

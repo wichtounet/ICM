@@ -8,11 +8,29 @@
         </tr>
         <tr>
             <td>Personne de contact : </td>
-            <td><asp:DropDownList ID="personList" runat="server" /></td>
+            <td>
+                <asp:ListView ID="PersonList" runat="server">
+                    <ItemTemplate>
+                        <asp:Label ID="LabelID" runat="server" Visible="false" Text='<%# Eval("Id")%>' />
+                        <li>
+                            <a href='ShowPerson.aspx?person=<%# Eval("Id")%>'><%# Eval("RoleFirstName")%></a>
+                        </li>
+                    </ItemTemplate>
+                </asp:ListView>
+            </td>
         </tr>
         <tr>
-            <td>Département : </td>
-            <td><asp:DropDownList ID="departmentList" runat="server" /></td>
+            <td>Destination : </td>
+            <td>
+                <asp:ListView ID="DestinationList" runat="server">
+                    <ItemTemplate>
+                        <asp:Label ID="LabelID" runat="server" Visible="false" Text='<%# Eval("InstitutionId")%>' />
+                        <li>
+                            <a href='ShowInstitution.aspx?institution=<%# Eval("InstitutionId")%>'><%# Eval("departementInstitution")%></a>
+                        </li>
+                    </ItemTemplate>
+                </asp:ListView>
+            </td>
         </tr>
         <tr>
             <td>Date début : </td>

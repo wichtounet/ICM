@@ -103,8 +103,6 @@ namespace ICM
             
             ContractsDAO contractDAO = new ContractsDAO();
 
-            //contractDAO.addContract(titleText.Text, dateDebut.Text, dateFin.Text, "", "simple", 0, 0, 0, 0);
-
             //File
             int fileSize = UploadImageFile.PostedFile.ContentLength;
             string fileMIMEType = UploadImageFile.PostedFile.ContentType;

@@ -64,5 +64,10 @@ namespace ICM.Model
             get;
             set;
         }
+        public List<Department> departments
+        {
+            get;
+            set;
+        }
     }
 }

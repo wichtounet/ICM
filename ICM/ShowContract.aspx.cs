@@ -21,18 +21,19 @@ namespace ICM
 
                 IDLabel.Text = contract.Id.ToString();
                 TitreLabel.Text = contract.Title;
-                dateDebutLabel.Text = contract.Start.ToString();
-                dateFinLabel.Text = contract.End.ToString();
+                dateDebutLabel.Text = contract.Start.ToString("d");
+                dateFinLabel.Text = contract.End.ToString("d");
                 userLabel.Text = contract.User;
                 typeLabel.Text = contract.Type;
                 userLabel.Text  = contract.User;
                 StateLabel.Text = contract.Archived ? "Oui" : "Non";
                 downloadFile.NavigateUrl = "ContractFile.aspx?id=" + contract.fileId.ToString();
 
-                personList.DataSource = contract.persons;
-                personList.DataValueField = "Name";
-                personList.DataTextField = "Name";
-                personList.DataBind();
+                PersonList.DataSource = contract.persons;
+                PersonList.DataBind();
+
+                DestinationList.DataSource = contract.departments;
+                DestinationList.DataBind();
             }
             else{
                 EditButton.Enabled = false;

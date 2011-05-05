@@ -59,13 +59,12 @@
     <Content Include="Account\ChangePassword.aspx" />
     <Content Include="Account\ChangePasswordSuccess.aspx" />
     <Content Include="Account\Login.aspx" />
-    <Content Include="Account\Register.aspx" />
     <Content Include="AddContract.aspx" />
     <Content Include="AddInstitution.aspx" />
     <Content Include="AddPerson.aspx" />
     <Content Include="ContractFile.aspx" />
     <Content Include="HistoPDF.aspx" />
-    <Content Include="Lib\itextsharp.dll" />    
+    <Content Include="Lib\itextsharp.dll" />
     <Content Include="Lib\NLog.dll" />
     <Content Include="ShowContract.aspx" />
     <Content Include="ShowPerson.aspx" />
@@ -108,13 +107,6 @@
     <Compile Include="Account\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Account\Register.aspx.cs">
-      <DependentUpon>Register.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Account\Register.aspx.designer.cs">
-      <DependentUpon>Register.aspx</DependentUpon>
-    </Compile>
     <Compile Include="AddContract.aspx.cs">
       <DependentUpon>AddContract.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -143,6 +135,7 @@
     <Compile Include="ContractFile.aspx.designer.cs">
       <DependentUpon>ContractFile.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Dao\User.cs" />
     <Compile Include="HistoPDF.aspx.cs">
       <DependentUpon>HistoPDF.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
