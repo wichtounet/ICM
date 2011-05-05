@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -9,11 +10,23 @@ using ICM.Utils;
 using iTextSharp.text;
 using iTextSharp.text.html.simpleparser;
 using iTextSharp.text.pdf;
+using NLog;
 
 namespace ICM
 {
+    /// <summary>
+    ///  This page enable the users to generate an historique in PDF format. 
+    /// </summary>
+    /// <remarks>Baptiste Wicht</remarks>
     public partial class HistoPDF : Page
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// Generate the PDF and put it in the response. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void Page_Load(object sender, EventArgs e)
         {
             var contractsQuery = Request.QueryString["contracts"];
@@ -40,12 +53,13 @@ namespace ICM
                     catch (SqlException exception)
                     {
                         document.Add(new Paragraph("Impossible de générer le PDF à cause d'une erreur serveur : " + exception.Message));
+
+                        Logger.Debug("SQL Error during histo PDF Generation : {0}", exception.Message);
                     }
                 }
                 catch (DocumentException ex)
                 {
-                    Console.Error.WriteLine(ex.StackTrace);
-                    Console.Error.WriteLine(ex.Message);
+                    Logger.Debug("Error during PDF generation : {0}", ex.Message);
                 }
 
                 document.Close();
@@ -63,28 +77,34 @@ namespace ICM
 
             document.AddTitle(title);
 
-            var titleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
+            document.Add(new Paragraph(title, new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD)));
+
             var subtitleFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
 
-            document.Add(new Paragraph(title, titleFont));
+            using(var connection = DBManager.GetInstance().GetNewConnection())
+            {
+                var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
-            document.Add(new Paragraph(" ", subtitleFont));
-            document.Add(new Paragraph("Contrats", subtitleFont));
+                document.Add(new Paragraph(" ", subtitleFont));
+                document.Add(new Paragraph("Contrats", subtitleFont));
 
-            var contractsDAO = new ContractsDAO();
+                var contractsDAO = new ContractsDAO();
 
-            var contractsData = contracts.Select(contract => contract.ToInt()).Aggregate("<ul>", (current, id) => current + ("<li>" + contractsDAO.GetContractById(id) + "</li>")) + "</ul>";
+                var contractsData = contracts.Select(contract => contract.ToInt()).Aggregate("<ul>", (current, id) => current + ("<li>" + contractsDAO.GetContractById(id, connection, transaction) + "</li>")) + "</ul>";
 
-            ParseHtml(document, contractsData);
+                ParseHtml(document, contractsData);
 
-            document.Add(new Paragraph(" ", subtitleFont));
-            document.Add(new Paragraph("Personnes", subtitleFont));
+                document.Add(new Paragraph(" ", subtitleFont));
+                document.Add(new Paragraph("Personnes", subtitleFont));
 
-            var personsDAO = new PersonsDAO();
+                var personsDAO = new PersonsDAO();
 
-            var personsData = persons.Select(person => person.ToInt()).Aggregate("<ul>", (current, id) => current + ("<li>" + personsDAO.GetPersonByID(id) + "</li>")) + "</ul>";
+                var personsData = persons.Select(person => person.ToInt()).Aggregate("<ul>", (current, id) => current + ("<li>" + personsDAO.GetPersonByID(id, transaction, connection) + "</li>")) + "</ul>";
 
-            ParseHtml(document, personsData);
+                ParseHtml(document, personsData);
+
+                transaction.Commit();
+            }
         }
 
         private static void ParseHtml(Document document, string str)

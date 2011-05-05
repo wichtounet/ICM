@@ -1,16 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using ICM.Dao;
-using ICM.Model;
 using ICM.Utils;
 
 namespace ICM
 {
+    /// <summary>
+    ///  This page enable the users to generate an historique. 
+    /// </summary>
+    /// <remarks>Baptiste Wicht</remarks>
     public partial class Histo : Page
     {
+        /// <summary>
+        /// Load the lists of the page. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void Page_Load(object sender, EventArgs e)
         {
             //In order to not refill the form at postback
@@ -24,7 +32,7 @@ namespace ICM
 
         private void LoadLists()
         {
-            var dataSource = new InstitutionsDAO().GetInstitutions();
+            var dataSource = new InstitutionsDAO().GetInstitutionsClean();
 
             InstitutionList.DataBindWithEmptyElement(dataSource, "Name", "Id");
 
@@ -34,6 +42,11 @@ namespace ICM
             }
         }
 
+        /// <summary>
+        /// Generate the historique
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void SearchHisto(object sender, EventArgs e)
         {
             if(Page.IsValid)
@@ -46,21 +59,31 @@ namespace ICM
 
                 Extensions.SqlOperation operation = () =>
                 {
-                    var contracts = new ContractsDAO().HistoSearch(year, institutionId, departmentId);
+                    using(var connection = DBManager.GetInstance().GetNewConnection())
+                    {
+                        var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
-                    ContractsView.DataSource = contracts;
-                    ContractsView.DataBind();
+                        var contracts = new ContractsDAO().HistoSearch(connection, transaction, year, institutionId, departmentId);
 
-                    var persons = new PersonsDAO().HistoSearch(contracts);
+                        ContractsView.DataSource = contracts;
+                        ContractsView.DataBind();
 
-                    PersonsView.DataSource = persons;
-                    PersonsView.DataBind();
+                        PersonsView.DataSource = new PersonsDAO().HistoSearch(connection, transaction, contracts);
+                        PersonsView.DataBind();
+
+                        transaction.Commit();
+                    }
                 };
 
                 this.Verified(operation, ErrorLabel);
             }
         }
 
+        /// <summary>
+        /// An institution has been selected. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void InstitutionSelected(object sender, EventArgs e)
         {
             if("".Equals(InstitutionList.SelectedValue))
@@ -73,12 +96,11 @@ namespace ICM
 
                 Extensions.SqlOperation operation = () =>
                 {
-                    var institution = new InstitutionsDAO().GetInstitution(id);
+                    var institution = new InstitutionsDAO().GetInstitutionClean(id);
 
                     if (institution != null)
                     {
-                        DepartmentList.DataBindWithEmptyElement(
-                            institution.Departments, "Name", "Id");
+                        DepartmentList.DataBindWithEmptyElement(institution.Departments, "Name", "Id");
                     }
                 };
 
@@ -86,6 +108,11 @@ namespace ICM
             }
         }
 
+        /// <summary>
+        /// Generate the PDF of the historique
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void GeneratePDF(object sender, EventArgs e)
         {
             var contracts = ContractsView.Items;

@@ -82,6 +82,44 @@ namespace ICM.Dao
             return institution;
         }
 
+        ///<summary>
+        /// Return the institution with the given id. This method opens a connection and close it. 
+        ///</summary>
+        ///<param name="id">The id of the institution to search. </param>
+        ///<returns>The institution with the given id. </returns>
+        public Institution GetInstitutionClean(int id)
+        {
+            using(var connection = DBManager.GetInstance().GetNewConnection())
+            {
+                Institution institution = null;
+
+                var parameters = new NameValueCollection
+                {
+                    {"@id", id.ToString()},
+                };
+
+                var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+                using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution] WHERE id = @id", connection, transaction, parameters))
+                {
+                    if (institutionReader.Read())
+                    {
+                        institution = GetInstitutionWithoutDepartmentsAndContinent(institutionReader);
+                    }
+                }
+
+                if (institution != null)
+                {
+                    institution.Departments = GetDepartments(institution.Id, connection, transaction);
+                    institution.Country.Continent = GetContinent(institution.Country.Name, connection, transaction);
+                }
+
+                DBUtils.CommitTransaction(transaction);
+
+                return institution;
+            }
+        }
+
         //TODO: test
         public void UpdateInstitution(Institution institution)
         {
@@ -174,6 +212,40 @@ namespace ICM.Dao
             return institutions;
         }
 
+        ///<summary>
+        /// Returns all the institutions. This method opens a new connection and close it. 
+        ///</summary>
+        ///<returns>All the institutions of the database. </returns>
+        public List<Institution> GetInstitutionsClean()
+        {
+            using(var connection = DBManager.GetInstance().GetNewConnection())
+            {
+                var institutions = new List<Institution>();
+
+                var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+                //Instantiate institutions without department list
+                using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution]", connection, transaction, new NameValueCollection()))
+                {
+                    while (institutionReader.Read())
+                    {
+                        institutions.Add(GetInstitutionWithoutDepartmentsAndContinent(institutionReader));
+                    }
+                }
+
+                //Add department list to the institutions
+                foreach (var institution in institutions)
+                {
+                    institution.Departments = GetDepartments(institution.Id, connection, transaction);
+                    institution.Country.Continent = GetContinent(institution.Country.Name, connection, transaction);
+                }
+
+                DBUtils.CommitTransaction(transaction);
+
+                return institutions;
+            }
+        }
+
         public List<Department> GetDepartments(int institutionId) {
             SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
             List<Department> departments = GetDepartments(institutionId, transaction);
@@ -209,6 +281,11 @@ namespace ICM.Dao
 
         private List<Department> GetDepartments(int institutionId, SqlTransaction transaction)
         {
+            return GetDepartments(institutionId, DBManager.GetInstance().GetConnection(), transaction);
+        }
+
+        private List<Department> GetDepartments(int institutionId, SqlConnection connection, SqlTransaction transaction)
+        {
             List<Department> departments = new List<Department>();
 
             var parameters = new NameValueCollection
@@ -216,7 +293,7 @@ namespace ICM.Dao
                 {"@institutionId", institutionId.ToString()}
             };
 
-            using (SqlResult departmentReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Department] WHERE institutionId = @institutionId", transaction, parameters))
+            using (SqlResult departmentReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Department] WHERE institutionId = @institutionId", connection, transaction, parameters))
             {
                 //Fill departments list
                 while (departmentReader.Read())
@@ -233,6 +310,11 @@ namespace ICM.Dao
 
         private Continent GetContinent(string countryName, SqlTransaction transaction)
         {
+            return GetContinent(countryName, DBManager.GetInstance().GetConnection(), transaction);
+        }
+
+        private Continent GetContinent(string countryName, SqlConnection connection, SqlTransaction transaction)
+        {
             //Get continent name
             string continentName;
             var parameters = new NameValueCollection
@@ -240,7 +322,7 @@ namespace ICM.Dao
                 {"@countryName", countryName}
             };
 
-            using (SqlResult countryReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Country] WHERE name = @countryName", transaction, parameters))
+            using (SqlResult countryReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Country] WHERE name = @countryName", connection, transaction, parameters))
             {
                 countryReader.Read();
                 continentName = (string)countryReader["continentName"];

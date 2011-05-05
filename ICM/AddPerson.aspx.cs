@@ -16,7 +16,7 @@ namespace ICM
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private static int transactionId = 0;
+        private static int transactionId;
 
         /// <summary>
         /// Load the informations about the person, load the lists and fill the page. 
@@ -60,13 +60,13 @@ namespace ICM
                         IDLabel.Text = id.ToString();
 
                         //TODO Use the same transaction if possible
-                        var dataSource = new InstitutionsDAO().GetInstitutions();
+                        var dataSource = new InstitutionsDAO().GetInstitutionsClean();
 
                         InstitutionList.DataBind(dataSource, "Name", "Id");
 
                         InstitutionList.SelectedValue = person.Department.InstitutionId.ToString();
 
-                        var institution = new InstitutionsDAO().GetInstitution(person.Department.InstitutionId);
+                        var institution = new InstitutionsDAO().GetInstitutionClean(person.Department.InstitutionId);
 
                         DepartmentList.DataBind(institution.Departments, "Name", "Id");
 
@@ -92,7 +92,7 @@ namespace ICM
 
         private void LoadLists()
         {
-            var dataSource = new InstitutionsDAO().GetInstitutions();
+            var dataSource = new InstitutionsDAO().GetInstitutionsClean();
 
             InstitutionList.DataBind(dataSource, "Name", "Id");
 
@@ -152,6 +152,8 @@ namespace ICM
                     {
                         new PersonsDAO().SavePerson(id, FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text, departmentId, transaction, connection);
 
+                        transaction.Commit();
+
                         DBManager.GetInstance().CloseConnection(connection);
 
                         Response.Redirect("ShowPerson.aspx?person=" + id);
@@ -173,7 +175,7 @@ namespace ICM
             {
                 var id = InstitutionList.SelectedValue.ToInt();
 
-                var institution = new InstitutionsDAO().GetInstitution(id);
+                var institution = new InstitutionsDAO().GetInstitutionClean(id);
 
                 if (institution != null)
                 {

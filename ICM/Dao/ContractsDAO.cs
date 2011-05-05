@@ -89,6 +89,74 @@ namespace ICM.Dao
             return contracts.First();
         }
 
+        //COPIED BY WICHT
+        public Contract GetContractById(int id, SqlConnection connection, SqlTransaction transaction)
+        {
+            var contracts = new List<Contract>();
+
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()},
+            };
+
+            Contract c = new Contract();
+            List<Person> persons = new List<Person>();
+            List<Department> departments = new List<Department>();
+
+            using (var reader = DBUtils.ExecuteTransactionQuery("SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived " +
+                                                     "FROM [Contract] C " +
+                                                     "WHERE C.id = @id"
+                                                    , connection, transaction, parameters))
+            {
+
+                if (reader.Read())
+                {
+                    c = BindContract(reader);
+                }
+            }
+
+            using (var readerAssoc = DBUtils.ExecuteTransactionQuery("SELECT A.roleName, P.id AS personId, P.name, P.firstname " +
+                                                     "FROM [Association] A " +
+                                                     "INNER JOIN Person P " +
+                                                     "ON A.person = P.id " +
+                                                     "WHERE A.contractId = @id"
+                                                    , connection, transaction, parameters))
+            {
+                while (readerAssoc.Read())
+                {
+                    Person p = new Person();
+                    p.Id = (int)readerAssoc["personId"];
+                    p.Role = (string)readerAssoc["roleName"];
+                    p.FirstName = (string)readerAssoc["firstname"];
+                    p.Name = (string)readerAssoc["name"];
+                    persons.Add(p);
+                }
+            }
+            using (var readerDestination = DBUtils.ExecuteTransactionQuery("SELECT P.name AS depName, I.id AS institutionId, I.name AS insName" +
+                                                     " FROM [Destination] D" +
+                                                     " INNER JOIN [Department] P" +
+                                                     " ON D.department = P.id" +
+                                                     " INNER JOIN [Institution] I" +
+                                                     " ON P.institutionId = I.id" +
+                                                     " WHERE D.contract = @id"
+                                                    , connection, transaction, parameters))
+            {
+                while (readerDestination.Read())
+                {
+                    Department d = new Department();
+                    d.Name = (string)readerDestination["depName"];
+                    d.InstitutionName = (string)readerDestination["insName"];
+                    d.InstitutionId = (int)readerDestination["institutionId"];
+                    departments.Add(d);
+                }
+            }
+            c.persons = persons;
+            c.departments = departments;
+            contracts.Add(c);
+            //DO NOT CLOSE THE CONNECTION OR THE TRANSACTION HERE
+            return contracts.First();
+        }
+
         public void GetContractFile(HttpContext context, int id)
         {
             try
@@ -321,17 +389,15 @@ namespace ICM.Dao
         ///<summary>
         /// Make a search for the historique feature. 
         ///</summary>
+        ///<param name="connection">The connection to use</param>
+        ///<param name="transaction">The transaction to use</param>
         ///<param name="year">The year to search contracts. </param>
         ///<param name="institutionId">The institution of the contracts. </param>
         ///<param name="departmentId">The department of the contracts. </param>
         ///<returns>All the contracts of the historique. </returns>
-        public List<Contract> HistoSearch(int year, int institutionId, int departmentId)
+        public List<Contract> HistoSearch(SqlConnection connection, SqlTransaction transaction, int year, int institutionId, int departmentId)
         {
             var contracts = new List<Contract>();
-
-            var connection = DBManager.GetInstance().GetConnection();
-
-            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
             var query = "SELECT DISTINCT C.id, C.title FROM Contract C";
 
@@ -369,8 +435,6 @@ namespace ICM.Dao
                     contracts.Add(contract);
                 }
             }
-
-            transaction.Commit();
 
             Logger.Debug("Histo search found {0} persons", contracts.Count);
 

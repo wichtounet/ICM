@@ -19,7 +19,7 @@ namespace ICM.Dao
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// Create a new person with the given values
+        /// Create a new person with the given values. This method creates a new connection and close it. 
         /// </summary>
         /// <param name="name">The name of the person</param>
         /// <param name="firstname">The firstname of the person</param>
@@ -29,25 +29,30 @@ namespace ICM.Dao
         /// <returns>the id of the inserted person</returns>
         public int CreatePerson(string firstname, string name, string phone, string email, int department)
         {
-            Logger.Debug("Creating person");
-
-            var parameters = new NameValueCollection
+            using (var connection = DBManager.GetInstance().GetNewConnection())
             {
-                {"@firstname", firstname},
-                {"@name", name},
-                {"@phone", phone},
-                {"@email", email},
-                {"@archived", "0"},
-                {"@department", department.ToString()}
-            };
+                var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
-            var id = DBUtils.ExecuteInsert(
-                "INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)",
-                IsolationLevel.ReadUncommitted, parameters, "Person");
+                Logger.Debug("Creating person");
 
-            Logger.Debug("Created person with id {0}", id);
+                var parameters = new NameValueCollection
+                {
+                    {"@firstname", firstname},
+                    {"@name", name},
+                    {"@phone", phone},
+                    {"@email", email},
+                    {"@archived", "0"},
+                    {"@department", department.ToString()}
+                };
 
-            return id;
+                var id = DBUtils.ExecuteInsert(
+                    "INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)",
+                    IsolationLevel.ReadUncommitted, parameters, "Person", transaction);
+
+                Logger.Debug("Created person with id {0}", id);
+
+                return id;
+            }
         }
 
         /// <summary>
@@ -79,13 +84,11 @@ namespace ICM.Dao
                 "UPDATE [Person] SET firstname = @firstname, name = @name, phone = @phone, email = @email, departmentId = @department WHERE id = @id",
                 transaction, parameters);
 
-            transaction.Commit();
-
             Logger.Debug("Saved person {0}", id);
         }
 
         /// <summary>
-        /// Archive the person with the given id
+        /// Archive the person with the given id. This method open a new connection and close it
         /// </summary>
         /// <param name="id">The id of the person to save</param>
         public void ArchivePerson(int id)
@@ -105,7 +108,7 @@ namespace ICM.Dao
         }
 
         /// <summary>
-        /// Search for persons in the database using the given arguments as criteria
+        /// Search for persons in the database using the given arguments as criteria. This method open a new connection and close it. 
         /// </summary>
         /// <param name="name">The name to search persons for</param>
         /// <param name="firstname">The first name to search persons for</param>
@@ -145,11 +148,14 @@ namespace ICM.Dao
 
             Logger.Debug("Searching persons, with query {0}", query);
 
-            using (var reader = DBUtils.ExecuteQuery(query, IsolationLevel.ReadUncommitted, parameters))
+            using(var connection = DBManager.GetInstance().GetNewConnection())
             {
-                while (reader.Read())
+                using (var reader = DBUtils.ExecuteQuery(query, connection, IsolationLevel.ReadUncommitted, parameters))
                 {
-                    persons.Add(BindPerson(reader));
+                    while (reader.Read())
+                    {
+                        persons.Add(BindPerson(reader));
+                    }
                 }
             }
 
@@ -167,19 +173,22 @@ namespace ICM.Dao
         }
 
         /// <summary>
-        /// Return the person with the given id
+        /// Return the person with the given id. This method open a new connection and close it
         /// </summary>
         /// <param name="id">The id of the person to search</param>
         /// <returns>the person with the given ID or null if there is no person with this person</returns>
         public Person GetPersonByID(int id)
         {
-            var transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+            using (var connection = DBManager.GetInstance().GetNewConnection())
+            {
+                var transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
 
-            var person = GetPersonByID(id, transaction, DBManager.GetInstance().GetConnection());
+                var person = GetPersonByID(id, transaction, connection);
 
-            transaction.Commit();
+                transaction.Commit();
 
-            return person;
+                return person;
+            }
         }
 
         public Person GetPersonByID(int id, SqlTransaction transaction, SqlConnection connection)
@@ -254,9 +263,10 @@ namespace ICM.Dao
         ///<summary>
         /// Make a search of persons for historique
         ///</summary>
+        ///<param name="transaction">The transaction to use</param>
         ///<param name="contracts">All the contracts we want the persons for. </param>
         ///<returns>All the persons related with the given contracts</returns>
-        public List<Person> HistoSearch(List<Contract> contracts)
+        public List<Person> HistoSearch(SqlConnection connection, SqlTransaction transaction, List<Contract> contracts)
         {
             var persons = new List<Person>();
 
@@ -278,7 +288,7 @@ namespace ICM.Dao
 
             Logger.Debug("Histo search using query \"{0}\"", query);
 
-            using (var reader = DBUtils.ExecuteQuery(query, IsolationLevel.ReadUncommitted))
+            using (var reader = DBUtils.ExecuteTransactionQuery(query, connection, transaction, new NameValueCollection()))
             {
                 while (reader.Read())
                 {

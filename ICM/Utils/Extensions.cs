@@ -30,11 +30,16 @@ namespace ICM.Utils
             return Convert.ToInt16(str);
         }
 
-        public static int? ToIntStrict(this String str)
+        ///<summary>
+        /// Convert the string to int or -1 if the str is empty
+        ///</summary>
+        ///<param name="str">The string to convert</param>
+        ///<returns>The int value of the string or -1 if the string is empty</returns>
+        public static int ToIntOrDefault(this String str)
         {
-            if (str == null)
+            if ("".Equals(str))
             {
-                return null;
+                return -1;
             }
 
             return Convert.ToInt16(str);

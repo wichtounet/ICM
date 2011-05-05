@@ -41,7 +41,7 @@ namespace ICM.Utils
 
         public static SqlResult ExecuteTransactionQuery(string sql, SqlConnection connection, SqlTransaction transaction, NameValueCollection parameters)
         {
-            var command = new SqlCommand(sql, connection, transaction);
+            var command = new SqlCommand(sql, transaction.Connection, transaction);
 
             foreach (var key in parameters.AllKeys)
             {
@@ -77,15 +77,25 @@ namespace ICM.Utils
             return id;
         }
 
+        ///<summary>
+        /// Execute an update on the database. 
+        ///</summary>
+        ///<param name="sql">The SQL Query</param>
+        ///<param name="level">The isolation level</param>
+        ///<param name="parameters">The SQL Parameters</param>
+        /// <remarks>
+        /// This method open a new connection and close it
+        /// </remarks>
         public static void ExecuteUpdate(string sql, IsolationLevel level, NameValueCollection parameters)
         {
-            var connection = DBManager.GetInstance().GetConnection();
+            using (var connection = DBManager.GetInstance().GetNewConnection())
+            {
+                var transaction = connection.BeginTransaction(level);
 
-            var transaction = connection.BeginTransaction(level);
+                ExecuteNonQuery(connection, sql, transaction, parameters);
 
-            ExecuteNonQuery(connection, sql, transaction, parameters);
-
-            transaction.Commit();
+                transaction.Commit();
+            }
         }
 
         public static int ExecuteInsert(string sql, IsolationLevel level, NameValueCollection parameters, string tableName)
@@ -162,6 +172,22 @@ namespace ICM.Utils
             }
 
             command.ExecuteNonQuery();
+        }
+
+        public static SqlResult ExecuteQuery(string sql, SqlConnection connection, IsolationLevel level, NameValueCollection parameters)
+        {
+            var transaction = connection.BeginTransaction(level);
+
+            var command = new SqlCommand(sql, connection, transaction);
+
+            foreach (var key in parameters.AllKeys)
+            {
+                command.Parameters.AddWithValue(key, parameters.Get(key));
+            }
+
+            var reader = command.ExecuteReader();
+
+            return new SqlResult(transaction, reader);
         }
 
         public static SqlResult ExecuteQuery(string sql, IsolationLevel level, NameValueCollection parameters)

@@ -38,8 +38,6 @@ namespace ICM.Utils
 
             var newConnection = new SqlConnection(@"Data Source=160.98.60.35\MSSQLSERVER,1433;Initial Catalog=ICM;Integrated Security=False;User ID=sa;Password=International3;Connect Timeout=5");
 
-            Logger.Debug("Connection opened with timeout {0}", newConnection.ConnectionTimeout);
-
             newConnection.Open();
 
             return newConnection;
