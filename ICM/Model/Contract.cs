@@ -19,12 +19,12 @@ namespace ICM.Model
             get;
             set;
         }
-        public string Start
+        public DateTime Start
         {
             get;
             set;
         }
-        public string End
+        public DateTime End
         {
             get;
             set;

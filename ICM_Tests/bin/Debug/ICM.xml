@@ -4,10 +4,37 @@
         <name>ICM</name>
     </assembly>
     <members>
+        <member name="T:ICM.Utils.Extensions">
+            <summary>
+             Contains several extensions methods useful to make easier the development. 
+            </summary>
+            <remarks>Baptiste Wicht</remarks>
+        </member>
+        <member name="M:ICM.Utils.Extensions.DataBind``1(System.Web.UI.WebControls.DropDownList,System.Collections.Generic.List{``0},System.String,System.String)">
+            <summary>
+             Bind the list to a datasource and set the text field and value field
+            </summary>
+            <param name="list">this</param>
+            <param name="dataSource">The datasource</param>
+            <param name="textField">The text field</param>
+            <param name="valueField">The value field</param>
+            <typeparam name="T">Type of data in the data source</typeparam>
+        </member>
+        <member name="M:ICM.Utils.Extensions.DataBindWithEmptyElement``1(System.Web.UI.WebControls.DropDownList,System.Collections.Generic.List{``0},System.String,System.String)">
+            <summary>
+             Bind the list to a datasource and set the text field and value field and add an empty item at the start of the list
+            </summary>
+            <param name="list">this</param>
+            <param name="dataSource">The datasource</param>
+            <param name="textField">The text field</param>
+            <param name="valueField">The value field</param>
+            <typeparam name="T">Type of data in the data source</typeparam>
+        </member>
         <member name="T:ICM.Dao.LanguagesDAO">
             <summary>
              This class enables the user to search the database for languages. 
             </summary>
+            <remarks>Baptiste Wicht</remarks>
         </member>
         <member name="M:ICM.Dao.LanguagesDAO.GetAllLanguages">
             <summary>
@@ -193,9 +220,45 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="F:ICM.AddInstitution.Button1">
+            <summary>
+            Button1 control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:ICM.Histo.IDLabel">
+            <summary>
+            IDLabel control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:ICM.Histo.YearTextBox">
             <summary>
             YearTextBox control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:ICM.Histo.RequiredNameValidator">
+            <summary>
+            RequiredNameValidator control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:ICM.Histo.CompareValidator1">
+            <summary>
+            CompareValidator1 control.
             </summary>
             <remarks>
             Auto-generated field.
@@ -211,9 +274,9 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:ICM.Histo.DepartementList">
+        <member name="F:ICM.Histo.DepartmentList">
             <summary>
-            DepartementList control.
+            DepartmentList control.
             </summary>
             <remarks>
             Auto-generated field.
@@ -256,10 +319,63 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="T:ICM.Model.Language">
+            <summary>
+             A Language, represents in what language we communicate with the institution
+            </summary>
+            <remarks>Baptiste Wicht</remarks>
+        </member>
+        <member name="P:ICM.Model.Language.Name">
+            <summary>
+             The name of the language. 
+            </summary>
+        </member>
+        <member name="T:ICM.Model.Person">
+            <summary>
+             A Person, represents a single person in a contract. 
+            </summary>
+            <remarks>Baptiste Wicht</remarks>
+        </member>
+        <member name="P:ICM.Model.Person.Id">
+            <summary>
+             The id of the person
+            </summary>
+        </member>
+        <member name="P:ICM.Model.Person.FirstName">
+            <summary>
+             The first name of the person
+            </summary>
+        </member>
+        <member name="P:ICM.Model.Person.Name">
+            <summary>
+             The name of the person
+            </summary>
+        </member>
+        <member name="P:ICM.Model.Person.Phone">
+            <summary>
+             The phone number of the person. 
+            </summary>
+        </member>
+        <member name="P:ICM.Model.Person.Email">
+            <summary>
+             The email address of the Person. 
+            </summary>
+        </member>
+        <member name="P:ICM.Model.Person.Archived">
+            <summary>
+             A boolean tag indicating 
+            </summary>
+        </member>
+        <member name="P:ICM.Model.Person.Department">
+            <summary>
+             The department
+            </summary>
+        </member>
         <member name="T:ICM.Dao.PersonsDAO">
             <summary>
              This class enables the user to make operations on the "Person" table. With this DAO, you can create, update, delete and search for persons. 
             </summary>
+            <remarks>Baptiste Wicht</remarks>
         </member>
         <member name="M:ICM.Dao.PersonsDAO.CreatePerson(System.String,System.String,System.String,System.String)">
             <summary>
@@ -287,7 +403,7 @@
             </summary>
             <param name="id">The id of the person to save</param>
         </member>
-        <member name="M:ICM.Dao.PersonsDAO.SearchPersons(System.String,System.String,System.Boolean)">
+        <member name="M:ICM.Dao.PersonsDAO.SearchPersons(System.String,System.String,System.Boolean,System.Int32,System.Int32)">
             <summary>
             Search for persons in the database using the given arguments as criteria
             </summary>
@@ -325,6 +441,12 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="T:ICM.Utils.DBUtils">
+            <summary>
+             This utility class contains several methods that aims to simplify the use of database. 
+            </summary>
+            <remarks>Baptiste Wicht</remarks>
+        </member>
         <member name="F:ICM.PersonsMaster.PersonsContent">
             <summary>
             PersonsContent control.
@@ -333,6 +455,17 @@
             Auto-generated field.
             To modify move field declaration from designer file to code-behind file.
             </remarks>
+        </member>
+        <member name="T:ICM.Model.Role">
+            <summary>
+             A Role, represents what the person is doing in a contract
+            </summary>
+            <remarks>Baptiste Wicht</remarks>
+        </member>
+        <member name="P:ICM.Model.Role.Name">
+            <summary>
+             The name of the person. 
+            </summary>
         </member>
         <member name="F:ICM.Account.ChangePassword.ChangeUserPassword">
             <summary>
@@ -469,76 +602,94 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
-        <member name="F:ICM._Default.TitleLabel">
+        <member name="F:ICM._Default.stateForm">
             <summary>
-            TitleLabel control.
+            Contrôle stateForm.
             </summary>
             <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM._Default.dateDepart">
+        <member name="F:ICM._Default.TitleText">
             <summary>
-            dateDepart control.
+            Contrôle TitleText.
             </summary>
             <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM._Default.dateFin">
+        <member name="F:ICM._Default.ContractTypeList">
             <summary>
-            dateFin control.
+            Contrôle ContractTypeList.
             </summary>
             <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM._Default.DepartementList">
+        <member name="F:ICM._Default.YearList">
             <summary>
-            DepartementList control.
+            Contrôle YearList.
             </summary>
             <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM._Default.UniversityList">
+        <member name="F:ICM._Default.InstitutionList">
             <summary>
-            UniversityList control.
+            Contrôle InstitutionList.
             </summary>
             <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM._Default.TypeList">
+        <member name="F:ICM._Default.DepartmentList">
             <summary>
-            TypeList control.
+            Contrôle DepartmentList.
             </summary>
             <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM._Default.PersonsList">
+        <member name="F:ICM._Default.PersonneList">
             <summary>
-            PersonsList control.
+            Contrôle PersonneList.
             </summary>
             <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:ICM._Default.ArchivedCheck">
+            <summary>
+            Contrôle ArchivedCheck.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
         <member name="F:ICM._Default.SearchButton">
             <summary>
-            SearchButton control.
+            Contrôle SearchButton.
             </summary>
             <remarks>
-            Auto-generated field.
-            To modify move field declaration from designer file to code-behind file.
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:ICM._Default.ResultsView">
+            <summary>
+            Contrôle ResultsView.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
         <member name="F:ICM.ShowPerson.IDLabel">
@@ -635,6 +786,7 @@
             <summary>
              This class enables the user to search the database for countries and continents. 
             </summary>
+            <remarks>Baptiste Wicht</remarks>
         </member>
         <member name="M:ICM.Dao.CountriesDAO.GetAllContinents">
             <summary>
@@ -681,6 +833,15 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="F:ICM.Persons.IDLabel">
+            <summary>
+            IDLabel control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
         <member name="F:ICM.Persons.NameLabel">
             <summary>
             NameLabel control.
@@ -702,6 +863,15 @@
         <member name="F:ICM.Persons.InstitutionList">
             <summary>
             InstitutionList control.
+            </summary>
+            <remarks>
+            Auto-generated field.
+            To modify move field declaration from designer file to code-behind file.
+            </remarks>
+        </member>
+        <member name="F:ICM.Persons.DepartmentList">
+            <summary>
+            DepartmentList control.
             </summary>
             <remarks>
             Auto-generated field.
@@ -735,6 +905,33 @@
             To modify move field declaration from designer file to code-behind file.
             </remarks>
         </member>
+        <member name="T:ICM.Model.Continent">
+            <summary>
+             A Continent, represents a way to group countries. 
+            </summary>
+            <remarks>Baptiste Wicht</remarks>
+        </member>
+        <member name="P:ICM.Model.Continent.Name">
+            <summary>
+             The name of the continent
+            </summary>
+        </member>
+        <member name="T:ICM.Model.Country">
+            <summary>
+             A Country, represents a country in which the institutions or the person is. 
+            </summary>
+            <remarks>Baptiste Wicht</remarks>
+        </member>
+        <member name="P:ICM.Model.Country.Name">
+            <summary>
+             The name of the country
+            </summary>
+        </member>
+        <member name="P:ICM.Model.Country.Continent">
+            <summary>
+             The continent the country is located on. 
+            </summary>
+        </member>
         <member name="F:ICM.AddContract.stateForm">
             <summary>
             Contrôle stateForm.
@@ -744,135 +941,144 @@
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.titleText">
+        <member name="F:ICM.AddContract.TitleText">
             <summary>
-            Contrôle titleText.
+            Contrôle TitleText.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.typeContractList">
+        <member name="F:ICM.AddContract.ContractTypeList">
             <summary>
-            Contrôle typeContractList.
+            Contrôle ContractTypeList.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.dateDebut">
+        <member name="F:ICM.AddContract.StartDate">
             <summary>
-            Contrôle dateDebut.
+            Contrôle StartDate.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.dateFin">
+        <member name="F:ICM.AddContract.EndDate">
             <summary>
-            Contrôle dateFin.
+            Contrôle EndDate.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.institutionList">
+        <member name="F:ICM.AddContract.InstitutionList">
             <summary>
-            Contrôle institutionList.
+            Contrôle InstitutionList.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.addInstitution">
+        <member name="F:ICM.AddContract.DepartmentList">
             <summary>
-            Contrôle addInstitution.
+            Contrôle DepartmentList.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.institutionChooseList">
+        <member name="F:ICM.AddContract.AddDepartment">
             <summary>
-            Contrôle institutionChooseList.
+            Contrôle AddDepartment.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.deleteInstitution">
+        <member name="F:ICM.AddContract.DepartmentSelectedList">
             <summary>
-            Contrôle deleteInstitution.
+            Contrôle DepartmentSelectedList.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.institutionLabel">
+        <member name="F:ICM.AddContract.DeleteDepartment">
             <summary>
-            Contrôle institutionLabel.
+            Contrôle DeleteDepartment.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.personneList">
+        <member name="F:ICM.AddContract.DepartmentLabel">
             <summary>
-            Contrôle personneList.
+            Contrôle DepartmentLabel.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.roleList">
+        <member name="F:ICM.AddContract.PersonList">
             <summary>
-            Contrôle roleList.
+            Contrôle PersonList.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.addPerson">
+        <member name="F:ICM.AddContract.RoleList">
             <summary>
-            Contrôle addPerson.
+            Contrôle RoleList.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.choosePersonsList">
+        <member name="F:ICM.AddContract.AddPerson">
             <summary>
-            Contrôle choosePersonsList.
+            Contrôle AddPerson.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.deletePerson">
+        <member name="F:ICM.AddContract.PersonSelectedList">
             <summary>
-            Contrôle deletePerson.
+            Contrôle PersonSelectedList.
             </summary>
             <remarks>
             Champ généré automatiquement.
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.personLabel">
+        <member name="F:ICM.AddContract.DeletePerson">
             <summary>
-            Contrôle personLabel.
+            Contrôle DeletePerson.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:ICM.AddContract.PersonLabel">
+            <summary>
+            Contrôle PersonLabel.
             </summary>
             <remarks>
             Champ généré automatiquement.
@@ -888,9 +1094,18 @@
             Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
             </remarks>
         </member>
-        <member name="F:ICM.AddContract.submitForm">
+        <member name="F:ICM.AddContract.Add">
             <summary>
-            Contrôle submitForm.
+            Contrôle Add.
+            </summary>
+            <remarks>
+            Champ généré automatiquement.
+            Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+            </remarks>
+        </member>
+        <member name="F:ICM.AddContract.Save">
+            <summary>
+            Contrôle Save.
             </summary>
             <remarks>
             Champ généré automatiquement.
@@ -1081,6 +1296,7 @@
             <summary>
              This class enables the user to search the database for roles. 
             </summary>
+            <remarks>Baptiste Wicht</remarks>
         </member>
         <member name="M:ICM.Dao.RolesDAO.GetAllRoles">
             <summary>
@@ -1094,6 +1310,17 @@
             </summary>
             <param name="result">The result of a SQL query</param>
             <returns>a new instance of Role with the values of the SQL Result</returns>
+        </member>
+        <member name="M:ICM.Dao.InstitutionsDAO.SearchInstitutions(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Search for institutions in the database using the given arguments as criteria
+            </summary>
+            <param name="name">Instution name</param>
+            <param name="language">Institution language</param>
+            <param name="continent">Institution country</param>
+            <param name="country">Institution country</param>
+            <param name="archived">Institution state (archived or not)</param>
+            <returns>All the institutions matching the search criteria</returns>
         </member>
     </members>
 </doc>

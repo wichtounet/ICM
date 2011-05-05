@@ -21,8 +21,8 @@ namespace ICM
 
                 IDLabel.Text = contract.Id.ToString();
                 TitreLabel.Text = contract.Title;
-                dateDebutLabel.Text = contract.Start;
-                dateFinLabel.Text = contract.End;
+                dateDebutLabel.Text = contract.Start.ToString();
+                dateFinLabel.Text = contract.End.ToString();
                 userLabel.Text = contract.User;
                 typeLabel.Text = contract.Type;
                 userLabel.Text  = contract.User;
@@ -30,6 +30,8 @@ namespace ICM
                 downloadFile.NavigateUrl = "ContractFile.aspx?id=" + contract.fileId.ToString();
 
                 personList.DataSource = contract.persons;
+                personList.DataValueField = "Name";
+                personList.DataTextField = "Name";
                 personList.DataBind();
             }
             else{
@@ -39,12 +41,12 @@ namespace ICM
         }
         protected void EditContract(object sender, EventArgs e)
         {
-            
+            Response.Redirect("AddContract.aspx?contract=" + Request.QueryString["contract"].ToInt()); 
         }
 
-        protected void DeleteContract(object sender, EventArgs e)
+        protected void ArchiveContract(object sender, EventArgs e)
         {
-            
+            new ContractsDAO().ArchiveContract(Request.QueryString["contract"].ToInt());
         }
 
     }

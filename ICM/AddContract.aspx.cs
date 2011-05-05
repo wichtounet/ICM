@@ -23,81 +23,74 @@ namespace ICM
             if ("-1".Equals(stateForm.Text))
             {
                 stateForm.Text = "1";
+                
+                InstitutionList.DataBindWithEmptyElement(new InstitutionsDAO().GetInstitutions(), "Name", "Id");
+                ContractTypeList.DataBindWithEmptyElement(new TypesDAO().GetAllTypes(), "Name", "Name");
+                PersonList.DataBindWithEmptyElement(new PersonsDAO().GetAllPersons(), "Name", "Id");
+                RoleList.DataBindWithEmptyElement(new RolesDAO().GetAllRoles(), "Name", "Name");
 
-                PersonsDAO personsDAO = new PersonsDAO();
-                TypesDAO typesDAO = new TypesDAO();
-                RolesDAO roleDAO = new RolesDAO();
-                InstitutionsDAO institutionsDAO = new InstitutionsDAO();
+                if (Request.QueryString["contract"] != null)
+                {
+                    var id = Request.QueryString["contract"].ToInt();
 
-                List<TypeContract> types = typesDAO.GetAllPersons();
-                List<Role> roles = roleDAO.GetAllRoles();
-                //List<Institution> institutions = institutionsDAO.GetInstitutions();
+                    var contract = new ContractsDAO().GetContractById(id);
 
-                personnes = personsDAO.GetAllPersons();
-                /*
-                Person p1 = new Person();
-                p1.Id = 1;
-                p1.Name = "Vincent";
-                p1.FirstName = "Ischi";
-                personnes.Add(p1);
-                Person p2 = new Person();
-                p2.Id = 2;
-                p2.Name = "Jesus";
-                p2.FirstName = "Christ";
-                personnes.Add(p2);
-                Person p3 = new Person();
-                p3.Id = 3;
-                p3.Name = "Ta";
-                p3.FirstName = "mère";
-                personnes.Add(p3);
-                */
+                    TitleText.Text = contract.Title;
+                    StartDate.Text = contract.Start.ToString("d"); // 05/17/2011
+                    EndDate.Text = contract.End.ToShortDateString();
+                    //typeContractList
+                    //fileID
 
-                personneList.DataSource = personnes;
-                personneList.DataValueField = "Id";
-                personneList.DataTextField = "Name";
-                personneList.DataBind();
-
-                institutionList.DataSource = personnes;
-                institutionList.DataBind();
-
-                typeContractList.DataSource = types;
-                typeContractList.DataBind();
-
-                roleList.DataSource = roles;
-                roleList.DataBind();
+                    Save.Visible = true;
+                }
+                else
+                {
+                    Add.Visible = true;
+                }
             }
             
         }
 
-        protected void addPerson_Click(object sender, EventArgs e)
+        protected void InstitutionSelected(object sender, EventArgs e)
         {
-            choosePersonsList.Items.Add(new ListItem(roleList.SelectedItem.Text + ": " + personneList.SelectedItem.Text, personneList.SelectedItem.Value+";"+roleList.SelectedItem.Value));
-            personLabel.Text = personneList.SelectedItem.Text;
-        }
-        protected void deletePerson_Click(object sender, EventArgs e)
-        {
-            choosePersonsList.Items.Remove(choosePersonsList.SelectedItem);
-        }
+            int id = InstitutionList.SelectedValue.ToInt();
 
-        protected void addInstitution_Click(object sender, EventArgs e)
-        {
-            institutionChooseList.Items.Add(new ListItem(institutionList.SelectedItem.Text, institutionList.SelectedItem.Value));
-        }
-        protected void deleteInstitution_Click(object sender, EventArgs e)
-        {
-            institutionChooseList.Items.Remove(institutionChooseList.SelectedItem);
-        }
-        
+            var institution = new InstitutionsDAO().GetInstitution(id);
 
-        protected void personneList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-            string selectedItem = personneList.SelectedItem.ToString();
-
+            if (institution != null)
+            {
+                DepartmentList.DataBindWithEmptyElement(institution.Departments, "Name", "Id");
+            }
         }
 
+        protected void AddPerson_Click(object sender, EventArgs e)
+        {
+            PersonSelectedList.Items.Add(new ListItem(RoleList.SelectedItem.Text + ": " + PersonList.SelectedItem.Text, PersonList.SelectedItem.Value + ";" + RoleList.SelectedItem.Value));
+            //PersonLabel.Text = PersonList.SelectedItem.Text;
+        }
+        protected void DeletePerson_Click(object sender, EventArgs e)
+        {
+            PersonSelectedList.Items.Remove(PersonSelectedList.SelectedItem);
+        }
 
-        protected void submitForm_Click(object sender, EventArgs e)
+        protected void AddDepartment_Click(object sender, EventArgs e)
+        {
+            DepartmentSelectedList.Items.Add(new ListItem(DepartmentList.SelectedItem.Text, DepartmentList.SelectedItem.Value));
+        }
+        protected void DeleteDepartment_Click(object sender, EventArgs e)
+        {
+            DepartmentSelectedList.Items.Remove(DepartmentSelectedList.SelectedItem);
+        }
+
+        protected void Add_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                submit();
+            }
+        }
+
+        protected void Save_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
@@ -121,13 +114,18 @@ namespace ICM
 
             //Persons
             SortedList persons = new SortedList();
-            for (int i = 0; i < choosePersonsList.Items.Count; i++)
+            for (int i = 0; i < PersonSelectedList.Items.Count; i++)
             {
-                string[] w = choosePersonsList.Items[i].Value.Split(';');
+                string[] w = PersonSelectedList.Items[i].Value.Split(';');
                 persons.Add(w[0], w[1]);
             }
+            int[] destination = new int[DepartmentSelectedList.Items.Count];
+            for (int i = 0; i < DepartmentSelectedList.Items.Count; i++)
+            {
+                destination[i] = DepartmentSelectedList.Items[i].Value.ToInt();
+            }
 
-            int id = contractDAO.addContract(titleText.Text, dateDebut.Text, dateFin.Text, typeContractList.SelectedItem.Value, "vincent", persons, 0, 0, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+            int id = contractDAO.addContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, "vincent", persons, destination, 0, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
 
             Response.Redirect("showContract.aspx?contract="+id);
         }

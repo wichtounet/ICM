@@ -42,7 +42,7 @@
     
     <p>
         <asp:Button ID="EditButton" runat="server" Text="Modifier" OnClick="EditContract" /> 
-        <asp:Button ID="DeleteButton" runat="server" Text="Archiver" OnClick="DeleteContract" />
+        <asp:Button ID="DeleteButton" runat="server" Text="Archiver" OnClick="ArchiveContract" />
     </p>
 
      <script type="text/javascript">

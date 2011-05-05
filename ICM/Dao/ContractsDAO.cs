@@ -19,42 +19,47 @@ namespace ICM.Dao
         {
             var contracts = new List<Contract>();
 
+            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+
             var parameters = new NameValueCollection
             {
                 {"@id", id.ToString()},
             };
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived, A.roleName, P.name, P.firstname "+
+            Contract c = new Contract();
+            List<Person> persons = new List<Person>();
+
+            using (var reader = DBUtils.ExecuteTransactionQuery("SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived "+
                                                      "FROM [Contract] C "+
-                                                     "INNER JOIN Association A "+
-                                                     "ON C.id = A.contractId "+
-                                                     "INNER JOIN Person P " +
-                                                     "ON A.person = P.id "+
                                                      "WHERE C.id = @id"
-                                                    , IsolationLevel.ReadUncommitted, parameters))
+                                                    , transaction, parameters))
             {
 
                 if (reader.Read())
                 {
-                    Contract c = BindContract(reader);/*
-                    using (var readerAssoc = DBUtils.ExecuteQuery("SELECT A.roleName, P.name, P.firstname " +
+                    c = BindContract(reader);
+                }
+            }
+
+            using (var readerAssoc = DBUtils.ExecuteTransactionQuery("SELECT A.roleName, P.name, P.firstname " +
                                                      "FROM [Association] A " +
                                                      "INNER JOIN Person P " +
                                                      "ON A.person = P.id " +
                                                      "WHERE A.contractId = @id"
-                                                    , IsolationLevel.ReadUncommitted, parameters))
-                    {
-                        while (readerAssoc.Read())
-                        {
-                            Person p = new Person();
-                            p.Name = readerAssoc["name"].ToString();
-                            p.FirstName = readerAssoc["firstname"].ToString();
-                            c.persons.Add(p);
-                        }
-                    }*/
-                    contracts.Add(c);
+                                                    , transaction, parameters))
+            {
+                while (readerAssoc.Read())
+                {
+                    Person p = new Person();
+                    p.Name = readerAssoc["roleName"].ToString()+": "+readerAssoc["firstname"].ToString() + " " + readerAssoc["name"].ToString();
+                    persons.Add(p);
                 }
             }
+            c.persons = persons;
+            contracts.Add(c);
+
+            transaction.Connection.Close();
+            
             return contracts.First();
         }
 
@@ -91,38 +96,12 @@ namespace ICM.Dao
                 context.Response.Write(ex.ToString());
             } 
         }
-
-        public List<Contract> GetContractsBySearch(string title, string description, string type, int personId, int departmentId, int destinationId, int institutionId)
+        
+        public int addContract(string title, string start, string end, string typeContractName, string userName, SortedList persons, int[] destinations, int institutionId, int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
         {
-            List<Contract> contractsList = new List<Contract>();
-            /*
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
-
-            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
-
-            string query = "SELECT * FROM [Contract] WHERE title LIKE(@title) AND description LIKE(@description)";
-
-            SqlCommand command = new SqlCommand(query, connection, transaction);
-            command.Parameters.AddWithValue("@name", "%" + title + "%");
-            command.Parameters.AddWithValue("@firstname", "%" + description + "%");
-
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    Contract contract = BindContract(reader);
-                    contractsList.Add(contract);
-                }
-            }
-
-            transaction.Commit();
-            */
-            return contractsList;
-        }
-
-        public int addContract(string title, string start, string end, string typeContractName, string userName, SortedList persons, int destinationId, int institutionId, int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
-        {
-            int contractFileId = addFile(fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+            
+            int contractFileId = addFile(transaction, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
 
             var parameters = new NameValueCollection
             {
@@ -135,14 +114,141 @@ namespace ICM.Dao
                 {"@typeContractName", typeContractName},
                 {"@archived", "0"}
             };
-            
-            int contractId = DBUtils.ExecuteInsert(
-                "INSERT INTO [Contract] (title, start, [end], fileId, xmlContent, userLogin, typeContractName, archived) VALUES (@title, @start, @end, @fileId, @xmlContent, @userLogin, @typeContractName, @archived)",
-                IsolationLevel.ReadUncommitted, parameters, "Contract");
 
-            addContacts(contractId, persons);
+            int contractId = DBUtils.ExecuteInsertWithoutCommit(
+                "INSERT INTO [Contract] (title, start, [end], fileId, xmlContent, userLogin, typeContractName, archived) VALUES (@title, @start, @end, @fileId, @xmlContent, @userLogin, @typeContractName, @archived)",
+                IsolationLevel.ReadUncommitted, parameters, "Contract", transaction);
+
+            addContacts(transaction, contractId, persons);
+            addDestinations(transaction, contractId, destinations);
+
+            transaction.Commit();
 
             return contractId;
+        }
+        
+        private int addFile(SqlTransaction transaction, int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
+        {
+
+            string fileToDbQueryStr = @"INSERT INTO ContractFile (fileSize, fileMIMEType, fileBinaryData) VALUES(@fileSize, @fileMIMEType, @fileBinaryData)";
+            System.Data.SqlClient.SqlCommand command = new SqlCommand(fileToDbQueryStr, transaction.Connection, transaction);
+
+            command.Parameters.AddWithValue("fileSize", fileSize);
+            command.Parameters.AddWithValue("fileMIMEType", fileMIMEType);
+
+            SqlParameter imageFileBinaryParam = new SqlParameter("fileBinaryData", SqlDbType.VarBinary, fileSize);
+            imageFileBinaryParam.Value = fileBinaryBuffer;
+
+            command.Parameters.Add(imageFileBinaryParam);
+
+            command.ExecuteNonQuery();
+
+            var getCommand = new SqlCommand("SELECT IDENT_CURRENT('ContractFile') AS ID", transaction.Connection, transaction);
+
+            int id;
+            using (var reader = getCommand.ExecuteReader())
+            {
+                reader.Read();
+
+                id = reader["ID"].ToString().ToInt();
+            }
+
+            return id;
+        }
+
+        private void addContacts(SqlTransaction transaction, int contractId, SortedList persons)
+        {
+            for (int i = 0; i < persons.Count; i++)
+            {
+                var parametersContact = new NameValueCollection
+                {
+                    {"@person", persons.GetKey(i).ToString()},
+                    {"@roleName", persons.GetByIndex(i).ToString()},
+                    {"@contractId", contractId.ToString()},
+                };
+
+               DBUtils.ExecuteNonQuery(transaction.Connection, "INSERT INTO [Association] VALUES (@person, @roleName, @contractId)", transaction, parametersContact);
+            }
+        }
+
+        private void addDestinations(SqlTransaction transaction, int contractId, int[] destinations)
+        {
+            for (int i = 0; i < destinations.Length; i++)
+            {
+                var parametersDestination = new NameValueCollection
+                {
+                    {"@department", destinations[i].ToString()},
+                    {"@contractId", contractId.ToString()},
+                };
+
+                DBUtils.ExecuteNonQuery(transaction.Connection, "INSERT INTO [Destination] VALUES (@contractId, @department)", transaction, parametersDestination);
+            }
+        }
+
+        public void ArchiveContract(int id)
+        {
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()},
+            };
+
+            DBUtils.ExecuteUpdate(
+                "UPDATE [Contract] SET archived = 1 WHERE id = @id",
+                IsolationLevel.ReadUncommitted, parameters);
+        }
+
+        public List<Contract> SearchContracts(string title, int year, string contractType, int institution, int department, int person, bool archived)
+        {
+            List<Contract> contracts = new List<Contract>();
+
+            var query = "SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived FROM [Contract] C" +
+                         " LEFT OUTER JOIN Association A" +
+                         " ON A.contractId= C.id"+
+                         " WHERE C.title LIKE(@title) AND C.typeContractName LIKE(@contractType)";
+
+
+            if (person != -1)
+            {
+                query += " AND A.person = @person";
+            }
+            if (year > 0)
+            {
+                query += " AND ( YEAR(C.start) = @year OR YEAR(C.[end]) = @year )";
+            }
+            /*
+            if (department != -1)
+            {
+                query += " AND departmentId = @department";
+            }
+            else if (institution != -1)
+            {
+                query += " AND departmentId IN (SELECT id FROM Department WHERE institutionId = @institution)";
+            }
+            */
+            if (archived)
+            {
+                query += " AND archived = 1";
+            }
+
+            var parameters = new NameValueCollection
+            {
+                {"@title", "%" + title + "%"},
+                {"@department", department.ToString()},
+                {"@institution", institution.ToString()},
+                {"@person", person.ToString()},
+                {"@contractType", "%"+ contractType + "%"},
+                {"@year", year.ToString()},
+            };
+
+            using (var reader = DBUtils.ExecuteQuery(query, IsolationLevel.ReadUncommitted, parameters))
+            {
+                while (reader.Read())
+                {
+                    contracts.Add(BindContract(reader));
+                }
+            }
+
+            return contracts;
         }
         
         public List<Contract> GetAllContracts()
@@ -169,77 +275,19 @@ namespace ICM.Dao
             return contractsList;
         }
         
-        private int addFile(int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
-        {
-
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
-
-            SqlTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
-
-            string fileToDbQueryStr = @"INSERT INTO ContractFile (fileSize, fileMIMEType, fileBinaryData) VALUES(@fileSize, @fileMIMEType, @fileBinaryData)";
-            System.Data.SqlClient.SqlCommand command = new SqlCommand(fileToDbQueryStr, connection, transaction);
-
-            command.Parameters.AddWithValue("fileSize", fileSize);
-            command.Parameters.AddWithValue("fileMIMEType", fileMIMEType);
-
-            SqlParameter imageFileBinaryParam = new SqlParameter("fileBinaryData", SqlDbType.VarBinary, fileSize);
-            imageFileBinaryParam.Value = fileBinaryBuffer;
-
-            command.Parameters.Add(imageFileBinaryParam);
-
-            command.ExecuteNonQuery();
-
-            var getCommand = new SqlCommand("SELECT IDENT_CURRENT('ContractFile') AS ID", connection, transaction);
-
-            int id;
-            using (var reader = getCommand.ExecuteReader())
-            {
-                reader.Read();
-
-                id = reader["ID"].ToString().ToInt();
-            }
-
-            transaction.Commit();
-
-            return id;
-        }
-
-
-        private void addContacts(int contractId, SortedList persons)
-        {
-            for (int i = 0; i < persons.Count; i++)
-            {
-                var parametersContact = new NameValueCollection
-                {
-                    {"@person", persons.GetKey(i).ToString()},
-                    {"@roleName", persons.GetByIndex(i).ToString()},
-                    {"@contractId", contractId.ToString()},
-                };
-
-                var connection = DBManager.GetInstance().GetConnection();
-
-                var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
-
-                DBUtils.ExecuteNonQuery(connection, "INSERT INTO [Association] VALUES (@person, @roleName, @contractId)", transaction, parametersContact);
-
-                transaction.Commit();
-
-            }
-        }
-
         private static Contract BindContract(SqlResult reader)
         {
             Contract contract = new Contract();
 
-            contract.Id = reader["id"].ToString().ToInt();
-            contract.Title = reader["title"].ToString();
-            contract.Start = reader["start"].ToString();//DateTime.ParseExact(reader["start"].ToString(), "yyyy-MM-dd hh:mm:ss", null);
-            contract.End = reader["end"].ToString();//DateTime.ParseExact(reader["end"].ToString(), "yyyy-MM-dd hh:mm:ss", null);
-            contract.XmlContent = reader["xmlContent"].ToString();
-            contract.User = reader["userLogin"].ToString();
-            contract.Type = reader["typeContractName"].ToString();
-            contract.Archived = reader["archived"].ToString().Equals("1") ? true : false;
-            contract.fileId = reader["fileId"].ToString().ToInt();
+            contract.Id = (int) reader["id"];
+            contract.Title = (string) reader["title"];
+            contract.Start = (DateTime)reader["start"];//DateTime.ParseExact(reader["start"].ToString(), "yyyy-MM-dd hh:mm:ss", null);
+            contract.End = (DateTime) reader["end"];
+            contract.XmlContent = (string) reader["xmlContent"];
+            contract.User = (string) reader["userLogin"];
+            contract.Type = (string) reader["typeContractName"];
+            contract.Archived = (bool) reader["archived"];
+            contract.fileId = (int) reader["fileId"];
 
             return contract;
         }

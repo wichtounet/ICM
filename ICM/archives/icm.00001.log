@@ -1,0 +1,169 @@
+2011-05-04 15:11:26.1864 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:11:26.2394 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:11:26.2394 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:11:26.2974 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:12:29.9610 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:12:29.9840 ICM.Utils.DBManager Open connection
+2011-05-04 15:12:30.1121 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:12:30.1631 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:12:30.1631 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:12:30.2091 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:12:33.4312 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:12:33.4762 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:12:33.4762 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:12:33.5242 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:13:55.1819 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:13:55.1979 ICM.Utils.DBManager Open connection
+2011-05-04 15:13:55.4069 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:13:55.4549 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:13:55.4549 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:13:55.5979 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:13:57.2900 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:13:57.4200 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:13:57.4200 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:13:57.4951 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:17:09.8211 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:17:09.8371 ICM.Utils.DBManager Open connection
+2011-05-04 15:17:09.9511 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:17:09.9981 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:17:09.9981 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:17:10.0531 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:17:39.6678 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:17:39.6848 ICM.Utils.DBManager Open connection
+2011-05-04 15:17:39.8008 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:17:39.8468 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:17:39.8468 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:17:39.8958 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:18:51.1548 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:18:51.1648 ICM.Utils.DBManager Open connection
+2011-05-04 15:18:51.2859 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:18:51.3389 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:18:51.3389 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:18:51.3849 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:20:35.1428 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:20:35.1558 ICM.Utils.DBManager Open connection
+2011-05-04 15:20:35.2808 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:20:35.3408 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:20:35.3408 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:20:35.3888 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:25:27.8275 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:25:27.8435 ICM.Utils.DBManager Open connection
+2011-05-04 15:25:27.9695 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:25:28.0185 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:25:28.0185 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:25:28.1316 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:25:53.1020 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:25:53.1280 ICM.Utils.DBManager Open connection
+2011-05-04 15:25:53.2810 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:25:53.3270 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:25:53.3270 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:25:53.3890 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:26:15.2703 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:26:15.2803 ICM.Utils.DBManager Open connection
+2011-05-04 15:26:15.4113 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:26:15.4643 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:26:15.4643 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:26:15.5093 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:26:39.3406 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:26:39.3586 ICM.Utils.DBManager Open connection
+2011-05-04 15:26:39.5756 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:26:39.7467 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:26:39.7467 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:26:39.7967 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:27:34.4468 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:27:34.4658 ICM.Utils.DBManager Open connection
+2011-05-04 15:27:34.5838 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:27:34.6358 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:27:34.6368 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:27:34.6818 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:28:21.9805 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:28:21.9985 ICM.Utils.DBManager Open connection
+2011-05-04 15:28:22.1155 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:28:22.1635 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:28:22.1635 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:28:22.2785 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:28:41.6086 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:28:41.6266 ICM.Utils.DBManager Open connection
+2011-05-04 15:28:41.7466 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:28:41.7956 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:28:41.7956 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:28:41.8416 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:29:08.5712 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:29:08.5962 ICM.Utils.DBManager Open connection
+2011-05-04 15:29:08.7222 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:29:08.7662 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:29:08.7662 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:29:08.8152 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:29:36.1067 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:29:36.1167 ICM.Utils.DBManager Open connection
+2011-05-04 15:29:36.2587 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:29:36.3067 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:29:36.3067 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:29:36.3558 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:29:42.3571 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:29:42.4001 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:29:42.4001 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:29:42.4441 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:29:48.5484 ICM.Utils.DBManager Open connection
+2011-05-04 15:29:48.5975 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:29:48.6415 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:29:48.6415 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:29:48.6855 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:30:06.2175 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:30:06.2265 ICM.Utils.DBManager Open connection
+2011-05-04 15:30:06.3515 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:30:06.4075 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:30:06.4075 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:30:06.4545 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:30:09.9657 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:30:10.0087 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:30:10.0087 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:30:10.1627 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:32:56.3692 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:32:56.3942 ICM.Utils.DBManager Open connection
+2011-05-04 15:32:56.5302 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:32:56.5762 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:32:56.5762 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:32:56.6252 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:39:24.4444 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:39:24.4614 ICM.Utils.DBManager Open connection
+2011-05-04 15:39:24.7714 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:39:24.8204 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:39:24.8204 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:39:24.9664 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:39:29.8857 ICM.Dao.RolesDAO Get all roles
+2011-05-04 15:39:29.9427 ICM.Dao.RolesDAO Found 3 roles
+2011-05-04 15:39:29.9427 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 15:39:29.9957 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 15:47:49.7463 ICM.Utils.DBManager Create DBManager
+2011-05-04 15:47:49.7653 ICM.Utils.DBManager Open connection
+2011-05-04 15:48:16.4208 ICM.Dao.PersonsDAO Searching persons
+2011-05-04 15:48:16.4708 ICM.Dao.PersonsDAO Found 4 persons
+2011-05-04 15:48:17.6669 ICM.Dao.PersonsDAO Search person by ID (6)
+2011-05-04 15:48:17.7119 ICM.Dao.PersonsDAO Found JacquesWicht
+2011-05-04 15:48:21.9071 ICM.Dao.PersonsDAO Search person by ID (10)
+2011-05-04 15:48:21.9531 ICM.Dao.PersonsDAO Found DavidDutch
+2011-05-04 15:48:43.3964 ICM.Dao.PersonsDAO Creating person
+2011-05-04 16:34:58.4691 ICM.Dao.PersonsDAO Searching persons
+2011-05-04 16:34:58.5351 ICM.Dao.PersonsDAO Found 4 persons
+2011-05-04 17:57:56.3079 ICM.Utils.DBManager Create DBManager
+2011-05-04 17:57:56.3179 ICM.Utils.DBManager Open connection
+2011-05-04 18:02:13.7816 ICM.Utils.DBManager Create DBManager
+2011-05-04 18:02:13.7986 ICM.Utils.DBManager Open connection
+2011-05-04 18:03:06.3696 ICM.Utils.DBManager Create DBManager
+2011-05-04 18:03:06.3916 ICM.Utils.DBManager Open connection
+2011-05-04 18:03:35.6933 ICM.Utils.DBManager Create DBManager
+2011-05-04 18:03:35.7023 ICM.Utils.DBManager Open connection
+2011-05-04 18:04:32.4585 ICM.Utils.DBManager Create DBManager
+2011-05-04 18:04:32.4675 ICM.Utils.DBManager Open connection
+2011-05-04 18:05:34.5101 ICM.Utils.DBManager Create DBManager
+2011-05-04 18:05:34.5261 ICM.Utils.DBManager Open connection
+2011-05-04 18:05:35.1411 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 18:05:35.1941 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 18:06:04.5178 ICM.Utils.DBManager Create DBManager
+2011-05-04 18:06:04.5268 ICM.Utils.DBManager Open connection
+2011-05-04 18:06:04.7738 ICM.Dao.PersonsDAO Get all persons
+2011-05-04 18:06:04.8218 ICM.Dao.PersonsDAO Found 6 persons
+2011-05-04 18:06:37.1356 ICM.Utils.DBManager Create DBManager
+2011-05-04 18:06:37.1466 ICM.Utils.DBManager Open connection
+2011-05-04 18:06:37.3977 ICM.Dao.PersonsDAO Get all persons
