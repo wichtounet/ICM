@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Threading;
 using ICM.Dao;
 using ICM.Utils;
+using NLog;
 
 namespace ICM
 {
@@ -10,6 +14,10 @@ namespace ICM
     /// <remarks>Baptiste Wicht</remarks>
     public partial class AddPerson : System.Web.UI.Page
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        private static int transactionId = 0;
+
         /// <summary>
         /// Load the informations about the person, load the lists and fill the page. 
         /// </summary>
@@ -26,7 +34,20 @@ namespace ICM
                     {
                         var id = Request.QueryString["person"].ToInt();
 
-                        var person = new PersonsDAO().GetPersonByID(id);
+                        var connection = DBManager.GetInstance().GetNewConnection();
+                        
+                        var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+                        
+                        new PersonsDAO().LockPerson(id, transaction, connection);
+
+                        var tr = Interlocked.Increment(ref transactionId);
+
+                        Session["connection" + tr] = connection;
+                        Session["transaction" + tr] = transaction;
+
+                        ViewState["transaction"] = tr;
+
+                        var person = new PersonsDAO().GetPersonByID(id, transaction, connection);
 
                         IDLabel.Text = person.Id.ToString();
                         NameTextBox.Text = person.Name;
@@ -36,6 +57,9 @@ namespace ICM
 
                         SaveButton.Visible = true;
 
+                        IDLabel.Text = id.ToString();
+
+                        //TODO Use the same transaction if possible
                         var dataSource = new InstitutionsDAO().GetInstitutions();
 
                         InstitutionList.DataBind(dataSource, "Name", "Id");
@@ -45,10 +69,8 @@ namespace ICM
                         var institution = new InstitutionsDAO().GetInstitution(person.Department.InstitutionId);
 
                         DepartmentList.DataBind(institution.Departments, "Name", "Id");
-                        
-                        DepartmentList.SelectedValue = person.Department.Id.ToString();
 
-                        IDLabel.Text = id.ToString();
+                        DepartmentList.SelectedValue = person.Department.Id.ToString();
                     };
 
                     this.Verified(operation, ErrorLabel);
@@ -117,9 +139,23 @@ namespace ICM
 
                     var departmentId = DepartmentList.SelectedValue.ToInt();
 
-                    new PersonsDAO().SavePerson(id, FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text, departmentId);
+                    var tr = (int) ViewState["transaction"];
 
-                    Response.Redirect("ShowPerson.aspx?person=" + id);
+                    var transaction = (SqlTransaction) Session["transaction" + tr];
+                    var connection = (SqlConnection) Session["connection" + tr];
+
+                    if(transaction == null || connection == null)
+                    {
+                        Logger.Error("No transaction or connection configured");
+                    } 
+                    else
+                    {
+                        new PersonsDAO().SavePerson(id, FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text, departmentId, transaction, connection);
+
+                        DBManager.GetInstance().CloseConnection(connection);
+
+                        Response.Redirect("ShowPerson.aspx?person=" + id);
+                    }
                 };
 
                 this.Verified(operation, ErrorLabel);

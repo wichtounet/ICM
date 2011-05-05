@@ -39,6 +39,20 @@ namespace ICM.Utils
             return new SqlResult(null, reader);
         }
 
+        public static SqlResult ExecuteTransactionQuery(string sql, SqlConnection connection, SqlTransaction transaction, NameValueCollection parameters)
+        {
+            var command = new SqlCommand(sql, connection, transaction);
+
+            foreach (var key in parameters.AllKeys)
+            {
+                command.Parameters.AddWithValue(key, parameters.Get(key));
+            }
+
+            var reader = command.ExecuteReader();
+
+            return new SqlResult(null, reader);
+        }
+
         public static SqlResult ExecuteTransactionQuery(string sql, SqlTransaction transaction)
         {
             return ExecuteTransactionQuery(sql, transaction, new NameValueCollection());

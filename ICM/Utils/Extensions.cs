@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NLog;
@@ -16,22 +17,12 @@ namespace ICM.Utils
     {
         public static bool ContainsDepartmentWithName(this List<Department> departments, string name)
         {
-            foreach (Department department in departments)
-            {
-                if (department.Name.Equals(name))
-                    return true;
-            }
-            return false;
+            return departments.Any(department => department.Name.Equals(name));
         }
 
         public static User GetUserByLogin(this List<User> users, string login)
         {
-            foreach (User user in users)
-            {
-                if (user.Login.Equals(login))
-                    return user;
-            }
-            return null;
+            return users.FirstOrDefault(user => user.Login.Equals(login));
         }
 
         public static int ToInt(this String str)
@@ -47,14 +38,6 @@ namespace ICM.Utils
             }
 
             return Convert.ToInt16(str);
-        }
-
-        public static SqlParameter[] ToArray(this SqlParameterCollection collection)
-        {
-            var array = new SqlParameter[collection.Count];
-            collection.CopyTo(array, 0);
-
-            return array;
         }
 
         ///<summary>
@@ -115,9 +98,20 @@ namespace ICM.Utils
             catch (SqlException exception)
             {
                 label.Visible = true;
-                label.Text = "Erreur de base de données : " + exception.Message;
 
-                LogManager.GetLogger(page.GetType().FullName).DebugException("SQL Exception during get person informations", exception);
+                if(exception.Message.StartsWith("Timeout expired."))
+                {
+                    label.Text = "Cet objet est verrouillé par un autre utilisateur, vous ne pourrez le modifier que lorsqu'il aura terminé. ";
+
+                    LogManager.GetLogger(page.GetType().FullName).Debug("Concurrency modification exception");
+                    LogManager.GetLogger(page.GetType().FullName).DebugException("SQL Exception on a page : ", exception);
+                } 
+                else
+                {
+                    label.Text = "Erreur de base de données : " + exception.Message;
+
+                    LogManager.GetLogger(page.GetType().FullName).DebugException("SQL Exception on a page : ", exception);
+                }
             }
         }
     }

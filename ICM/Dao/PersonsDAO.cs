@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using ICM.Model;
 using ICM.Utils;
@@ -53,12 +54,14 @@ namespace ICM.Dao
         /// Save the given person. Make a single UPDATE on the database with the id. 
         /// </summary>
         /// <param name="id">The id of the person to save</param>
-        /// <param name="name">The name of the person</param>
         /// <param name="firstname">The name of the person</param>
-        /// <param name="email">The name of the person</param>
+        /// <param name="name">The name of the person</param>
         /// <param name="phone">The name of the person</param>
+        /// <param name="email">The name of the person</param>
         /// <param name="department">The department of the person</param>
-        public void SavePerson(int id, string firstname, string name, string phone, string email, int department)
+        /// <param name="transaction"></param>
+        /// <param name="connection"></param>
+        public void SavePerson(int id, string firstname, string name, string phone, string email, int department, SqlTransaction transaction, SqlConnection connection)
         {
             Logger.Debug("Saving person {0}", id);
 
@@ -72,9 +75,11 @@ namespace ICM.Dao
                 {"@department", department.ToString()},
             };
 
-            DBUtils.ExecuteUpdate(
+            DBUtils.ExecuteNonQuery(connection, 
                 "UPDATE [Person] SET firstname = @firstname, name = @name, phone = @phone, email = @email, departmentId = @department WHERE id = @id",
-                IsolationLevel.ReadUncommitted, parameters);
+                transaction, parameters);
+
+            transaction.Commit();
 
             Logger.Debug("Saved person {0}", id);
         }
@@ -168,6 +173,17 @@ namespace ICM.Dao
         /// <returns>the person with the given ID or null if there is no person with this person</returns>
         public Person GetPersonByID(int id)
         {
+            var transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+            var person = GetPersonByID(id, transaction, DBManager.GetInstance().GetConnection());
+
+            transaction.Commit();
+
+            return person;
+        }
+
+        public Person GetPersonByID(int id, SqlTransaction transaction, SqlConnection connection)
+        {
             Logger.Debug("Search person by ID ({0})", id);
 
             var persons = new List<Person>();
@@ -177,7 +193,7 @@ namespace ICM.Dao
                 {"@id", id.ToString()},
             };
 
-            using (var reader = DBUtils.ExecuteQuery(GetBaseQuery() + " WHERE P.id = @id", IsolationLevel.ReadUncommitted, parameters))
+            using (var reader = DBUtils.ExecuteTransactionQuery(GetBaseQuery() + " WHERE P.id = @id", connection, transaction, parameters))
             {
                 while (reader.Read())
                 {
@@ -190,6 +206,26 @@ namespace ICM.Dao
             Logger.Debug("Found {0}", person == null ? null : person.ToString());
 
             return person;
+        }
+
+        public void LockPerson(int id, SqlTransaction transaction, SqlConnection connection)
+        {
+            Logger.Debug("Lock Person with ID ({0})", id);
+
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()},
+            };
+
+            var command = new SqlCommand("UPDATE PERSON set name = name WHERE id = @id", connection, transaction)
+                              {CommandTimeout = 3};
+
+            foreach (var key in parameters.AllKeys)
+            {
+                command.Parameters.AddWithValue(key, parameters.Get(key));
+            }
+
+            command.ExecuteNonQuery();
         }
 
         /// <summary>
