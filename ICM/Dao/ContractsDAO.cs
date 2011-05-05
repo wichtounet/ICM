@@ -9,11 +9,14 @@ using ICM.Utils;
 using System.Collections.Specialized;
 using System.Data.SqlClient;
 using System.Globalization;
+using NLog;
 
 namespace ICM.Dao
 {
     public class ContractsDAO
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public Contract GetContractById(int id)
         {
             var contracts = new List<Contract>();
@@ -140,7 +143,7 @@ namespace ICM.Dao
             */
             return contractsList;
         }
-        
+
         private int addFile(int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
         {
 
@@ -191,6 +194,65 @@ namespace ICM.Dao
             contract.fileId = reader["fileId"].ToString().ToInt();
 
             return contract;
+        }
+
+        ///<summary>
+        /// Make a search for the historique feature. 
+        ///</summary>
+        ///<param name="year">The year to search contracts. </param>
+        ///<param name="institutionId">The institution of the contracts. </param>
+        ///<param name="departmentId">The department of the contracts. </param>
+        ///<returns>All the contracts of the historique. </returns>
+        public List<Contract> HistoSearch(int year, int institutionId, int departmentId)
+        {
+            var contracts = new List<Contract>();
+
+            var connection = DBManager.GetInstance().GetConnection();
+
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+            var query = "SELECT DISTINCT C.id, C.title FROM Contract C";
+
+            if(departmentId != -1)
+            {
+                query += " INNER JOIN Destination D ON D.contract = C.id";
+                query += " WHERE D.department = @department";
+            }
+            else if (institutionId != -1)
+            {
+                query += " INNER JOIN Destination Dest ON Dest.contract = C.id";
+                query += " INNER JOIN Department Dep ON Dep.id = Dest.department";
+                query += " WHERE Dep.institutionId = @institution";
+            } else
+            {
+                query += " WHERE 1 = 1";
+            }
+
+            query += " AND (YEAR(start) = @year OR YEAR([end]) = @year)";
+
+            Logger.Debug("Histo search with query \"{0}\"", query);
+
+            var command = new SqlCommand(query, connection, transaction);
+
+            command.Parameters.AddWithValue("year", year.ToString());
+            command.Parameters.AddWithValue("department", departmentId.ToString());
+            command.Parameters.AddWithValue("institution", institutionId.ToString());
+
+            using(var reader = command.ExecuteReader())
+            {
+                while(reader.Read())
+                {
+                    var contract = new Contract {Id = (int) reader["id"], Title = (string) reader["title"]};
+
+                    contracts.Add(contract);
+                }
+            }
+
+            transaction.Commit();
+
+            Logger.Debug("Histo search found {0} persons", contracts.Count);
+
+            return contracts;
         }
     }
 }

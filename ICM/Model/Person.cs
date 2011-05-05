@@ -70,7 +70,7 @@
 
         public override string ToString()
         {
-            return FirstName + Name;
+            return FirstName + " " + Name;
         }
     }
 }

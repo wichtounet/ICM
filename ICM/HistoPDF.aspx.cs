@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Web.UI;
+using ICM.Dao;
+using ICM.Utils;
 using iTextSharp.text;
 using iTextSharp.text.html.simpleparser;
 using iTextSharp.text.pdf;
@@ -11,6 +16,12 @@ namespace ICM
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            var contractsQuery = Request.QueryString["contracts"];
+            var contracts = contractsQuery == null || contractsQuery.Count() == 0 ? new string[0] : contractsQuery.Split(new[]{';'}, StringSplitOptions.RemoveEmptyEntries);
+
+            var personsQuery = Request.QueryString["persons"];
+            var persons = personsQuery == null || personsQuery.Count() == 0 ? new string[0] : personsQuery.Split(new[]{';'}, StringSplitOptions.RemoveEmptyEntries);
+            
             using (var m = new MemoryStream())
             {
                 var document = new Document();
@@ -22,7 +33,14 @@ namespace ICM
 
                     document.Open();
 
-                    WriteDocument(document);
+                    try
+                    {
+                        WriteDocument(document, contracts, persons);
+                    } 
+                    catch (SqlException exception)
+                    {
+                        document.Add(new Paragraph("Impossible de générer le PDF à cause d'une erreur serveur : " + exception.Message));
+                    }
                 }
                 catch (DocumentException ex)
                 {
@@ -39,15 +57,34 @@ namespace ICM
             }
         }
 
-        private static void WriteDocument(Document document)
+        private void WriteDocument(Document document, IEnumerable<string> contracts, IEnumerable<string> persons)
         {
+            var title = "Historique " + Request.QueryString["year"];
+
+            document.AddTitle(title);
+
             var titleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
+            var subtitleFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
 
-            var titleParagraph = new Paragraph("Historique", titleFont);
+            document.Add(new Paragraph(title, titleFont));
 
-            document.Add(titleParagraph);
+            document.Add(new Paragraph(" ", subtitleFont));
+            document.Add(new Paragraph("Contrats", subtitleFont));
 
-            
+            var contractsDAO = new ContractsDAO();
+
+            var contractsData = contracts.Select(contract => contract.ToInt()).Aggregate("<ul>", (current, id) => current + ("<li>" + contractsDAO.GetContractById(id) + "</li>")) + "</ul>";
+
+            ParseHtml(document, contractsData);
+
+            document.Add(new Paragraph(" ", subtitleFont));
+            document.Add(new Paragraph("Personnes", subtitleFont));
+
+            var personsDAO = new PersonsDAO();
+
+            var personsData = persons.Select(person => person.ToInt()).Aggregate("<ul>", (current, id) => current + ("<li>" + personsDAO.GetPersonByID(id) + "</li>")) + "</ul>";
+
+            ParseHtml(document, personsData);
         }
 
         private static void ParseHtml(Document document, string str)
@@ -61,33 +98,5 @@ namespace ICM
                 document.Add(e);
             }
         }
-
-        /*public static string AsCommaSeparatedList(EntitySet<LinksItem> items)
-        {
-            var str = "";
-            var index = 0;
-
-            foreach (var item in items)
-            {
-                var link = "<a href=\"" + item.Link + "\">" + item.Title + "</a>";
-
-                str += index++ > 0 ? ", " + link : link;
-            }
-
-            return str;
-        }
-
-        public static string AsCommaSeparatedList(EntitySet<RegistrationsItem> items)
-        {
-            var str = "";
-            var index = 0;
-
-            foreach (var item in items)
-            {
-                str += index++ > 0 ? ", " + item.Student : item.Student;
-            }
-
-            return str;
-        }*/
     }
 }

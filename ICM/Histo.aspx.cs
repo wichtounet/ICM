@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using ICM.Dao;
 using ICM.Model;
 using ICM.Utils;
@@ -13,7 +16,7 @@ namespace ICM
             //In order to not refill the form at postback
             if ("-1".Equals(IDLabel.Text))
             {
-                LoadLists();
+                this.Verified(LoadLists, ErrorLabel);
 
                 IDLabel.Text = "1";
             }
@@ -38,24 +41,23 @@ namespace ICM
                 HistoPanel.Visible = true;
 
                 var year = YearTextBox.Text.ToInt();
-                Institution institution = null;
-                Department department = null;
+                var institutionId = "".Equals(InstitutionList.SelectedValue) ? -1 : InstitutionList.SelectedValue.ToInt();
+                var departmentId = "".Equals(DepartmentList.SelectedValue) ? -1 : DepartmentList.SelectedValue.ToInt();
 
-                if(!"".Equals(InstitutionList.SelectedValue))
+                Extensions.SqlOperation operation = () =>
                 {
-                    var institutionId = InstitutionList.SelectedValue.ToInt();
+                    var contracts = new ContractsDAO().HistoSearch(year, institutionId, departmentId);
 
-                    institution = new InstitutionsDAO().GetInstitution(institutionId);
+                    ContractsView.DataSource = contracts;
+                    ContractsView.DataBind();
 
-                    if(!"".Equals(DepartmentList.SelectedValue))
-                    {
-                        var departmentId = DepartmentList.SelectedValue.ToInt();
+                    var persons = new PersonsDAO().HistoSearch(contracts);
 
-                        //TODO get the good department
-                    }
-                }
+                    PersonsView.DataSource = persons;
+                    PersonsView.DataBind();
+                };
 
-                //TODO Make the search of contracts
+                this.Verified(operation, ErrorLabel);
             }
         }
 
@@ -69,13 +71,30 @@ namespace ICM
             {
                 var id = InstitutionList.SelectedValue.ToInt();
 
-                var institution = new InstitutionsDAO().GetInstitution(id);
-
-                if (institution != null)
+                Extensions.SqlOperation operation = () =>
                 {
-                    DepartmentList.DataBindWithEmptyElement(institution.Departments, "Name", "Id");
-                }
+                    var institution = new InstitutionsDAO().GetInstitution(id);
+
+                    if (institution != null)
+                    {
+                        DepartmentList.DataBindWithEmptyElement(
+                            institution.Departments, "Name", "Id");
+                    }
+                };
+
+                this.Verified(operation, ErrorLabel);
             }
+        }
+
+        protected void GeneratePDF(object sender, EventArgs e)
+        {
+            var contracts = ContractsView.Items;
+            var persons = PersonsView.Items;
+
+            var contractList = contracts.Aggregate("", (current, contract) => current + (((Label) contract.FindControl("LabelID")).Text.ToInt() + ";"));
+            var personList = persons.Aggregate("", (current, person) => current + (((Label) person.FindControl("LabelID")).Text.ToInt() + ";"));
+
+            Response.Redirect("HistoPDF.aspx?persons=" + personList + "&contracts=" + contractList + "&year=" + YearTextBox.Text);
         }
     }
 }

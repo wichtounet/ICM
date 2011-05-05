@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Linq;
@@ -154,7 +155,7 @@ namespace ICM.Dao
 
         private static string GetBaseQuery()
         {
-            return "SELECT P.id, P.name, P.firstname, P.email, P.phone, P.archived, P.departmentId, D.name AS departmentName, I.name AS institutionName, I.id AS institutionId " +
+            return "SELECT DISTINCT P.id, P.name, P.firstname, P.email, P.phone, P.archived, P.departmentId, D.name AS departmentName, I.name AS institutionName, I.id AS institutionId " +
                    "FROM Person P " + 
                    "INNER JOIN Department D ON P.departmentId = D.id " + 
                    "INNER JOIN Institution I ON D.institutionId = I.id";
@@ -202,6 +203,46 @@ namespace ICM.Dao
             var persons = new List<Person>();
 
             using (var reader = DBUtils.ExecuteQuery(GetBaseQuery(), IsolationLevel.ReadUncommitted))
+            {
+                while (reader.Read())
+                {
+                    persons.Add(BindPerson(reader));
+                }
+            }
+
+            Logger.Debug("Found {0} persons", persons.Count);
+
+            return persons;
+        }
+
+        ///<summary>
+        /// Make a search of persons for historique
+        ///</summary>
+        ///<param name="contracts">All the contracts we want the persons for. </param>
+        ///<returns>All the persons related with the given contracts</returns>
+        public List<Person> HistoSearch(List<Contract> contracts)
+        {
+            var persons = new List<Person>();
+
+            var query = GetBaseQuery();
+            query += " INNER JOIN Association A ON A.person = P.id";
+            query += " WHERE A.roleName = 'Etudiant' AND A.contractId IN (";
+
+            if(contracts.Count > 0)
+            {
+                query += contracts[0].Id;
+
+                for(var i = 1; i < contracts.Count; i++)
+                {
+                    query += ", " + contracts[i].Id;
+                }
+            }
+
+            query += ")";
+
+            Logger.Debug("Histo search using query \"{0}\"", query);
+
+            using (var reader = DBUtils.ExecuteQuery(query, IsolationLevel.ReadUncommitted))
             {
                 while (reader.Read())
                 {

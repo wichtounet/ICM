@@ -62,7 +62,7 @@ namespace ICM_Tests
             var target = new PersonsDAO(); // TODO: Initialize to an appropriate value
 
             var name = "Test" + new Random().Next();
-            var actual = target.CreatePerson("New", name, "076/482.04.78", "test@gmail.com");
+            var actual = target.CreatePerson("New", name, "076/482.04.78", "test@gmail.com", 4);
 
             Assert.IsTrue(actual > 0, "The id must be greater than 0");
 
