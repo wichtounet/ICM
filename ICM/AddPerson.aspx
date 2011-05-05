@@ -44,6 +44,8 @@
             </td>
         </tr>
     </table>
+    
+    <asp:Label ID="ErrorLabel" ForeColor="Red" runat="server" Visible="false" />
 
      <script type="text/javascript">
          $(function () {

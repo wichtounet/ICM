@@ -1,8 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Institutions.master" AutoEventWireup="true" CodeBehind="AddInstitution.aspx.cs" Inherits="ICM.AddInstitution" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="InstitutionsContent" runat="server">
-    <h2>
-        Nouvelle institution
-    </h2>
     <table>
         <tr>
             <td>Nom : </td>
@@ -60,7 +57,10 @@
         <tr>
             <td> </td>
             <td><asp:Button ID="AddButton" runat="server" Text="Ajouter institution" 
-                    onclick="AddButton_Click" /></td>
+                    onclick="AddButton_Click" />
+                <asp:Button ID="EditButton" runat="server" onclick="EditButton_Click" 
+                    Text="Modifier institution" />
+            </td>
         </tr>
     </table>        
     

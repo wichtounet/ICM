@@ -47,6 +47,8 @@
         </EmptyDataTemplate>
     </asp:ListView>
 
+    <asp:Label ID="ErrorLabel" ForeColor="Red" runat="server" Visible="false"></asp:Label>
+
      <script type="text/javascript">
          $(function () {
              $("[id$=SearchButton]").button();

@@ -23,8 +23,9 @@ namespace ICM.Dao
         /// <param name="firstname">The firstname of the person</param>
         /// <param name="email">The email of the person</param>
         /// <param name="phone">The phone of the person</param>
+        /// <param name="department">The department of the person</param>
         /// <returns>the id of the inserted person</returns>
-        public int CreatePerson(string firstname, string name, string phone, string email)
+        public int CreatePerson(string firstname, string name, string phone, string email, int department)
         {
             Logger.Debug("Creating person");
 
@@ -35,7 +36,7 @@ namespace ICM.Dao
                 {"@phone", phone},
                 {"@email", email},
                 {"@archived", "0"},
-                {"@department", "2"}
+                {"@department", department.ToString()}
             };
 
             var id = DBUtils.ExecuteInsert(
@@ -55,7 +56,8 @@ namespace ICM.Dao
         /// <param name="firstname">The name of the person</param>
         /// <param name="email">The name of the person</param>
         /// <param name="phone">The name of the person</param>
-        public void SavePerson(int id, string firstname, string name, string phone, string email)
+        /// <param name="department">The department of the person</param>
+        public void SavePerson(int id, string firstname, string name, string phone, string email, int department)
         {
             Logger.Debug("Saving person {0}", id);
 
@@ -66,10 +68,11 @@ namespace ICM.Dao
                 {"@name", name},
                 {"@phone", phone},
                 {"@email", email},
+                {"@department", department.ToString()},
             };
 
             DBUtils.ExecuteUpdate(
-                "UPDATE [Person] SET firstname = @firstname, name = @name, phone = @phone, email = @email WHERE id = @id",
+                "UPDATE [Person] SET firstname = @firstname, name = @name, phone = @phone, email = @email, departmentId = @department WHERE id = @id",
                 IsolationLevel.ReadUncommitted, parameters);
 
             Logger.Debug("Saved person {0}", id);
@@ -101,27 +104,29 @@ namespace ICM.Dao
         /// <param name="name">The name to search persons for</param>
         /// <param name="firstname">The first name to search persons for</param>
         /// <param name="archived">Indicate if we must search for the archived persons to</param>
+        /// <param name="institution">The institution we must search for, or -1 if this is not a criteria</param>
+        /// <param name="department">The department we must search for, or -1 if this is not a criteria</param>
         /// <returns>all the persons matching the criterias</returns>
         public List<Person> SearchPersons(string name, string firstname, bool archived, int institution, int department)
         {
-            Logger.Debug("Searching persons");
-
             var persons = new List<Person>();
+            
+            var query = GetBaseQuery();
 
-            var query = "SELECT * FROM [Person] WHERE name LIKE(@name) AND firstname LIKE(@firstname)";
+            query += " WHERE P.name LIKE(@name) AND P.firstname LIKE(@firstname)";
 
             if (!archived)
             {
-                query += " AND archived = 0";
+                query += " AND P.archived = 0";
             }
 
             if(department != -1)
             {
-                query += " AND departmentId = @department";
+                query += " AND P.departmentId = @department";
             } 
             else if(institution != -1)
             {
-                query += " AND departmentId IN (SELECT id FROM Department WHERE institutionId = @institution)";
+                query += " AND D.institutionId = @institution";
             }
 
             var parameters = new NameValueCollection
@@ -131,6 +136,8 @@ namespace ICM.Dao
                 {"@department", department.ToString()},
                 {"@institution", institution.ToString()},
             };
+
+            Logger.Debug("Searching persons, with query {0}", query);
 
             using (var reader = DBUtils.ExecuteQuery(query, IsolationLevel.ReadUncommitted, parameters))
             {
@@ -143,6 +150,14 @@ namespace ICM.Dao
             Logger.Debug("Found {0} persons", persons.Count);
 
             return persons;
+        }
+
+        private static string GetBaseQuery()
+        {
+            return "SELECT P.id, P.name, P.firstname, P.email, P.phone, P.archived, P.departmentId, D.name AS departmentName, I.name AS institutionName, I.id AS institutionId " +
+                   "FROM Person P " + 
+                   "INNER JOIN Department D ON P.departmentId = D.id " + 
+                   "INNER JOIN Institution I ON D.institutionId = I.id";
         }
 
         /// <summary>
@@ -161,14 +176,13 @@ namespace ICM.Dao
                 {"@id", id.ToString()},
             };
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Person] WHERE id = @id", IsolationLevel.ReadUncommitted, parameters))
+            using (var reader = DBUtils.ExecuteQuery(GetBaseQuery() + " WHERE P.id = @id", IsolationLevel.ReadUncommitted, parameters))
             {
                 while (reader.Read())
                 {
                     persons.Add(BindPerson(reader));
                 }
             }
-
 
             var person = persons.First();
 
@@ -187,7 +201,7 @@ namespace ICM.Dao
 
             var persons = new List<Person>();
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Person]", IsolationLevel.ReadUncommitted))
+            using (var reader = DBUtils.ExecuteQuery(GetBaseQuery(), IsolationLevel.ReadUncommitted))
             {
                 while (reader.Read())
                 {
@@ -207,6 +221,14 @@ namespace ICM.Dao
         /// <returns>a new instance of Person with the values of the SQL Result</returns>
         private static Person BindPerson(SqlResult result)
         {
+            var department = new Department
+            {
+                Id = (int) result["departmentId"],
+                Name = (string) result["departmentName"],
+                InstitutionName = (string) result["institutionName"],
+                InstitutionId = (int) result["institutionId"]
+            };
+
             var person = new Person
             {
                 Id = (int) result["id"],
@@ -214,11 +236,10 @@ namespace ICM.Dao
                 FirstName = (string) result["firstname"],
                 Email = (string) result["email"],
                 Phone = (string) result["phone"],
-                Archived = (bool) result["archived"]
+                Archived = (bool) result["archived"],
+                Department = department
             };
 
-            //TODO : Get department of person
-            
             return person;
         }
     }

@@ -13,40 +13,49 @@ namespace ICM {
     public partial class Institutions {
         
         /// <summary>
-        /// NameLabel control.
+        /// NameText control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox NameLabel;
+        protected global::System.Web.UI.WebControls.TextBox NameText;
         
         /// <summary>
-        /// LanguageLabel control.
+        /// LanguagesList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox LanguageLabel;
+        protected global::System.Web.UI.WebControls.DropDownList LanguagesList;
         
         /// <summary>
-        /// Continent control.
+        /// ContinentsList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList Continent;
+        protected global::System.Web.UI.WebControls.DropDownList ContinentsList;
         
         /// <summary>
-        /// CountryList control.
+        /// CountriesList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList CountryList;
+        protected global::System.Web.UI.WebControls.DropDownList CountriesList;
+        
+        /// <summary>
+        /// ArchivedCheckBox control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ArchivedCheckBox;
         
         /// <summary>
         /// SearchButton control.
@@ -56,5 +65,14 @@ namespace ICM {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button SearchButton;
+        
+        /// <summary>
+        /// ResultsView control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ListView ResultsView;
     }
 }
