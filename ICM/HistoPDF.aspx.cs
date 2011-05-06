@@ -90,7 +90,7 @@ namespace ICM
 
                 var contractsDAO = new ContractsDAO();
 
-                var contractsData = contracts.Select(contract => contract.ToInt()).Aggregate("<ul>", (current, id) => current + ("<li>" + contractsDAO.GetContractById(id, connection, transaction) + "</li>")) + "</ul>";
+                var contractsData = contracts.Select(contract => contract.ToInt()).Aggregate("<ul>", (current, id) => current + ("<li>" + contractsDAO.GetContractById(id, transaction) + "</li>")) + "</ul>";
 
                 ParseHtml(document, contractsData);
 
