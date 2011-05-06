@@ -30,12 +30,14 @@
             </td>
         </tr>
     </table>
+    
+    <asp:Label ID="ErrorLabel" ForeColor="Red" runat="server" Visible="false"></asp:Label>
 
     <asp:Panel ID="HistoPanel" runat="server" Visible="false">
         <asp:ListView ID="ContractsView" runat="server">
             <LayoutTemplate>
                 <p>
-                    <h3>Contrats</h3>
+                    <h3><strong>Contrats</strong></h3>
 
                     <ul>
                         <asp:PlaceHolder ID="itemPlaceholder" runat="server" />
@@ -55,7 +57,7 @@
             <ItemTemplate>
                 <asp:Label ID="LabelID" runat="server" Visible="false" Text='<%# Eval("Id")%>' />
                 <li>
-                    <a href='ShowContract.aspx?person=<%# Eval("Id")%>'><%# Eval("Title") %></a>
+                    <a href='ShowContract.aspx?contract=<%# Eval("Id")%>'><%# Eval("Title") %></a>
                 </li>
             </ItemTemplate>
 
@@ -69,7 +71,7 @@
         <asp:ListView ID="PersonsView" runat="server">
             <LayoutTemplate>
                 <p>
-                    <h3>Etudiants IN/OUT</h3>
+                    <h3><strong>Etudiants IN/OUT</strong></h3>
                     <ul>
                         <asp:PlaceHolder ID="itemPlaceholder" runat="server" />
                     </ul>
@@ -98,5 +100,14 @@
                 </p>
             </EmptyDataTemplate>
         </asp:ListView>
+
+        <asp:Button Text="Generer PDF" runat="server" ID="GeneratePDFButton" OnClick="GeneratePDF" />
     </asp:Panel>
+
+     <script type="text/javascript">
+         $(function () {
+             $("[id$=SearchButton]").button();
+             $("[id$=GeneratePDFButton]").button();
+         });
+    </script>
 </asp:Content>

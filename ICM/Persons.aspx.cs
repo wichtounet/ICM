@@ -25,8 +25,7 @@ namespace ICM
             if ("-1".Equals(IDLabel.Text))
             {
                 this.Verified(
-                    () =>
-                    InstitutionList.DataBindWithEmptyElement(new InstitutionsDAO().GetInstitutions(), "Name", "Id"),
+                    () => InstitutionList.DataBindWithEmptyElement(new InstitutionsDAO().GetInstitutionsClean(), "Name", "Id"),
                     ErrorLabel);
 
                 IDLabel.Text = "1";
@@ -40,7 +39,9 @@ namespace ICM
         /// <param name="e">The args of the event</param>
         protected void SearchPerson(object sender, EventArgs e)
         {
-            SearchPersons();
+            Logger.Debug("User started search persons");
+
+            this.Verified(SearchPersons, ErrorLabel);
         }
 
         /// <summary>
@@ -48,25 +49,11 @@ namespace ICM
         /// </summary>
         private void SearchPersons()
         {
-            Logger.Debug("User started search persons");
+            var institutionId = InstitutionList.SelectedValue.ToIntOrDefault();
+            var departmentId = DepartmentList.SelectedValue.ToIntOrDefault();
 
-            var institution = InstitutionList.SelectedValue;
-            var department = DepartmentList.SelectedValue;
-
-            var institutionId = "".Equals(institution) ? -1 : institution.ToInt();
-            var departmentId = "".Equals(department) ? -1 : department.ToInt();
-
-            Extensions.SqlOperation operation = () =>
-            {
-                var persons = new PersonsDAO().SearchPersons(NameLabel.Text, FirstNameLabel.Text, ArchivedCheckBox.Checked, institutionId, departmentId);
-
-                ErrorLabel.Visible = true;
-
-                ResultsView.DataSource = persons;
-                ResultsView.DataBind();
-            };
-
-            this.Verified(operation, ErrorLabel);
+            ResultsView.DataSource = new PersonsDAO().SearchPersons(NameLabel.Text, FirstNameLabel.Text, ArchivedCheckBox.Checked, institutionId, departmentId);
+            ResultsView.DataBind();
         }
 
         /// <summary>
@@ -78,13 +65,13 @@ namespace ICM
         {
             ListViewItem myItem = ResultsView.Items[e.ItemIndex];
 
-            var labelId = myItem.FindControl("LabelID") as Label;
+            var labelId = (Label) myItem.FindControl("LabelID");
 
             this.Verified(
                 () => new PersonsDAO().ArchivePerson(labelId.Text.ToInt()),
                 ErrorLabel);
 
-            SearchPersons();
+            this.Verified(SearchPersons, ErrorLabel);
         }
 
         /// <summary>
@@ -96,14 +83,16 @@ namespace ICM
         {
             Extensions.SqlOperation operation = () =>
             {
-                var id = InstitutionList.SelectedValue.ToInt();
+                var id = InstitutionList.SelectedValue.ToIntOrDefault();
 
-                var institution = new InstitutionsDAO().GetInstitution(id);
-
-                if (institution != null)
+                if(id > 0)
                 {
-                    DepartmentList.DataBindWithEmptyElement(
-                        institution.Departments, "Name", "Id");
+                    var institution = new InstitutionsDAO().GetInstitutionClean(id);
+
+                    if (institution != null)
+                    {
+                        DepartmentList.DataBindWithEmptyElement(institution.Departments, "Name", "Id");
+                    }
                 }
             };
 
