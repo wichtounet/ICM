@@ -83,9 +83,6 @@ namespace ICM_Tests
         ///A test for CreatePerson
         ///</summary>
         [TestMethod]
-        [HostType("ASP.NET")]
-        [AspNetDevelopmentServerHost("H:\\prog\\dev\\visual-studio\\ICM\\ICM", "/")]
-        [UrlToTest("http://localhost:37234/")]
         public void CreatePersonTest()
         {
             var target = new PersonsDAO();
@@ -109,9 +106,6 @@ namespace ICM_Tests
         ///A test for ArchivePerson
         ///</summary>
         [TestMethod]
-        [HostType("ASP.NET")]
-        [AspNetDevelopmentServerHost("H:\\prog\\dev\\visual-studio\\ICM\\ICM", "/")]
-        [UrlToTest("http://localhost:37234/")]
         public void ArchivePersonTest()
         {
             var target = new PersonsDAO();
@@ -122,6 +116,7 @@ namespace ICM_Tests
 
             var person = target.GetPersonByID(actual);
 
+            Assert.IsNotNull(person, "Person must not be null");
             Assert.AreEqual(true, person.Archived, "The person must be archived");
         }
 
@@ -129,9 +124,6 @@ namespace ICM_Tests
         ///A test for GetPersonByID
         ///</summary>
         [TestMethod]
-        [HostType("ASP.NET")]
-        [AspNetDevelopmentServerHost("H:\\prog\\dev\\visual-studio\\ICM\\ICM", "/")]
-        [UrlToTest("http://localhost:37234/")]
         public void GetPersonByIDTest()
         {
             var target = new PersonsDAO();
@@ -146,9 +138,6 @@ namespace ICM_Tests
         ///A test for SavePerson
         ///</summary>
         [TestMethod]
-        [HostType("ASP.NET")]
-        [AspNetDevelopmentServerHost("H:\\prog\\dev\\visual-studio\\ICM\\ICM", "/")]
-        [UrlToTest("http://localhost:37234/")]
         public void SavePersonTest()
         {
             var target = new PersonsDAO(); // TODO: Initialize to an appropriate value

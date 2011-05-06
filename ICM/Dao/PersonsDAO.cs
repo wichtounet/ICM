@@ -212,11 +212,18 @@ namespace ICM.Dao
                 }
             }
 
-            var person = persons.First();
+            if(persons.Count > 0)
+            {
+                var person = persons.First();
 
-            Logger.Debug("Found {0}", person == null ? null : person.ToString());
+                Logger.Debug("Found {0}", person.ToString());
 
-            return person;
+                return person;
+            }
+
+            Logger.Debug("Found no person");
+
+            return null;
         }
 
         public void LockPerson(int id, SqlTransaction transaction, SqlConnection connection)

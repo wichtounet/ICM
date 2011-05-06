@@ -39,7 +39,7 @@ namespace ICM.Utils
 
         public static int ToInt(this String str)
         {
-            return Convert.ToInt16(str);
+            return Convert.ToInt32(str);
         }
 
         ///<summary>
@@ -54,7 +54,7 @@ namespace ICM.Utils
                 return -1;
             }
 
-            return Convert.ToInt16(str);
+            return Convert.ToInt32(str);
         }
 
         ///<summary>
