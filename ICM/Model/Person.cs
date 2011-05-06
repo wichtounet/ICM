@@ -81,7 +81,12 @@
 
         public string RoleFirstName
         {
-            get { return Role +": " + NameFirstName;}
+            get { return Role +": " + NameFirstName; }
+        }
+
+        public string RoleId
+        {
+            get { return Id + ";" + Role; }
         }
 
         public override string ToString()
