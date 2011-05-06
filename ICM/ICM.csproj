@@ -135,7 +135,7 @@
     <Compile Include="ContractFile.aspx.designer.cs">
       <DependentUpon>ContractFile.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Dao\User.cs" />
+    <Compile Include="Model\User.cs" />
     <Compile Include="HistoPDF.aspx.cs">
       <DependentUpon>HistoPDF.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

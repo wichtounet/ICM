@@ -10,6 +10,7 @@ using ICM.Dao;
 using ICM.Utils;
 using System.Collections.Generic;
 using System.Collections;
+using System.Xml;
 
 namespace ICM
 {
@@ -26,7 +27,7 @@ namespace ICM
                 
                 InstitutionList.DataBindWithEmptyElement(new InstitutionsDAO().GetInstitutions(), "Name", "Id");
                 ContractTypeList.DataBindWithEmptyElement(new TypesDAO().GetAllTypes(), "Name", "Name");
-                PersonList.DataBindWithEmptyElement(new PersonsDAO().GetAllPersons(), "Name", "Id");
+                PersonList.DataBindWithEmptyElement(new PersonsDAO().GetAllPersons(), "NameFirstName", "Id");
                 RoleList.DataBindWithEmptyElement(new RolesDAO().GetAllRoles(), "Name", "Name");
 
                 if (Request.QueryString["contract"] != null)
@@ -38,14 +39,37 @@ namespace ICM
                     TitleText.Text = contract.Title;
                     StartDate.Text = contract.Start.ToString("d"); // 05/17/2011
                     EndDate.Text = contract.End.ToShortDateString();
-                    //typeContractList
-                    //fileID
+                    if (contract.departments.Count != 0)
+                    {
+                        InstitutionList.SelectedValue = contract.departments[0].InstitutionId.ToString();
+                        var institution = new InstitutionsDAO().GetInstitution(contract.departments[0].InstitutionId);
+                        if (institution != null)
+                        {
+                            DepartmentList.DataBindWithEmptyElement(institution.Departments, "Name", "Id");
+                        }
+                        DepartmentSelectedList.DataSource = contract.departments;
+                        DepartmentSelectedList.DataTextField = "Name";
+                        DepartmentSelectedList.DataValueField = "Id";
+                        DepartmentSelectedList.DataBind();
+                    }
+                    if (contract.persons.Count != 0)
+                    {
+                        PersonSelectedList.DataSource = contract.persons;
+                        PersonSelectedList.DataTextField = "RoleFirstName";
+                        PersonSelectedList.DataValueField = "RoleId";
+                        PersonSelectedList.DataBind();
+                    }
+                    ContractTypeList.SelectedValue = contract.Type.ToString();
+
+                    FileID.Text = contract.fileId.ToString();
+                    downloadFile.NavigateUrl = "ContractFile.aspx?id=" + contract.fileId.ToString();
 
                     Save.Visible = true;
                 }
                 else
                 {
                     Add.Visible = true;
+                    downloadFile.Visible = false;
                 }
             }
             
@@ -86,7 +110,7 @@ namespace ICM
         {
             if (Page.IsValid)
             {
-                submit();
+                Submit();
             }
         }
 
@@ -94,11 +118,11 @@ namespace ICM
         {
             if (Page.IsValid)
             {
-                submit();
+                Submit();
             }
         }
 
-        private void submit()
+        private void Submit()
         {
             
             ContractsDAO contractDAO = new ContractsDAO();
@@ -117,15 +141,118 @@ namespace ICM
                 string[] w = PersonSelectedList.Items[i].Value.Split(';');
                 persons.Add(w[0], w[1]);
             }
+
+            //Destinations
             int[] destination = new int[DepartmentSelectedList.Items.Count];
             for (int i = 0; i < DepartmentSelectedList.Items.Count; i++)
             {
                 destination[i] = DepartmentSelectedList.Items[i].Value.ToInt();
             }
 
-            int id = contractDAO.addContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, "vincent", persons, destination, 0, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+            int id;
+            if (Request.QueryString["contract"] == null)
+            {
+                XmlDocument xml = createXML();
+                id = contractDAO.AddContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.ToString(), "vincent", persons, destination, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+            }
+            else
+            {
+                id = Request.QueryString["contract"].ToInt();
+                int contractFileId = -1;
+                if (fileSize > 0)
+                {
+                    contractFileId = contractFileId = FileID.Text.ToInt();
 
-            Response.Redirect("showContract.aspx?contract="+id);
+                }
+                contractDAO.SaveContract(id, TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, "", "vincent", persons, destination, contractFileId, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+            }
+
+            Response.Redirect("showContract.aspx?contract=" + id);
+        }
+
+        private XmlDocument createXML()
+        {
+            int[] departmentTab = new int[PersonSelectedList.Items.Count + DepartmentSelectedList.Items.Count];
+            int index = 0;
+            
+            XmlDocument xmlDoc = new XmlDocument();
+
+
+            // Write down the XML declaration
+            XmlDeclaration xmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", null);
+
+            // Create the root element
+            XmlElement rootNode = xmlDoc.CreateElement("contract");
+            rootNode.SetAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            rootNode.SetAttribute("xsi:noNamespaceSchemaLocation", "contract.xsd");
+            rootNode.SetAttribute("title", TitleText.Text);
+            rootNode.SetAttribute("startDate", StartDate.Text);
+            rootNode.SetAttribute("endDate", EndDate.Text);
+            rootNode.SetAttribute("contractType", ContractTypeList.SelectedValue);
+            //rootNode.SetAttribute("destinationDepartment", "");
+            rootNode.SetAttribute("authorLogin", "");
+
+            xmlDoc.InsertBefore(xmlDeclaration, xmlDoc.DocumentElement);
+            xmlDoc.AppendChild(rootNode);
+            
+            
+
+            XmlElement contactsNode = xmlDoc.CreateElement("contacts");
+            xmlDoc.DocumentElement.PrependChild(contactsNode);
+
+            PersonsDAO personsDAO = new PersonsDAO();
+            for (int i = 0; i < PersonSelectedList.Items.Count; i++)
+            {
+                string[] w = PersonSelectedList.Items[i].Value.Split(';');
+                Person person = personsDAO.GetPersonByID(w[0].ToInt());
+                XmlElement personNode = xmlDoc.CreateElement("person");
+                personNode.SetAttribute("id", w[0]);
+                personNode.SetAttribute("name", person.Name);
+                personNode.SetAttribute("firstName", person.FirstName);
+                personNode.SetAttribute("phone", person.Phone);
+                personNode.SetAttribute("departmentId", person.Department.Id.ToString());
+                personNode.SetAttribute("role", w[1]);
+
+                departmentTab[index++] = w[0].ToInt();
+                contactsNode.AppendChild(personNode);
+            }
+
+            XmlElement destinationsNode = xmlDoc.CreateElement("destinations");
+            xmlDoc.DocumentElement.PrependChild(destinationsNode);
+
+            InstitutionsDAO institutionsDAO = new InstitutionsDAO();
+            for (int i = 0; i < DepartmentSelectedList.Items.Count; i++)
+            {
+                int id = DepartmentSelectedList.Items[i].Value.ToInt();
+                //Department department = institutionsDAO.getDepartement(id);
+                XmlElement destinationNode = xmlDoc.CreateElement("destination");
+                destinationNode.SetAttribute("id", "01");
+
+                departmentTab[index++] = id;
+                destinationsNode.AppendChild(destinationNode);
+            }
+
+            XmlElement departmentsNode = xmlDoc.CreateElement("departments");
+            xmlDoc.DocumentElement.PrependChild(departmentsNode);
+            for (int i = 0; i < departmentTab.Length; i++)
+            {
+                //Department department = institutionsDAO.getDepartement(id);
+                XmlElement departmentNode = xmlDoc.CreateElement("department");
+                departmentNode.SetAttribute("id", "01");
+                departmentNode.SetAttribute("name", "01");
+                departmentNode.SetAttribute("institutionName", "01");
+                departmentNode.SetAttribute("institutionCity", "01");
+                departmentNode.SetAttribute("institutionInterest", "01");
+                departmentNode.SetAttribute("institutionLanguage", "01");
+                departmentNode.SetAttribute("institutionCountry", "01");
+                departmentNode.SetAttribute("institutionContinent", "01");
+
+                departmentsNode.AppendChild(departmentNode);
+            }
+            
+            xmlDoc.Save(Server.MapPath("contract.xml"));
+
+            return xmlDoc;
         }
     }
 }

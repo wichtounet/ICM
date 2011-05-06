@@ -3,7 +3,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContractsContent" runat="server">
    <asp:Label ID="stateForm" Visible="false" runat="server" Text="-1" />
-
+   <asp:Label ID="FileID" Visible="false" runat="server" Text="-1" />
     <h2>
         Nouveau contrat
     </h2>
@@ -58,7 +58,7 @@
         </tr>
         <tr>
             <td>Fichier binaire :</td>
-            <td><asp:FileUpload ID="UploadImageFile" runat="server" /></td>
+            <td><asp:HyperLink ID="downloadFile" NavigateUrl="ContractFile.aspx" Text="Télécharger" Target="_blank" runat="server" /><asp:FileUpload ID="UploadImageFile" runat="server" /></td>
         </tr>
         <tr>
             <td> </td>
@@ -76,7 +76,7 @@
              //$("[id$=startDate]").datepicker("setDate", new Date(2008, 9, 03));
          });
          $(function () {
-             $("[id$=EndDate]").datepicker();
+             $("[id$=temp]").datepicker();
              //$("[id$=endDate]").datepicker("option", "dateFormat", "dd.mm.yy");
          });
 

@@ -22,6 +22,15 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.Label stateForm;
         
         /// <summary>
+        /// Contrôle FileID.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label FileID;
+        
+        /// <summary>
         /// Contrôle TitleText.
         /// </summary>
         /// <remarks>
@@ -164,6 +173,15 @@ namespace ICM {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label PersonLabel;
+        
+        /// <summary>
+        /// Contrôle downloadFile.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink downloadFile;
         
         /// <summary>
         /// Contrôle UploadImageFile.

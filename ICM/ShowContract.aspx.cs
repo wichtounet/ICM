@@ -22,7 +22,7 @@ namespace ICM
                 IDLabel.Text = contract.Id.ToString();
                 TitreLabel.Text = contract.Title;
                 dateDebutLabel.Text = contract.Start.ToString("d");
-                dateFinLabel.Text = contract.End.ToString("d");
+                dateFinLabel.Text = contract.End.ToString("d"); //TODO: A CHANGER 
                 userLabel.Text = contract.User;
                 typeLabel.Text = contract.Type;
                 userLabel.Text  = contract.User;
@@ -48,6 +48,7 @@ namespace ICM
         protected void ArchiveContract(object sender, EventArgs e)
         {
             new ContractsDAO().ArchiveContract(Request.QueryString["contract"].ToInt());
+            Response.Redirect("ShowContract.aspx?contract=" + Request.QueryString["contract"].ToInt()); 
         }
 
     }
