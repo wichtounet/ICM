@@ -209,7 +209,7 @@ namespace ICM.Dao
                 {"@archived", "0"}
             };
 
-            int contractId = DBUtils.ExecuteInsertWithoutCommit(
+            int contractId = DBUtils.ExecuteInsert(
                 "INSERT INTO [Contract] (title, start, [end], fileId, xmlContent, userLogin, typeContractName, archived) VALUES (@title, @start, @end, @fileId, @xmlContent, @userLogin, @typeContractName, @archived)",
                 IsolationLevel.ReadUncommitted, parameters, "Contract", transaction);
 

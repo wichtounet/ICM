@@ -49,6 +49,8 @@ namespace ICM.Dao
                     "INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)",
                     IsolationLevel.ReadUncommitted, parameters, "Person", transaction);
 
+                transaction.Commit();
+
                 Logger.Debug("Created person with id {0}", id);
 
                 return id;
@@ -181,7 +183,7 @@ namespace ICM.Dao
         {
             using (var connection = DBManager.GetInstance().GetNewConnection())
             {
-                var transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+                var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
                 var person = GetPersonByID(id, transaction, connection);
 

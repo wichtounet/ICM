@@ -133,28 +133,6 @@ namespace ICM.Utils
                 id = reader["ID"].ToString().ToInt();
             }
 
-            transaction.Commit();
-
-            return id;
-        }
-
-        public static int ExecuteInsertWithoutCommit(string sql, IsolationLevel level, NameValueCollection parameters, string tableName, SqlTransaction transaction)
-        {
-            ExecuteNonQuery(transaction.Connection, sql, transaction, parameters);
-
-            var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", transaction.Connection, transaction);
-            getCommand.Parameters.AddWithValue("table", tableName);
-
-            int id;
-            using (var reader = getCommand.ExecuteReader())
-            {
-                reader.Read();
-
-                id = reader["ID"].ToString().ToInt();
-            }
-
-            //transaction.Commit();
-
             return id;
         }
 
