@@ -89,8 +89,15 @@ namespace ICM
 
         protected void AddPerson_Click(object sender, EventArgs e)
         {
-            PersonSelectedList.Items.Add(new ListItem(RoleList.SelectedItem.Text + ": " + PersonList.SelectedItem.Text, PersonList.SelectedItem.Value + ";" + RoleList.SelectedItem.Value));
-            //PersonLabel.Text = PersonList.SelectedItem.Text;
+
+            if (isValueInList(PersonList.SelectedItem.Value + ";" + RoleList.SelectedItem.Value, PersonSelectedList))
+            {
+                PersonLabel.Text = "Personne déjà présente dans la liste";
+            }
+            else
+            {
+                PersonSelectedList.Items.Add(new ListItem(RoleList.SelectedItem.Text + ": " + PersonList.SelectedItem.Text, PersonList.SelectedItem.Value + ";" + RoleList.SelectedItem.Value));
+            }
         }
         protected void DeletePerson_Click(object sender, EventArgs e)
         {
@@ -99,7 +106,24 @@ namespace ICM
 
         protected void AddDepartment_Click(object sender, EventArgs e)
         {
-            DepartmentSelectedList.Items.Add(new ListItem(DepartmentList.SelectedItem.Text, DepartmentList.SelectedItem.Value));
+            if(isValueInList(DepartmentList.SelectedItem.Value, DepartmentList))
+            {
+                DepartmentLabel.Text = "Département déjà présent dans la liste";
+            }else
+            {
+                DepartmentSelectedList.Items.Add(new ListItem(DepartmentList.SelectedItem.Text, DepartmentList.SelectedItem.Value));
+            }
+            
+        }
+
+        private bool isValueInList(string p, DropDownList list)
+        {
+            for (int i = 0; i < list.Items.Count; i++)
+            {
+                if (p.Equals(list.Items[i].Value))
+                    return true;
+            }
+            return false;
         }
         protected void DeleteDepartment_Click(object sender, EventArgs e)
         {
