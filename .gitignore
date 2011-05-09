@@ -1,3 +1,4 @@
+
 ICM.suo.orig
 _ReSharper.ICM
 ICM/bin/
@@ -8,3 +9,11 @@ _ReSharper.ICM/
 ICM.suo
 ICM/ICM.csproj
 ICM.suo
+*.log
+*.csproj
+*.dll
+*.pdb
+*.config
+ICM.suo
+ICM.suo
+ICM/ICM.csproj
