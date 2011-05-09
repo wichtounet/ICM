@@ -20,21 +20,32 @@ namespace ICM.Dao
 
         public Contract GetContractById(int id)
         {
+            var transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+            var contract = GetContractById(id, transaction);
+
+            transaction.Connection.Close();
+            
+            return contract;
+        }
+
+
+        //COPIED BY WICHT
+        public Contract GetContractById(int id, SqlTransaction transaction)
+        {
             var contracts = new List<Contract>();
 
-            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
-
             var parameters = new NameValueCollection
-            {
-                {"@id", id.ToString()},
-            };
+           {
+               {"@id", id.ToString()},
+           };
 
             Contract c = new Contract();
             List<Person> persons = new List<Person>();
             List<Department> departments = new List<Department>();
 
-            using (var reader = DBUtils.ExecuteTransactionQuery("SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived "+
-                                                     "FROM [Contract] C "+
+            using (var reader = DBUtils.ExecuteTransactionQuery("SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived " +
+                                                     "FROM [Contract] C " +
                                                      "WHERE C.id = @id"
                                                     , transaction, parameters))
             {
@@ -56,9 +67,9 @@ namespace ICM.Dao
                 {
                     Person p = new Person();
                     p.Id = (int)readerAssoc["personId"];
-                    p.Role = (string) readerAssoc["roleName"];
-                    p.FirstName = (string) readerAssoc["firstname"];
-                    p.Name = (string) readerAssoc["name"];
+                    p.Role = (string)readerAssoc["roleName"];
+                    p.FirstName = (string)readerAssoc["firstname"];
+                    p.Name = (string)readerAssoc["name"];
                     persons.Add(p);
                 }
             }
@@ -74,10 +85,10 @@ namespace ICM.Dao
                 while (readerDestination.Read())
                 {
                     Department d = new Department();
-                    d.Id = (int) readerDestination["departementId"];
-                    d.Name = (string) readerDestination["depName"];
-                    d.InstitutionName = (string) readerDestination["insName"];
-                    d.InstitutionId = (int) readerDestination["institutionId"];
+                    d.Id = (int)readerDestination["departementId"];
+                    d.Name = (string)readerDestination["depName"];
+                    d.InstitutionName = (string)readerDestination["insName"];
+                    d.InstitutionId = (int)readerDestination["institutionId"];
                     departments.Add(d);
                 }
             }
@@ -85,11 +96,10 @@ namespace ICM.Dao
             c.departments = departments;
             contracts.Add(c);
 
-            transaction.Connection.Close();
-            
+            //DO NOT CLOSE THE CONNECTION OR THE TRANSACTION HERE
             return contracts.First();
         }
-       
+        
         public void GetContractFile(HttpContext context, int id)
         {
             try

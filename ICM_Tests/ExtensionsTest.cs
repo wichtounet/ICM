@@ -91,18 +91,5 @@ namespace ICM_Tests
             Assert.AreEqual(-999999, "-999999".ToIntOrDefault());
             Assert.AreEqual(-1, "".ToIntOrDefault());
         }
-
-        /// <summary>
-        ///A test for DataBindWithEmptyElement
-        ///</summary>
-        public void DataBindWithEmptyElementTestHelper<T>()
-        {
-            DropDownList list = null; // TODO: Initialize to an appropriate value
-            List<T> dataSource = null; // TODO: Initialize to an appropriate value
-            string textField = string.Empty; // TODO: Initialize to an appropriate value
-            string valueField = string.Empty; // TODO: Initialize to an appropriate value
-            Extensions.DataBindWithEmptyElement<T>(list, dataSource, textField, valueField);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
-        }
     }
 }
