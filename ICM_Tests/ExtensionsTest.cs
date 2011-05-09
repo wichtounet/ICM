@@ -1,10 +1,7 @@
 ﻿using ICM.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
 using ICM.Model;
 using System.Collections.Generic;
-using System.Web.UI.WebControls;
 
 namespace ICM_Tests
 {
@@ -12,7 +9,7 @@ namespace ICM_Tests
     ///This is a test class for ExtensionsTest and is intended
     ///to contain all ExtensionsTest Unit Tests
     ///</summary>
-    [TestClass()]
+    [TestClass]
     public class ExtensionsTest
     {
         /// <summary>

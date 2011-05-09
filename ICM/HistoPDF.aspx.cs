@@ -99,7 +99,7 @@ namespace ICM
 
                 var personsDAO = new PersonsDAO();
 
-                var personsData = persons.Select(person => person.ToInt()).Aggregate("<ul>", (current, id) => current + ("<li>" + personsDAO.GetPersonByID(id, transaction, connection) + "</li>")) + "</ul>";
+                var personsData = persons.Select(person => person.ToInt()).Aggregate("<ul>", (current, id) => current + ("<li>" + personsDAO.GetPersonByID(id, transaction) + "</li>")) + "</ul>";
 
                 ParseHtml(document, personsData);
 

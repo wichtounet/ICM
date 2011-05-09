@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.IO;
 using System.Data;
 using ICM.Model;
 using ICM.Utils;
 using System.Collections.Specialized;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.Collections;
 using NLog;
 
@@ -20,17 +18,18 @@ namespace ICM.Dao
 
         public Contract GetContractById(int id)
         {
-            var transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+            using(var connection = DBManager.GetInstance().GetNewConnection())
+            {
+                var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
-            var contract = GetContractById(id, transaction);
+                var person = GetContractById(id, transaction);
 
-            transaction.Connection.Close();
-            
-            return contract;
+                transaction.Commit();
+
+                return person;
+            }
         }
 
-
-        //COPIED BY WICHT
         public Contract GetContractById(int id, SqlTransaction transaction)
         {
             var contracts = new List<Contract>();
@@ -96,7 +95,6 @@ namespace ICM.Dao
             c.departments = departments;
             contracts.Add(c);
 
-            //DO NOT CLOSE THE CONNECTION OR THE TRANSACTION HERE
             return contracts.First();
         }
         
@@ -104,27 +102,30 @@ namespace ICM.Dao
         {
             try
             {
-                var parameters = new NameValueCollection
+                using(var connection = DBManager.GetInstance().GetNewConnection())
                 {
-                    {"@id", id.ToString()}
-                };
-
-                using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [ContractFile] WHERE id = @id", IsolationLevel.ReadUncommitted, parameters))
-                {
-                    if (reader.Read())
+                    var parameters = new NameValueCollection
                     {
-                        context.Response.ClearHeaders();
-                        context.Response.ClearContent();
-                        context.Response.AppendHeader("Pragma", "no-cache");
-                        context.Response.AppendHeader("Cache-Control", "no-cache");
-                        context.Response.CacheControl = "no-cache";
-                        context.Response.Expires = -1;
-                        context.Response.ExpiresAbsolute = new DateTime(1900, 1, 1);
-                        context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                        context.Response.ContentType = reader["fileMIMEType"].ToString();
-                        context.Response.BinaryWrite((byte[])reader["fileBinaryData"]);
-                        context.Response.Flush();
-                        context.Response.End();
+                        {"@id", id.ToString()}
+                    };
+
+                    using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [ContractFile] WHERE id = @id", connection, IsolationLevel.ReadUncommitted, parameters))
+                    {
+                        if (reader.Read())
+                        {
+                            context.Response.ClearHeaders();
+                            context.Response.ClearContent();
+                            context.Response.AppendHeader("Pragma", "no-cache");
+                            context.Response.AppendHeader("Cache-Control", "no-cache");
+                            context.Response.CacheControl = "no-cache";
+                            context.Response.Expires = -1;
+                            context.Response.ExpiresAbsolute = new DateTime(1900, 1, 1);
+                            context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                            context.Response.ContentType = reader["fileMIMEType"].ToString();
+                            context.Response.BinaryWrite((byte[])reader["fileBinaryData"]);
+                            context.Response.Flush();
+                            context.Response.End();
+                        }
                     }
                 }
             }
@@ -136,42 +137,42 @@ namespace ICM.Dao
         
         public int AddContract(string title, string start, string end, string typeContractName, string xml, string userName, SortedList persons, int[] destinations, int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
         {
-            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
-            
-            int contractFileId = addFile(transaction, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
-
-            var parameters = new NameValueCollection
+            using(var connection = DBManager.GetInstance().GetNewConnection())
             {
-                {"@title", title},
-                {"@start", start},
-                {"@end", end},
-                {"@fileId", contractFileId.ToString()},
-                {"@xmlContent", xml},
-                {"@userLogin", userName},
-                {"@typeContractName", typeContractName},
-                {"@archived", "0"}
-            };
+                var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
-            int contractId = DBUtils.ExecuteInsert(
-                "INSERT INTO [Contract] (title, start, [end], fileId, xmlContent, userLogin, typeContractName, archived) VALUES (@title, @start, @end, @fileId, @xmlContent, @userLogin, @typeContractName, @archived)",
-                IsolationLevel.ReadUncommitted, parameters, "Contract", transaction);
+                int contractFileId = addFile(transaction, fileSize, fileMIMEType, fileBinaryBuffer);
 
-            addContacts(transaction, contractId, persons);
-            addDestinations(transaction, contractId, destinations);
+                var parameters = new NameValueCollection
+                {
+                    {"@title", title},
+                    {"@start", start},
+                    {"@end", end},
+                    {"@fileId", contractFileId.ToString()},
+                    {"@xmlContent", xml},
+                    {"@userLogin", userName},
+                    {"@typeContractName", typeContractName},
+                    {"@archived", "0"}
+                };
 
-            transaction.Commit();
+                var contractId = DBUtils.ExecuteInsert(
+                    "INSERT INTO [Contract] (title, start, [end], fileId, xmlContent, userLogin, typeContractName, archived) VALUES (@title, @start, @end, @fileId, @xmlContent, @userLogin, @typeContractName, @archived)",
+                    IsolationLevel.ReadUncommitted, parameters, "Contract", transaction);
 
-            return contractId;
+                AddContacts(transaction, contractId, persons);
+                AddDestinations(transaction, contractId, destinations);
+
+                transaction.Commit();
+
+                return contractId;
+            }
         }
 
-
-        internal void SaveContract(int id, string title, string start, string end, string typeContractName, string xml, string userName, SortedList persons, int[] destinations, int contractFileId, int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
+        public void SaveContract(SqlTransaction transaction, int id, string title, string start, string end, string typeContractName, string xml, string userName, SortedList persons, int[] destinations, int contractFileId, int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
         {
-            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
-
             if (contractFileId != -1)
             {
-                updateFile(contractFileId, transaction, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+                updateFile(contractFileId, transaction, fileSize, fileMIMEType, fileBinaryBuffer);
             }
 
             var parameters = new NameValueCollection
@@ -186,26 +187,24 @@ namespace ICM.Dao
                 {"@archived", "0"}
             };
 
-            DBUtils.ExecuteNonQuery(transaction.Connection,
+            DBUtils.ExecuteNonQuery(
                 "UPDATE [Contract] SET title = @title, start = @start, [end] = @end, xmlContent = @xmlContent, userLogin = @userLogin, typeContractName = @typeContractName, archived = @archived WHERE id = @id",
                 transaction, parameters);
 
-            updateContacts(transaction, id, persons);
-            updateDestinations(transaction, id, destinations);
-
-            transaction.Commit();
+            UpdateContacts(transaction, id, persons);
+            UpdateDestinations(transaction, id, destinations);
         }
 
-        private int addFile(SqlTransaction transaction, int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
+        private int addFile(SqlTransaction transaction, int fileSize, string fileMIMEType, byte[] fileBinaryBuffer)
         {
 
-            string fileToDbQueryStr = @"INSERT INTO ContractFile (fileSize, fileMIMEType, fileBinaryData) VALUES(@fileSize, @fileMIMEType, @fileBinaryData)";
-            System.Data.SqlClient.SqlCommand command = new SqlCommand(fileToDbQueryStr, transaction.Connection, transaction);
+            var fileToDbQueryStr = @"INSERT INTO ContractFile (fileSize, fileMIMEType, fileBinaryData) VALUES(@fileSize, @fileMIMEType, @fileBinaryData)";
+            var command = new SqlCommand(fileToDbQueryStr, transaction.Connection, transaction);
 
             command.Parameters.AddWithValue("fileSize", fileSize);
             command.Parameters.AddWithValue("fileMIMEType", fileMIMEType);
 
-            SqlParameter imageFileBinaryParam = new SqlParameter("fileBinaryData", SqlDbType.VarBinary, fileSize);
+            var imageFileBinaryParam = new SqlParameter("fileBinaryData", SqlDbType.VarBinary, fileSize);
             imageFileBinaryParam.Value = fileBinaryBuffer;
 
             command.Parameters.Add(imageFileBinaryParam);
@@ -225,16 +224,16 @@ namespace ICM.Dao
             return id;
         }
 
-        private void updateFile(int contractFileId, SqlTransaction transaction, int fileSize, string fileMIMEType, BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
+        private void updateFile(int contractFileId, SqlTransaction transaction, int fileSize, string fileMIMEType, byte[] fileBinaryBuffer)
         {
-            string fileToDbQueryStr = @"UPDATE [ContractFile] SET fileSize = @fileSize, fileMIMEType = @fileMIMEType, fileBinaryData = @fileBinaryData WHERE id = @contractFileId";
-            System.Data.SqlClient.SqlCommand command = new SqlCommand(fileToDbQueryStr, transaction.Connection, transaction);
+            var fileToDbQueryStr = @"UPDATE [ContractFile] SET fileSize = @fileSize, fileMIMEType = @fileMIMEType, fileBinaryData = @fileBinaryData WHERE id = @contractFileId";
+            var command = new SqlCommand(fileToDbQueryStr, transaction.Connection, transaction);
 
             command.Parameters.AddWithValue("contractFileId", contractFileId);
             command.Parameters.AddWithValue("fileSize", fileSize);
             command.Parameters.AddWithValue("fileMIMEType", fileMIMEType);
 
-            SqlParameter imageFileBinaryParam = new SqlParameter("fileBinaryData", SqlDbType.VarBinary, fileSize);
+            var imageFileBinaryParam = new SqlParameter("fileBinaryData", SqlDbType.VarBinary, fileSize);
             imageFileBinaryParam.Value = fileBinaryBuffer;
 
             command.Parameters.Add(imageFileBinaryParam);
@@ -242,9 +241,9 @@ namespace ICM.Dao
             command.ExecuteNonQuery();
         }
      
-        private void addContacts(SqlTransaction transaction, int contractId, SortedList persons)
+        private static void AddContacts(SqlTransaction transaction, int contractId, SortedList persons)
         {
-            for (int i = 0; i < persons.Count; i++)
+            for (var i = 0; i < persons.Count; i++)
             {
                 var parametersContact = new NameValueCollection
                 {
@@ -253,37 +252,37 @@ namespace ICM.Dao
                     {"@contractId", contractId.ToString()},
                 };
 
-               DBUtils.ExecuteNonQuery(transaction.Connection, "INSERT INTO [Association] VALUES (@person, @roleName, @contractId)", transaction, parametersContact);
+               DBUtils.ExecuteNonQuery("INSERT INTO [Association] VALUES (@person, @roleName, @contractId)", transaction, parametersContact);
             }
         }
 
-        private void updateContacts(SqlTransaction transaction, int contractId, SortedList persons)
+        private static void UpdateContacts(SqlTransaction transaction, int contractId, SortedList persons)
         {
             var parameters = new NameValueCollection
                 {
                     {"@contractId", contractId.ToString()},
                 };
 
-            DBUtils.ExecuteNonQuery(transaction.Connection, "DELETE FROM [Association] WHERE contractId = @contractId", transaction, parameters);
+            DBUtils.ExecuteNonQuery("DELETE FROM [Association] WHERE contractId = @contractId", transaction, parameters);
 
-            addContacts(transaction, contractId, persons);
+            AddContacts(transaction, contractId, persons);
         }
 
-        private void updateDestinations(SqlTransaction transaction, int contractId, int[] destinations)
+        private void UpdateDestinations(SqlTransaction transaction, int contractId, int[] destinations)
         {
             var parameters = new NameValueCollection
                 {
                     {"@contractId", contractId.ToString()},
                 };
 
-            DBUtils.ExecuteNonQuery(transaction.Connection, "DELETE FROM [Destination] WHERE contract = @contractId", transaction, parameters);
+            DBUtils.ExecuteNonQuery("DELETE FROM [Destination] WHERE contract = @contractId", transaction, parameters);
 
-            addDestinations(transaction, contractId, destinations);
+            AddDestinations(transaction, contractId, destinations);
         }
 
-        private void addDestinations(SqlTransaction transaction, int contractId, int[] destinations)
+        private static void AddDestinations(SqlTransaction transaction, int contractId, int[] destinations)
         {
-            for (int i = 0; i < destinations.Length; i++)
+            for (var i = 0; i < destinations.Length; i++)
             {
                 var parametersDestination = new NameValueCollection
                 {
@@ -291,7 +290,7 @@ namespace ICM.Dao
                     {"@contractId", contractId.ToString()},
                 };
 
-                DBUtils.ExecuteNonQuery(transaction.Connection, "INSERT INTO [Destination] VALUES (@contractId, @department)", transaction, parametersDestination);
+                DBUtils.ExecuteNonQuery("INSERT INTO [Destination] VALUES (@contractId, @department)", transaction, parametersDestination);
             }
         }
 
@@ -309,7 +308,7 @@ namespace ICM.Dao
 
         public List<Contract> SearchContracts(string title, int year, string contractType, int institution, int department, int person, bool archived)
         {
-            List<Contract> contracts = new List<Contract>();
+            var contracts = new List<Contract>();
 
             var query = "SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived, D.department, P.institutionId FROM [Contract] C" +
                          " LEFT OUTER JOIN Association A" +
@@ -353,41 +352,20 @@ namespace ICM.Dao
                 {"@year", year.ToString()},
             };
 
-            using (var reader = DBUtils.ExecuteQuery(query, IsolationLevel.ReadUncommitted, parameters))
+            using (var connection = DBManager.GetInstance().GetNewConnection())
             {
-                while (reader.Read())
+                using (var reader = DBUtils.ExecuteQuery(query, connection, IsolationLevel.ReadUncommitted, parameters))
                 {
-                    contracts.Add(BindContract(reader));
+                    while (reader.Read())
+                    {
+                        contracts.Add(BindContract(reader));
+                    }
                 }
             }
-
+            
             return contracts;
         }
         
-        public List<Contract> GetAllContracts()
-        {
-            List<Contract> contractsList = new List<Contract>();
-            /*
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
-
-            SqlTransaction transaction = connection.BeginTransaction();
-            //transaction.IsolationLevel = System.Data.IsolationLevel.Chaos;
-
-            SqlCommand command = new SqlCommand("Select * from [Contract]", connection);
-
-            SqlResult reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                Contract contract = BindContract(reader);
-                contractsList.Add(contract);
-            }
-
-            reader.Close();
-            */
-            return contractsList;
-        }
-
         private static Contract BindContract(SqlResult reader)
         {
             Contract contract = new Contract();
@@ -414,7 +392,7 @@ namespace ICM.Dao
         ///<param name="institutionId">The institution of the contracts. </param>
         ///<param name="departmentId">The department of the contracts. </param>
         ///<returns>All the contracts of the historique. </returns>
-        public List<Contract> HistoSearch(SqlConnection connection, SqlTransaction transaction, int year, int institutionId, int departmentId)
+        public List<Contract> HistoSearch(SqlTransaction transaction, int year, int institutionId, int departmentId)
         {
             var contracts = new List<Contract>();
 
@@ -439,7 +417,7 @@ namespace ICM.Dao
 
             Logger.Debug("Histo search with query \"{0}\"", query);
 
-            var command = new SqlCommand(query, connection, transaction);
+            var command = new SqlCommand(query, transaction.Connection, transaction);
 
             command.Parameters.AddWithValue("year", year.ToString());
             command.Parameters.AddWithValue("department", departmentId.ToString());
@@ -459,76 +437,24 @@ namespace ICM.Dao
 
             return contracts;
         }
-
-        internal string GetContractById(int id, SqlConnection connection, SqlTransaction transaction)
+        
+        public void LockContract(int id, SqlTransaction transaction)
         {
-            var contracts = new List<Contract>();
+            Logger.Debug("Lock Contract with ID ({0})", id);
 
             var parameters = new NameValueCollection
             {
                 {"@id", id.ToString()},
             };
 
-            Contract c = new Contract();
-            List<Person> persons = new List<Person>();
-            List<Department> departments = new List<Department>();
+            var command = new SqlCommand("UPDATE Contract set title = title WHERE id = @id", transaction.Connection, transaction) { CommandTimeout = 3 };
 
-            using (var reader = DBUtils.ExecuteTransactionQuery("SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived " +
-                                                     "FROM [Contract] C " +
-                                                     "WHERE C.id = @id"
-                                                    , transaction, parameters))
+            foreach (var key in parameters.AllKeys)
             {
-
-                if (reader.Read())
-                {
-                    c = BindContract(reader);
-                }
+                command.Parameters.AddWithValue(key, parameters.Get(key));
             }
 
-            using (var readerAssoc = DBUtils.ExecuteTransactionQuery("SELECT A.roleName, P.id AS personId, P.name, P.firstname " +
-                                                     "FROM [Association] A " +
-                                                     "INNER JOIN Person P " +
-                                                     "ON A.person = P.id " +
-                                                     "WHERE A.contractId = @id"
-                                                    , transaction, parameters))
-            {
-                while (readerAssoc.Read())
-                {
-                    Person p = new Person();
-                    p.Id = (int)readerAssoc["personId"];
-                    p.Role = (string)readerAssoc["roleName"];
-                    p.FirstName = (string)readerAssoc["firstname"];
-                    p.Name = (string)readerAssoc["name"];
-                    persons.Add(p);
-                }
-            }
-            using (var readerDestination = DBUtils.ExecuteTransactionQuery("SELECT P.id AS departementId, P.name AS depName, I.id AS institutionId, I.name AS insName" +
-                                                     " FROM [Destination] D" +
-                                                     " INNER JOIN [Department] P" +
-                                                     " ON D.department = P.id" +
-                                                     " INNER JOIN [Institution] I" +
-                                                     " ON P.institutionId = I.id" +
-                                                     " WHERE D.contract = @id"
-                                                    , transaction, parameters))
-            {
-                while (readerDestination.Read())
-                {
-                    Department d = new Department();
-                    d.Id = (int)readerDestination["departementId"];
-                    d.Name = (string)readerDestination["depName"];
-                    d.InstitutionName = (string)readerDestination["insName"];
-                    d.InstitutionId = (int)readerDestination["institutionId"];
-                    departments.Add(d);
-                }
-            }
-            c.persons = persons;
-            c.departments = departments;
-            contracts.Add(c);
-
-            //transaction.Connection.Close();
-
-            return contracts.First().Title;
+            command.ExecuteNonQuery();
         }
-
     }
 }

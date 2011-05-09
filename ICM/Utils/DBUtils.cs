@@ -18,26 +18,7 @@ namespace ICM.Utils
             return transaction;
         }
 
-        public static void CommitTransaction(SqlTransaction transaction)
-        {
-            transaction.Commit();
-        }
-
         public static SqlResult ExecuteTransactionQuery(string sql, SqlTransaction transaction, NameValueCollection parameters)
-        {
-            var command = new SqlCommand(sql, transaction.Connection, transaction);
-
-            foreach (var key in parameters.AllKeys)
-            {
-                command.Parameters.AddWithValue(key, parameters.Get(key));
-            }
-
-            var reader = command.ExecuteReader();
-
-            return new SqlResult(null, reader);
-        }
-
-        public static SqlResult ExecuteTransactionQuery(string sql, SqlConnection connection, SqlTransaction transaction, NameValueCollection parameters)
         {
             var command = new SqlCommand(sql, transaction.Connection, transaction);
 
@@ -58,7 +39,7 @@ namespace ICM.Utils
 
         public static int ExecuteTransactionInsert(string sql, SqlTransaction transaction, NameValueCollection parameters, string tableName)
         {
-            ExecuteNonQuery(transaction.Connection, sql, transaction, parameters);
+            ExecuteNonQuery(sql, transaction, parameters);
 
             var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", transaction.Connection, transaction);
             getCommand.Parameters.AddWithValue("table", tableName);
@@ -88,39 +69,15 @@ namespace ICM.Utils
             {
                 var transaction = connection.BeginTransaction(level);
 
-                ExecuteNonQuery(connection, sql, transaction, parameters);
+                ExecuteNonQuery(sql, transaction, parameters);
 
                 transaction.Commit();
             }
         }
-
-        public static int ExecuteInsert(string sql, IsolationLevel level, NameValueCollection parameters, string tableName)
-        {
-            var connection = DBManager.GetInstance().GetConnection();
-
-            var transaction = connection.BeginTransaction(level);
-
-            ExecuteNonQuery(connection, sql, transaction, parameters);
-
-            var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", connection, transaction);
-            getCommand.Parameters.AddWithValue("table", tableName);
-
-            int id;
-            using (var reader = getCommand.ExecuteReader())
-            {
-                reader.Read();
-
-                id = reader["ID"].ToString().ToInt();
-            }
-
-            transaction.Commit();
-
-            return id;
-        }
-
+        
         public static int ExecuteInsert(string sql, IsolationLevel level, NameValueCollection parameters, string tableName, SqlTransaction transaction)
         {
-            ExecuteNonQuery(transaction.Connection, sql, transaction, parameters);
+            ExecuteNonQuery(sql, transaction, parameters);
 
             var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", transaction.Connection, transaction);
             getCommand.Parameters.AddWithValue("table", tableName);
@@ -136,9 +93,9 @@ namespace ICM.Utils
             return id;
         }
 
-        public static void ExecuteNonQuery(SqlConnection connection, string sql, SqlTransaction transaction, NameValueCollection parameters)
+        public static void ExecuteNonQuery(string sql, SqlTransaction transaction, NameValueCollection parameters)
         {
-            var command = new SqlCommand(sql, connection, transaction);
+            var command = new SqlCommand(sql, transaction.Connection, transaction);
 
             foreach (var key in parameters.AllKeys)
             {
