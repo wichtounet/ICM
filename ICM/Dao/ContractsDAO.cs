@@ -449,5 +449,76 @@ namespace ICM.Dao
 
             return contracts;
         }
+
+        internal string GetContractById(int id, SqlConnection connection, SqlTransaction transaction)
+        {
+            var contracts = new List<Contract>();
+
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()},
+            };
+
+            Contract c = new Contract();
+            List<Person> persons = new List<Person>();
+            List<Department> departments = new List<Department>();
+
+            using (var reader = DBUtils.ExecuteTransactionQuery("SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived " +
+                                                     "FROM [Contract] C " +
+                                                     "WHERE C.id = @id"
+                                                    , transaction, parameters))
+            {
+
+                if (reader.Read())
+                {
+                    c = BindContract(reader);
+                }
+            }
+
+            using (var readerAssoc = DBUtils.ExecuteTransactionQuery("SELECT A.roleName, P.id AS personId, P.name, P.firstname " +
+                                                     "FROM [Association] A " +
+                                                     "INNER JOIN Person P " +
+                                                     "ON A.person = P.id " +
+                                                     "WHERE A.contractId = @id"
+                                                    , transaction, parameters))
+            {
+                while (readerAssoc.Read())
+                {
+                    Person p = new Person();
+                    p.Id = (int)readerAssoc["personId"];
+                    p.Role = (string)readerAssoc["roleName"];
+                    p.FirstName = (string)readerAssoc["firstname"];
+                    p.Name = (string)readerAssoc["name"];
+                    persons.Add(p);
+                }
+            }
+            using (var readerDestination = DBUtils.ExecuteTransactionQuery("SELECT P.id AS departementId, P.name AS depName, I.id AS institutionId, I.name AS insName" +
+                                                     " FROM [Destination] D" +
+                                                     " INNER JOIN [Department] P" +
+                                                     " ON D.department = P.id" +
+                                                     " INNER JOIN [Institution] I" +
+                                                     " ON P.institutionId = I.id" +
+                                                     " WHERE D.contract = @id"
+                                                    , transaction, parameters))
+            {
+                while (readerDestination.Read())
+                {
+                    Department d = new Department();
+                    d.Id = (int)readerDestination["departementId"];
+                    d.Name = (string)readerDestination["depName"];
+                    d.InstitutionName = (string)readerDestination["insName"];
+                    d.InstitutionId = (int)readerDestination["institutionId"];
+                    departments.Add(d);
+                }
+            }
+            c.persons = persons;
+            c.departments = departments;
+            contracts.Add(c);
+
+            //transaction.Connection.Close();
+
+            return contracts.First().Title;
+        }
+
     }
 }

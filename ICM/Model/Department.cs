@@ -30,6 +30,24 @@
             get { return InstitutionName + ": " + Name; }
         }
 
+        public string InstitutionCity
+        {
+            get;
+            set;
+        }
+
+        public string InstitutionCountry
+        {
+            get;
+            set;
+        }
+
+        public string InstitutionLanguage
+        {
+            get;
+            set;
+        }
+
         public override string ToString()
         {
             return Name;
