@@ -6,14 +6,12 @@ ICM/obj/
 ICM.5.1.ReSharper.user
 _ReSharper.ICM/
 
-ICM.suo
 ICM/ICM.csproj
-ICM.suo
 *.log
 *.csproj
 *.dll
 *.pdb
 *.config
 ICM.suo
-ICM.suo
 ICM/ICM.csproj
+ICM/logs/icm.log

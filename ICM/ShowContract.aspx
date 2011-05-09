@@ -7,12 +7,30 @@
             <td><asp:Label ID="TitreLabel" runat="server" /></td>
         </tr>
         <tr>
-            <td>Institution : </td>
-            <td><asp:Label ID="InstitutionLabel" runat="server" /></td>
+            <td>Personne de contact : </td>
+            <td>
+                <asp:ListView ID="PersonList" runat="server">
+                    <ItemTemplate>
+                        <asp:Label ID="LabelID" runat="server" Visible="false" Text='<%# Eval("Id")%>' />
+                        <li>
+                            <a href='ShowPerson.aspx?person=<%# Eval("Id")%>'><%# Eval("RoleFirstName")%></a>
+                        </li>
+                    </ItemTemplate>
+                </asp:ListView>
+            </td>
         </tr>
         <tr>
-            <td>Département : </td>
-            <td><asp:Label ID="DepartmentLabel" runat="server" /></td>
+            <td>Destination : </td>
+            <td>
+                <asp:ListView ID="DestinationList" runat="server">
+                    <ItemTemplate>
+                        <asp:Label ID="LabelID" runat="server" Visible="false" Text='<%# Eval("InstitutionId")%>' />
+                        <li>
+                            <a href='ShowInstitution.aspx?institution=<%# Eval("InstitutionId")%>'><%# Eval("departementInstitution")%></a>
+                        </li>
+                    </ItemTemplate>
+                </asp:ListView>
+            </td>
         </tr>
         <tr>
             <td>Date début : </td>
@@ -42,7 +60,7 @@
     
     <p>
         <asp:Button ID="EditButton" runat="server" Text="Modifier" OnClick="EditContract" /> 
-        <asp:Button ID="DeleteButton" runat="server" Text="Archiver" OnClick="DeleteContract" />
+        <asp:Button ID="DeleteButton" runat="server" Text="Archiver" OnClick="ArchiveContract" />
     </p>
 
      <script type="text/javascript">

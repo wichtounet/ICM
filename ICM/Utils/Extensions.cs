@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NLog;
@@ -14,47 +15,46 @@ namespace ICM.Utils
     /// <remarks>Baptiste Wicht</remarks>
     public static class Extensions
     {
+        ///<summary>
+        /// Indicate if the given list of departments contains a department with the given name
+        ///</summary>
+        ///<param name="departments">The departments to search in</param>
+        ///<param name="name">The department name to search for</param>
+        ///<returns>true if the departments contains a department with the given name otherwise false</returns>
         public static bool ContainsDepartmentWithName(this List<Department> departments, string name)
         {
-            foreach (Department department in departments)
-            {
-                if (department.Name.Equals(name))
-                    return true;
-            }
-            return false;
+            return departments.Any(department => department.Name.Equals(name));
         }
 
+        ///<summary>
+        /// Returns the user with the given login in the given list of users. 
+        ///</summary>
+        ///<param name="users">The users to search in. </param>
+        ///<param name="login">The login to search for. </param>
+        ///<returns>The user with the given login</returns>
         public static User GetUserByLogin(this List<User> users, string login)
         {
-            foreach (User user in users)
-            {
-                if (user.Login.Equals(login))
-                    return user;
-            }
-            return null;
+            return users.FirstOrDefault(user => user.Login.Equals(login));
         }
 
         public static int ToInt(this String str)
         {
-            return Convert.ToInt16(str);
+            return Convert.ToInt32(str);
         }
 
-        public static int? ToIntStrict(this String str)
+        ///<summary>
+        /// Convert the string to int or -1 if the str is empty
+        ///</summary>
+        ///<param name="str">The string to convert</param>
+        ///<returns>The int value of the string or -1 if the string is empty</returns>
+        public static int ToIntOrDefault(this String str)
         {
-            if (str == null)
+            if ("".Equals(str))
             {
-                return null;
+                return -1;
             }
 
-            return Convert.ToInt16(str);
-        }
-
-        public static SqlParameter[] ToArray(this SqlParameterCollection collection)
-        {
-            var array = new SqlParameter[collection.Count];
-            collection.CopyTo(array, 0);
-
-            return array;
+            return Convert.ToInt32(str);
         }
 
         ///<summary>
@@ -115,9 +115,20 @@ namespace ICM.Utils
             catch (SqlException exception)
             {
                 label.Visible = true;
-                label.Text = "Erreur de base de données : " + exception.Message;
 
-                LogManager.GetLogger(page.GetType().FullName).DebugException("SQL Exception during get person informations", exception);
+                if(exception.Message.StartsWith("Timeout expired."))
+                {
+                    label.Text = "Cet objet est verrouillé par un autre utilisateur, vous ne pourrez le modifier que lorsqu'il aura terminé. ";
+
+                    LogManager.GetLogger(page.GetType().FullName).Debug("Concurrency modification exception");
+                    LogManager.GetLogger(page.GetType().FullName).DebugException("SQL Exception on a page : ", exception);
+                } 
+                else
+                {
+                    label.Text = "Erreur de base de données : " + exception.Message;
+
+                    LogManager.GetLogger(page.GetType().FullName).DebugException("SQL Exception on a page : ", exception);
+                }
             }
         }
     }

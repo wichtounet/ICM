@@ -6,25 +6,88 @@
     <h2>
         Rechercher un contrat
     </h2>
-    <p>
-        Titre : <asp:TextBox ID="TitleLabel" Columns="15" runat="server" /> <br />
-        Date de départ : <asp:TextBox ID="dateDepart" Columns="15" runat="server" /><br />
-        Date de fin : <asp:TextBox ID="dateFin" Columns="15" runat="server" /> <br />
-        Département : <asp:DropDownList ID="DepartementList" runat="server" /> <br />
-        Université : <asp:DropDownList ID="UniversityList" runat="server" /> <br />
-        Type : <asp:DropDownList ID="TypeList" runat="server" /> <br />
-        Personne : <asp:DropDownList ID="PersonsList" runat="server" /> <br />
-        <asp:Button ID="SearchButton" runat="server" Text="Rechercher" /> <br /> 
-    </p>
+    <asp:Label ID="stateForm" Visible="false" runat="server" Text="-1" />
+    <table>
+        <tr>
+            <td>Title : </td>
+            <td><asp:TextBox ID="TitleText" Columns="15" runat="server" /></td>
+            
+        </tr>
+        <tr>
+            <td>Type : </td>
+            <td><asp:DropDownList ID="ContractTypeList" runat="server" /></td>
+            
+        </tr>
+        <tr>
+            <td>Année : </td>
+            <td><asp:DropDownList ID="YearList" runat="server" /></td>
+            
+        </tr>
+        <tr>
+            <td>Institution : </td>
+            <td>
+                <asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected"  AutoPostBack="true"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Département :</td>
+            <td>
+                <asp:DropDownList ID="DepartmentList" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td>Personne de contact : </td>
+            <td>
+                <asp:DropDownList ID="PersonneList" runat="server" />
+            </td>
+            
+        </tr>
+        <tr>
+            <td>Contract archivé :</td>
+            <td><asp:CheckBox runat="server" ID="ArchivedCheck" /></td>
+        </tr>
+        <tr>
+            <td> </td>
+            <td> 
+                <asp:Button runat="server" id="SearchButton" text="Rechercher" onclick="Search_Click" />
+            </td>
+        </tr>
+    </table>   
+
+    <asp:ListView ID="ResultsView" runat="server" OnItemDeleting="ContractDeleting">
+        <LayoutTemplate>
+            <ul>
+                <asp:PlaceHolder ID="itemPlaceholder" runat="server" />
+            </ul>
+                
+            <p>
+                Page:
+                <asp:DataPager ID="SaisieDataPager" runat="server" PageSize="5">
+                    <Fields>
+                        <asp:NumericPagerField ButtonCount="5" />
+                    </Fields>
+                </asp:DataPager>
+            </p>
+        </LayoutTemplate>
+
+        <ItemTemplate>
+            <asp:Label ID="LabelID" runat="server" Visible="false" Text='<%# Eval("Id")%>' />
+            <li>
+                <a href='ShowContract.aspx?contract=<%# Eval("Id")%>'><%# Eval("Title") %></a>
+                    (<a href='AddContract.aspx?contract=<%# Eval("Id")%>'>Edit</a> | 
+                    <asp:LinkButton ID="ArchiveButton" runat="server" CommandName="Delete" Text="Archive" 
+                        OnClientClick="return confirm('Are you sure you want to archive this contract ?');" />)
+            </li>
+        </ItemTemplate>
+
+        <EmptyDataTemplate>
+            <p>
+                Aucun résultat
+            </p>
+        </EmptyDataTemplate>
+    </asp:ListView>
 
      <script type="text/javascript">
-         $(function () {
-             $("[id$=dateDepart]").datepicker();
-         });
-         $(function () {
-             $("[id$=dateFin]").datepicker();
-         });
-
          $(function () {
              $("[id$=SearchButton]").button();
          });

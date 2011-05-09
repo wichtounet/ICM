@@ -68,9 +68,30 @@
             set;
         }
 
+        public string NameFirstName
+        {
+            get { return FirstName + " " + Name; }
+        }
+
+        public string Role
+        {
+            get;
+            set;
+        }
+
+        public string RoleFirstName
+        {
+            get { return Role +": " + NameFirstName; }
+        }
+
+        public string RoleId
+        {
+            get { return Id + ";" + Role; }
+        }
+
         public override string ToString()
         {
-            return FirstName + Name;
+            return FirstName + " " + Name;
         }
     }
 }

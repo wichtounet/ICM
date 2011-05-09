@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using ICM.Dao;
 using ICM.Utils;
-using NLog;
 
 namespace ICM
 {
@@ -14,8 +11,6 @@ namespace ICM
     /// <remarks>Baptiste Wicht</remarks>
     public partial class ShowPerson : Page
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         /// <summary>
         /// Load the informations about the person and fill the page. 
         /// </summary>
@@ -30,8 +25,6 @@ namespace ICM
                 Extensions.SqlOperation operation = () =>
                 {
                     var person = new PersonsDAO().GetPersonByID(id);
-
-                    ErrorLabel.Visible = false;
 
                     IDLabel.Text = person.Id.ToString();
                     NameLabel.Text = person.Name;
@@ -60,9 +53,7 @@ namespace ICM
         /// <param name="e">The args of the event</param>
         protected void EditPerson(object sender, EventArgs e)
         {
-            var id = IDLabel.Text.ToInt();
-
-            Response.Redirect("AddPerson.aspx?person=" + id);
+            Response.Redirect("AddPerson.aspx?person=" + IDLabel.Text);
         }
 
         /// <summary>
