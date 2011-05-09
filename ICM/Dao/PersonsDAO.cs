@@ -66,8 +66,7 @@ namespace ICM.Dao
         /// <param name="phone">The name of the person</param>
         /// <param name="email">The name of the person</param>
         /// <param name="department">The department of the person</param>
-        /// <param name="transaction"></param>
-        /// <param name="connection"></param>
+        /// <param name="transaction">The transaction to use</param>
         public void SavePerson(int id, string firstname, string name, string phone, string email, int department, SqlTransaction transaction)
         {
             Logger.Debug("Saving person {0}", id);

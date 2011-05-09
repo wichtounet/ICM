@@ -386,7 +386,6 @@ namespace ICM.Dao
         ///<summary>
         /// Make a search for the historique feature. 
         ///</summary>
-        ///<param name="connection">The connection to use</param>
         ///<param name="transaction">The transaction to use</param>
         ///<param name="year">The year to search contracts. </param>
         ///<param name="institutionId">The institution of the contracts. </param>
