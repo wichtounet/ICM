@@ -22,7 +22,7 @@
                 
             <p>
                 Page:
-                <asp:DataPager ID="SaisieDataPager" runat="server" PageSize="5">
+                <asp:DataPager ID="SaisieDataPager" runat="server" PageSize="20">
                     <Fields>
                         <asp:NumericPagerField ButtonCount="5" />
                     </Fields>
@@ -36,7 +36,7 @@
                 <a href='ShowPerson.aspx?person=<%# Eval("Id")%>'><%# Eval("Name") %> <%# Eval("FirstName") %></a>
                     (<a href='AddPerson.aspx?person=<%# Eval("Id")%>'>Edit</a> | 
                     <asp:LinkButton ID="ArchiveButton" runat="server" CommandName="Delete" Text="Archive" 
-                        OnClientClick="return confirm('Are you sure you want to archive this person ?');" />)
+                        OnClientClick="return confirm('Etes vous sûr de vouloir archiver cette personne ?');" />)
             </li>
         </ItemTemplate>
 
