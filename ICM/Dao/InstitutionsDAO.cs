@@ -5,11 +5,14 @@ using System.Data.SqlClient;
 using System.Linq;
 using ICM.Model;
 using ICM.Utils;
+using NLog;
 
 namespace ICM.Dao
 {
     public class InstitutionsDAO
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Adds an insitution to the database.
         /// </summary>
@@ -18,6 +21,8 @@ namespace ICM.Dao
         public int AddInstitution(Institution institution)
         {
             int institutionId;
+
+            Logger.Debug("Creating institution in database");
 
             var parametersInstitution = new NameValueCollection
             {
@@ -54,6 +59,8 @@ namespace ICM.Dao
 
             DBUtils.CommitTransaction(transaction);
 
+            Logger.Debug("Created institution with id {0} in database", institutionId);
+
             return institutionId;
         }
 
@@ -65,6 +72,8 @@ namespace ICM.Dao
         public Institution GetInstitution(int id)
         {
             Institution institution = null;
+
+            Logger.Debug("Retrieving institution with id {0} from database", id);
 
             var parameters = new NameValueCollection
             {
@@ -89,6 +98,8 @@ namespace ICM.Dao
             
             DBUtils.CommitTransaction(transaction);
 
+            Logger.Debug("Retrieved institution with id {0} from database", id);
+
             return institution;
         }
 
@@ -99,6 +110,8 @@ namespace ICM.Dao
         ///<returns>The institution with the given id. </returns>
         public Institution GetInstitutionClean(int id)
         {
+            Logger.Debug("Retrieving institution with id {0} from database", id);
+
             using(var connection = DBManager.GetInstance().GetNewConnection())
             {
                 Institution institution = null;
@@ -126,6 +139,8 @@ namespace ICM.Dao
 
                 DBUtils.CommitTransaction(transaction);
 
+                Logger.Debug("Retrieved institution with id {0} from database", id);
+
                 return institution;
             }
         }
@@ -138,6 +153,8 @@ namespace ICM.Dao
             NameValueCollection parameters;
 
             List<Department> oldDepartments = GetDepartments(institution.Id, transaction);  //Department already present in DB
+
+            Logger.Debug("Archiving old departments of institution with id {0} in database", institution.Id);
 
             //Delete all the old departments
             foreach(Department oldDepartment in oldDepartments)
@@ -154,6 +171,10 @@ namespace ICM.Dao
                         parameters);
                 }
             }
+
+            Logger.Debug("Archived old departments of institution with id {0} in database", institution.Id);
+
+            Logger.Debug("Adding new departments of institution with id {0} into database", institution.Id);
 
             //Add all the new departments
             foreach(Department department in institution.Departments)
@@ -174,6 +195,8 @@ namespace ICM.Dao
                 }
             }
 
+            Logger.Debug("Added new departments of institution with id {0} into database", institution.Id);
+
             //Update institution data
             parameters = new NameValueCollection
             {
@@ -186,11 +209,16 @@ namespace ICM.Dao
                 {"@countryName", institution.Country.Name},
                 {"@archived", "0"}
             };
+
+            Logger.Debug("Updating information of institution with id {0} in database", institution.Id);
+
             DBUtils.ExecuteNonQuery(
                 connection,
                 "UPDATE [Institution] SET name = @name, description = @description, city = @city, interest = @interest, languageName = @languageName, countryName = @countryName WHERE id = @institutionId",
                 transaction,
                 parameters);
+
+            Logger.Debug("Updated information of institution with id {0} in database", institution.Id);
 
             //Commit transaction
             DBUtils.CommitTransaction(transaction);
@@ -205,6 +233,8 @@ namespace ICM.Dao
             List<Institution> institutions = new List<Institution>();
             SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
 
+            Logger.Debug("Retrieving all the institutions from database");
+
             //Instantiate institutions without department list
             using (SqlResult institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution]", transaction))
             {
@@ -214,6 +244,10 @@ namespace ICM.Dao
                 }
             }
 
+            Logger.Debug("Retrieved all the institutions from database");
+
+            Logger.Debug("Retrieving all the departments from database");
+
             //Add department list to the institutions
             foreach (Institution institution in institutions)
             {
@@ -222,6 +256,8 @@ namespace ICM.Dao
             }
 
             DBUtils.CommitTransaction(transaction);
+
+            Logger.Debug("Retrieved all the departments from database");
             
             return institutions;
         }
@@ -232,11 +268,14 @@ namespace ICM.Dao
         ///<returns>All the institutions of the database. </returns>
         public List<Institution> GetInstitutionsClean()
         {
+
             using(var connection = DBManager.GetInstance().GetNewConnection())
             {
                 var institutions = new List<Institution>();
 
                 var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+                Logger.Debug("Retrieving all the institutions from database");
 
                 //Instantiate institutions without department list
                 using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution]", connection, transaction, new NameValueCollection()))
@@ -247,6 +286,10 @@ namespace ICM.Dao
                     }
                 }
 
+                Logger.Debug("Retrieved all the institutions from database");
+
+                Logger.Debug("Retriving all the departments from database");
+
                 //Add department list to the institutions
                 foreach (var institution in institutions)
                 {
@@ -255,6 +298,8 @@ namespace ICM.Dao
                 }
 
                 DBUtils.CommitTransaction(transaction);
+
+                Logger.Debug("Retrieved all the departments from database");
 
                 return institutions;
             }
@@ -266,9 +311,11 @@ namespace ICM.Dao
         /// <param name="institutionId">Institution's id.</param>
         /// <returns>The list of departments.</returns>
         public List<Department> GetDepartments(int institutionId) {
+            Logger.Debug("Retrieving the departments of the institution with id {0} from database", institutionId);
             SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
             List<Department> departments = GetDepartments(institutionId, transaction);
             DBUtils.CommitTransaction(transaction);
+            Logger.Debug("Retrieved the departments of the institution with id {0} from database", institutionId);
             return departments;
         }
 
@@ -279,9 +326,13 @@ namespace ICM.Dao
                 {"@id", id.ToString()}
             };
 
+            Logger.Debug("Archiving the institution with id {0} in database", id);
+
             DBUtils.ExecuteUpdate(
                 "UPDATE [Institution] SET archived = 1 WHERE id = @id",
                 IsolationLevel.ReadUncommitted, parameters);
+
+            Logger.Debug("Archived the institution with id {0} in database", id);
         }
 
         /// <summary>
@@ -330,6 +381,8 @@ namespace ICM.Dao
                 {"@institutionId", institutionId.ToString()}
             };
 
+            Logger.Debug("Retriving department of the institution with id {0} in database", institutionId);
+
             using (SqlResult departmentReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Department] WHERE institutionId = @institutionId", connection, transaction, parameters))
             {
                 //Fill departments list
@@ -341,6 +394,8 @@ namespace ICM.Dao
                     departments.Add(department);
                 }
             }
+
+            Logger.Debug("Retrived department of the institution with id {0} in database", institutionId);
 
             return departments;
         }
@@ -372,11 +427,15 @@ namespace ICM.Dao
                 {"@countryName", countryName}
             };
 
+            Logger.Debug("Retrieving continent of the country named {0} from database", countryName);
+
             using (SqlResult countryReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Country] WHERE name = @countryName", connection, transaction, parameters))
             {
                 countryReader.Read();
                 continentName = (string)countryReader["continentName"];
             }
+
+            Logger.Debug("Retrieved continent of the country named {0} from database", countryName);
 
             //Instantiate continent
             return new Continent() { Name = continentName };
@@ -419,6 +478,13 @@ namespace ICM.Dao
                 query += " AND countryName IN (SELECT name FROM country WHERE continentName = @continentName)";
             }
 
+            Logger.Debug("Retrieving institutions with name like {0}, language={1}, continent={2}, country={3}, archived={4} from database",
+                            name,
+                            language,
+                            continent,
+                            country,
+                            archived);
+
             //Start transaction
             SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
 
@@ -441,6 +507,13 @@ namespace ICM.Dao
             //End transaction
             DBUtils.CommitTransaction(transaction);
 
+            Logger.Debug("Retrived institutions with name like {0}, language={1}, continent={2}, country={3}, archived={4} from database",
+                            name,
+                            language,
+                            continent,
+                            country,
+                            archived);
+
             return institutions;
         }
 
@@ -459,6 +532,8 @@ namespace ICM.Dao
             {
                 {"@id", id.ToString()},
             };
+
+            Logger.Debug("Retriving department with id {0} from database", id);
 
             using (var readerDestination = DBUtils.ExecuteTransactionQuery("SELECT D.id AS depId, d.name AS depName, I.id AS institutionId, I.name AS insName, I.city, I.languageName, I.countryName" +
                                                      " FROM [Department] D" +
@@ -482,6 +557,8 @@ namespace ICM.Dao
             }
 
             transaction.Connection.Close();
+
+            Logger.Debug("Retrieved department with id {0} from database", id);
 
             return departments.First();
         }
