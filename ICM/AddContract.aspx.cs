@@ -89,8 +89,15 @@ namespace ICM
 
         protected void AddPerson_Click(object sender, EventArgs e)
         {
-            PersonSelectedList.Items.Add(new ListItem(RoleList.SelectedItem.Text + ": " + PersonList.SelectedItem.Text, PersonList.SelectedItem.Value + ";" + RoleList.SelectedItem.Value));
-            //PersonLabel.Text = PersonList.SelectedItem.Text;
+
+            if (isValueInList(PersonList.SelectedItem.Value + ";" + RoleList.SelectedItem.Value, PersonSelectedList))
+            {
+                PersonLabel.Text = "Personne déjà présente dans la liste";
+            }
+            else
+            {
+                PersonSelectedList.Items.Add(new ListItem(RoleList.SelectedItem.Text + ": " + PersonList.SelectedItem.Text, PersonList.SelectedItem.Value + ";" + RoleList.SelectedItem.Value));
+            }
         }
         protected void DeletePerson_Click(object sender, EventArgs e)
         {
@@ -99,7 +106,24 @@ namespace ICM
 
         protected void AddDepartment_Click(object sender, EventArgs e)
         {
-            DepartmentSelectedList.Items.Add(new ListItem(DepartmentList.SelectedItem.Text, DepartmentList.SelectedItem.Value));
+            if(isValueInList(DepartmentList.SelectedItem.Value, DepartmentList))
+            {
+                DepartmentLabel.Text = "Département déjà présent dans la liste";
+            }else
+            {
+                DepartmentSelectedList.Items.Add(new ListItem(DepartmentList.SelectedItem.Text, DepartmentList.SelectedItem.Value));
+            }
+            
+        }
+
+        private bool isValueInList(string p, DropDownList list)
+        {
+            for (int i = 0; i < list.Items.Count; i++)
+            {
+                if (p.Equals(list.Items[i].Value))
+                    return true;
+            }
+            return false;
         }
         protected void DeleteDepartment_Click(object sender, EventArgs e)
         {
@@ -150,9 +174,9 @@ namespace ICM
             }
 
             int id;
+            XmlDocument xml = createXML();
             if (Request.QueryString["contract"] == null)
             {
-                XmlDocument xml = createXML();
                 id = contractDAO.AddContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.ToString(), "vincent", persons, destination, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
             }
             else
@@ -164,7 +188,7 @@ namespace ICM
                     contractFileId = contractFileId = FileID.Text.ToInt();
 
                 }
-                contractDAO.SaveContract(id, TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, "", "vincent", persons, destination, contractFileId, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+                contractDAO.SaveContract(id, TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.ToString(), "vincent", persons, destination, contractFileId, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
             }
 
             Response.Redirect("showContract.aspx?contract=" + id);
@@ -224,9 +248,8 @@ namespace ICM
             for (int i = 0; i < DepartmentSelectedList.Items.Count; i++)
             {
                 int id = DepartmentSelectedList.Items[i].Value.ToInt();
-                //Department department = institutionsDAO.getDepartement(id);
                 XmlElement destinationNode = xmlDoc.CreateElement("destination");
-                destinationNode.SetAttribute("id", "01");
+                destinationNode.SetAttribute("id", id.ToString());
 
                 departmentTab[index++] = id;
                 destinationsNode.AppendChild(destinationNode);
@@ -236,16 +259,15 @@ namespace ICM
             xmlDoc.DocumentElement.PrependChild(departmentsNode);
             for (int i = 0; i < departmentTab.Length; i++)
             {
-                //Department department = institutionsDAO.getDepartement(id);
+                int id = departmentTab[i];
+                Department d = institutionsDAO.GetDepartmentById(id);
                 XmlElement departmentNode = xmlDoc.CreateElement("department");
-                departmentNode.SetAttribute("id", "01");
-                departmentNode.SetAttribute("name", "01");
-                departmentNode.SetAttribute("institutionName", "01");
-                departmentNode.SetAttribute("institutionCity", "01");
-                departmentNode.SetAttribute("institutionInterest", "01");
-                departmentNode.SetAttribute("institutionLanguage", "01");
-                departmentNode.SetAttribute("institutionCountry", "01");
-                departmentNode.SetAttribute("institutionContinent", "01");
+                departmentNode.SetAttribute("id", d.Id.ToString());
+                departmentNode.SetAttribute("name", d.Name);
+                departmentNode.SetAttribute("institutionName", d.InstitutionName);
+                departmentNode.SetAttribute("institutionCity", d.InstitutionCity);
+                departmentNode.SetAttribute("institutionLanguage", d.InstitutionLanguage);
+                departmentNode.SetAttribute("institutionCountry", d.InstitutionCountry);
 
                 departmentsNode.AppendChild(departmentNode);
             }

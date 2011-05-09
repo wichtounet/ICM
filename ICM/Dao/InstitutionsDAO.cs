@@ -393,5 +393,42 @@ namespace ICM.Dao
 
             return institutions;
         }
+
+        public Department GetDepartmentById(int id)
+        {
+            var departments = new List<Department>();
+
+            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()},
+            };
+
+            using (var readerDestination = DBUtils.ExecuteTransactionQuery("SELECT D.id AS depId, d.name AS depName, I.id AS institutionId, I.name AS insName, I.city, I.languageName, I.countryName" +
+                                                     " FROM [Department] D" +
+                                                     " INNER JOIN [Institution] I" +
+                                                     " ON D.institutionId = I.id" +
+                                                     " WHERE D.id = @id"
+                                                    , transaction, parameters))
+            {
+                while (readerDestination.Read())
+                {
+                    Department d = new Department();
+                    d.Id = (int)readerDestination["depId"];
+                    d.Name = (string)readerDestination["depName"];
+                    d.InstitutionName = (string)readerDestination["insName"];
+                    d.InstitutionId = (int)readerDestination["institutionId"];
+                    d.InstitutionCity = (string)readerDestination["city"];
+                    d.InstitutionCountry = (string)readerDestination["countryName"];
+                    d.InstitutionLanguage = (string)readerDestination["languageName"];
+                    departments.Add(d);
+                }
+            }
+
+            transaction.Connection.Close();
+
+            return departments.First();
+        }
     }
 }

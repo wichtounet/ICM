@@ -69,6 +69,7 @@
     <Content Include="Lib\NLog.dll" />
     <Content Include="Scripts\jquery-ui-1.8.10.custom.min.js" />
     <Content Include="ShowContract.aspx" />
+    <Content Include="ShowInstitution.aspx" />
     <Content Include="ShowPerson.aspx" />
     <Content Include="Histo.aspx" />
     <Content Include="Institutions.aspx" />
@@ -163,6 +164,13 @@
     </Compile>
     <Compile Include="ShowContract.aspx.designer.cs">
       <DependentUpon>ShowContract.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ShowInstitution.aspx.cs">
+      <DependentUpon>ShowInstitution.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ShowInstitution.aspx.designer.cs">
+      <DependentUpon>ShowInstitution.aspx</DependentUpon>
     </Compile>
     <Compile Include="ShowPerson.aspx.cs">
       <DependentUpon>ShowPerson.aspx</DependentUpon>
@@ -261,6 +269,12 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
