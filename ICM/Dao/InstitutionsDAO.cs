@@ -14,6 +14,32 @@ namespace ICM.Dao
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
+        /// Locks the institution table in database performing a dummy update.
+        /// </summary>
+        /// <param name="id">Valid id of an institution.</param>
+        /// <param name="transaction">Transaction to be used.</param>
+        public void LockInstitution(int id, SqlTransaction transaction)
+        {
+            Logger.Debug("Locking institution with ID ({0})", id);
+
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()},
+            };
+
+            var command = new SqlCommand("UPDATE [Institution] set name = name WHERE id = @id", transaction.Connection, transaction) { CommandTimeout = 3 };
+
+            foreach (var key in parameters.AllKeys)
+            {
+                command.Parameters.AddWithValue(key, parameters.Get(key));
+            }
+
+            command.ExecuteNonQuery();
+
+            Logger.Debug("Locked institution with ID ({0})", id);
+        }
+
+        /// <summary>
         /// Adds an insitution to the database.
         /// </summary>
         /// <param name="institution">Institution to be added.</param>
@@ -35,8 +61,8 @@ namespace ICM.Dao
                 {"@archived", "0"}
             };
 
-            //TODO: is the right isolation level for christ's sake??? and check all the rest of the document!
-            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+            var connection = DBManager.GetInstance().GetNewConnection();
+            SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             //Insert institution
             institutionId = DBUtils.ExecuteTransactionInsert(
@@ -59,6 +85,8 @@ namespace ICM.Dao
 
             transaction.Commit();
 
+            connection.Close();
+
             Logger.Debug("Created institution with id {0} in database", institutionId);
 
             return institutionId;
@@ -80,7 +108,8 @@ namespace ICM.Dao
                 {"@id", id.ToString()},
             };
 
-            var transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+            var connection = DBManager.GetInstance().GetConnection();
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution] WHERE id = @id", transaction, parameters))
             {
@@ -97,6 +126,43 @@ namespace ICM.Dao
             }
 
             transaction.Commit();
+            connection.Close();
+
+            Logger.Debug("Retrieved institution with id {0} from database", id);
+
+            return institution;
+        }
+
+        /// <summary>
+        /// Creates an institution's instance representing the institution stored in the database with the specified ID.
+        /// </summary>
+        /// <param name="id">ID of the institution stored in the database.</param>
+        /// <param name="transaction">Transaction to be used.</param>
+        /// <returns>Institution's instance.</returns>
+        public Institution GetInstitution(int id, SqlTransaction transaction)
+        {
+            Institution institution = null;
+
+            Logger.Debug("Retrieving institution with id {0} from database", id);
+
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()},
+            };
+
+            using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution] WHERE id = @id", transaction, parameters))
+            {
+                if (institutionReader.Read())
+                {
+                    institution = GetInstitutionWithoutDepartmentsAndContinent(institutionReader);
+                }
+            }
+
+            if (institution != null)
+            {
+                institution.Departments = GetDepartments(institution.Id, transaction);
+                institution.Country.Continent = GetContinent(institution.Country.Name, transaction);
+            }
 
             Logger.Debug("Retrieved institution with id {0} from database", id);
 
@@ -118,6 +184,12 @@ namespace ICM.Dao
             }
         }
 
+        /// <summary>
+        /// Return the institution with the given id.
+        /// </summary>
+        /// <param name="id">Institution's id.</param>
+        /// <param name="connection">Connection to be used.</param>
+        /// <returns>An instance of the institution.</returns>
         public Institution GetInstitution(int id, SqlConnection connection)
         {
             Institution institution = null;
@@ -127,7 +199,7 @@ namespace ICM.Dao
                 {"@id", id.ToString()},
             };
 
-            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution] WHERE id = @id", transaction, parameters))
             {
@@ -150,11 +222,13 @@ namespace ICM.Dao
             return institution;
         }
 
-        //TODO: add transaction as parameter
-        public void UpdateInstitution(Institution institution)
+        /// <summary>
+        /// Updates information about an institution (in database).
+        /// </summary>
+        /// <param name="institution">Represents the institution to be updated.</param>
+        /// <param name="transaction">Transactin to be used.</param>
+        public void UpdateInstitution(Institution institution, SqlTransaction transaction)
         {
-            SqlConnection connection = DBManager.GetInstance().GetConnection();
-            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
             NameValueCollection parameters;
 
             List<Department> oldDepartments = GetDepartments(institution.Id, transaction);  //Department already present in DB
@@ -166,14 +240,7 @@ namespace ICM.Dao
             {
                 if (!institution.Departments.ContainsDepartmentWithName(oldDepartment.Name))
                 {
-                    parameters = new NameValueCollection
-                    {
-                        {"@departmentId", oldDepartment.Id.ToString()},
-                    };
-                    DBUtils.ExecuteNonQuery(
-                        "DELETE FROM [Department] WHERE id=@departmentId",
-                        transaction,
-                        parameters);
+                    ArchiveDepartment(oldDepartment.Id, transaction);
                 }
             }
 
@@ -222,9 +289,6 @@ namespace ICM.Dao
                 parameters);
 
             Logger.Debug("Updated information of institution with id {0} in database", institution.Id);
-
-            //Commit transaction
-            transaction.Commit();
         }
 
         /// <summary>
@@ -234,7 +298,8 @@ namespace ICM.Dao
         public List<Institution> GetInstitutions()
         {
             List<Institution> institutions = new List<Institution>();
-            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+            var connection = DBManager.GetInstance().GetConnection();
+            SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             Logger.Debug("Retrieving all the institutions from database");
 
@@ -258,15 +323,25 @@ namespace ICM.Dao
                 institution.Country.Continent = GetContinent(institution.Country.Name, transaction);
             }
 
+            Logger.Debug("Retrieved all the departments from database");
+
             transaction.Commit();
+            connection.Close();
 
             return institutions;
         }
 
+        /// <summary>
+        /// Creates and fills a list with all the institutions stored in the database.
+        /// </summary>
+        /// <param name="connection">Connection to be used.</param>
+        /// <returns>The list of institutions.</returns>
         public List<Institution> GetInstitutions(SqlConnection connection)
         {
             var institutions = new List<Institution>();
-            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
+            Logger.Debug("Retrieving all the institutions from database");
 
             //Instantiate institutions without department list
             using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution]", transaction))
@@ -276,6 +351,10 @@ namespace ICM.Dao
                     institutions.Add(GetInstitutionWithoutDepartmentsAndContinent(institutionReader));
                 }
             }
+
+            Logger.Debug("Retrieved all the institutions from database");
+
+            Logger.Debug("Retrieving all the departments from database");
 
             //Add department list to the institutions
             foreach (var institution in institutions)
@@ -307,7 +386,7 @@ namespace ICM.Dao
         {
             var institutions = new List<Institution>();
 
-            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 Logger.Debug("Retrieving all the institutions from database");
 
@@ -345,13 +424,19 @@ namespace ICM.Dao
         /// <returns>The list of departments.</returns>
         public List<Department> GetDepartments(int institutionId) {
             Logger.Debug("Retrieving the departments of the institution with id {0} from database", institutionId);
-            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+            var connection = DBManager.GetInstance().GetConnection();
+            SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
             List<Department> departments = GetDepartments(institutionId, transaction);
             transaction.Commit();
+            connection.Close();
             Logger.Debug("Retrieved the departments of the institution with id {0} from database", institutionId);
             return departments;
         }
 
+        /// <summary>
+        /// Sets to 1 the archived field of an insitution (in database).
+        /// </summary>
+        /// <param name="id">The institution's id.</param>
         public void ArchiveInstitution(int id)
         {
             var parameters = new NameValueCollection
@@ -366,6 +451,28 @@ namespace ICM.Dao
                 IsolationLevel.ReadUncommitted, parameters);
 
             Logger.Debug("Archived the institution with id {0} in database", id);
+        }
+
+        /// <summary>
+        /// Sets to 1 the archived field of a department (in database).
+        /// </summary>
+        /// <param name="id">The department's id.</param>
+        /// <param name="transaction">The transaction to be used^.</param>
+        public void ArchiveDepartment(int id, SqlTransaction transaction)
+        {
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()}
+            };
+
+            Logger.Debug("Archiving the department with id {0} in database", id);
+
+            DBUtils.ExecuteNonQuery(
+                    "UPDATE [Department] SET archived = 1 WHERE id = @id",
+                    transaction,
+                    parameters);
+
+            Logger.Debug("Archived the department with id {0} in database", id);
         }
 
         /// <summary>
@@ -395,13 +502,6 @@ namespace ICM.Dao
         /// <returns>The department's list.</returns>
         private List<Department> GetDepartments(int institutionId, SqlTransaction transaction)
         {
-        /// <summary>
-        /// Creates and fill a list of departments belonging to the institution identified by insitutionId.
-        /// </summary>
-        /// <param name="institutionId">The institution's identifier.</param>
-        /// <param name="connection">The connection to be used to query the database.</param>
-        /// <param name="transaction">The transaction to be used to query the database.</param>
-        /// <returns>The department's list.</returns>
             List<Department> departments = new List<Department>();
 
             var parameters = new NameValueCollection
@@ -409,7 +509,7 @@ namespace ICM.Dao
                 {"@institutionId", institutionId.ToString()}
             };
 
-            using (SqlResult departmentReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Department] WHERE institutionId = @institutionId", transaction, parameters))
+            using (SqlResult departmentReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Department] WHERE institutionId = @institutionId and archived=0", transaction, parameters))
 
             {
                 //Fill departments list
@@ -506,7 +606,8 @@ namespace ICM.Dao
                             archived);
 
             //Start transaction
-            SqlTransaction transaction = DBUtils.BeginTransaction(IsolationLevel.ReadUncommitted);
+            var connection = DBManager.GetInstance().GetNewConnection();
+            SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             //Instantiate institutions without department list
             using (SqlResult institutionReader = DBUtils.ExecuteTransactionQuery(query, transaction, parameters))
@@ -526,6 +627,7 @@ namespace ICM.Dao
 
             //End transaction
             transaction.Commit();
+            connection.Close();
 
             Logger.Debug("Retrived institutions with name like {0}, language={1}, continent={2}, country={3}, archived={4} from database",
                             name,
@@ -546,7 +648,7 @@ namespace ICM.Dao
         {
             var departments = new List<Department>();
 
-            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
             var parameters = new NameValueCollection
             {
