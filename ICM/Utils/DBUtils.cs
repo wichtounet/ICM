@@ -145,22 +145,38 @@ namespace ICM.Utils
         }
     }
 
+    ///<summary>
+    /// A simple container for a data reader. 
+    ///</summary>
     public class SqlResult : IDisposable
     {
         private readonly SqlDataReader reader;
         private readonly SqlTransaction transaction;
 
+        ///<summary>
+        /// Create a new SqlResult with the given transaction and reader. If transaction is not null, it will be closed on dispose. 
+        ///</summary>
+        ///<param name="transaction">The transaction</param>
+        ///<param name="reader">The reader to use</param>
         public SqlResult(SqlTransaction transaction, SqlDataReader reader)
         {
             this.transaction = transaction;
             this.reader = reader;
         }
 
+        ///<summary>
+        /// Read on the reader. 
+        ///</summary>
+        ///<returns>true if the reader has more data otherwise false</returns>
         public bool Read()
         {
             return reader.Read();
         }
 
+        ///<summary>
+        /// Return the object with the given name. 
+        ///</summary>
+        ///<param name="name">The name of the object in the reader</param>
         public object this[string name]
         {
             get { return reader[name]; }

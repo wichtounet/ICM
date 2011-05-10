@@ -37,6 +37,11 @@ namespace ICM.Utils
             return users.FirstOrDefault(user => user.Login.Equals(login));
         }
 
+        ///<summary>
+        /// Convert the string to int (32). 
+        ///</summary>
+        ///<param name="str">The string to convert. </param>
+        ///<returns></returns>
         public static int ToInt(this String str)
         {
             return Convert.ToInt32(str);
