@@ -36,6 +36,7 @@ namespace ICM.Account
                     return;
                 }
 
+                Session["userLogin"] = user.Login;
                 string privilege = user.Admin ? "Admin" : "Guest";
                 FormsAuthentication.RedirectFromLoginPage(privilege, RememberCheckBox.Checked);
             };
