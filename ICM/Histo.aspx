@@ -101,7 +101,7 @@
             </EmptyDataTemplate>
         </asp:ListView>
 
-        <asp:Button Text="Generer PDF" runat="server" ID="GeneratePDFButton" OnClick="GeneratePDF" />
+        <asp:Button Text="Télécharger PDF" runat="server" ID="GeneratePDFButton" OnClick="GeneratePDF" />
     </asp:Panel>
 
      <script type="text/javascript">

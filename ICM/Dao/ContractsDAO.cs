@@ -119,15 +119,19 @@ namespace ICM.Dao
                     {
                         if (reader.Read())
                         {
+                            var mimeType = ((string) reader["fileMIMEType"]);
+                            var extension = mimeType.Substring(mimeType.LastIndexOf("/"));
+
                             context.Response.ClearHeaders();
                             context.Response.ClearContent();
                             context.Response.AppendHeader("Pragma", "no-cache");
                             context.Response.AppendHeader("Cache-Control", "no-cache");
+                            context.Response.AppendHeader("content-disposition", "attachment; filename=" + "attach." + extension);
                             context.Response.CacheControl = "no-cache";
                             context.Response.Expires = -1;
                             context.Response.ExpiresAbsolute = new DateTime(1900, 1, 1);
                             context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                            context.Response.ContentType = reader["fileMIMEType"].ToString();
+                            context.Response.ContentType = mimeType;
                             context.Response.BinaryWrite((byte[])reader["fileBinaryData"]);
                             context.Response.Flush();
                             context.Response.End();
