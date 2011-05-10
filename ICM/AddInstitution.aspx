@@ -55,13 +55,16 @@
             <td> </td>
         </tr>
         <tr>
-            <td> </td>
+            <td> &nbsp;</td>
             <td><asp:Button ID="AddButton" runat="server" Text="Ajouter institution" 
                     onclick="AddButton_Click" />
                 <asp:Button ID="EditButton" runat="server" onclick="EditButton_Click" 
                     Text="Modifier institution" />
             </td>
         </tr>
+        <tr><td></td><td>
+            <asp:Label ID="ErrorLabel" runat="server" ForeColor="Red"></asp:Label>
+            </td></tr>
     </table>        
     
      <script type="text/javascript">

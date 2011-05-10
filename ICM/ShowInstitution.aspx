@@ -61,6 +61,9 @@
         <asp:Button ID="ArchiveButton" runat="server" Text="Archiver" 
             onclick="ArchiveButton_Click"/>
     </p>
+    <p>
+        <asp:Label ID="ErrorLabel" runat="server" ForeColor="Red"></asp:Label>
+    </p>
 
      <script type="text/javascript">
          $(function () {

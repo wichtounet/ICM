@@ -48,4 +48,5 @@
             </p>
         </EmptyDataTemplate>
     </asp:ListView>
+    <asp:Label ID="ErrorLabel" runat="server" ForeColor="Red"></asp:Label>
 </asp:Content>
