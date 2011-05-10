@@ -297,18 +297,20 @@ namespace ICM.Dao
         {
             var persons = new List<Person>();
 
+            if(contracts == null || contracts.Count == 0)
+            {
+                return persons;
+            }
+
             var query = GetBaseQuery();
             query += " INNER JOIN Association A ON A.person = P.id";
             query += " WHERE A.roleName = 'Etudiant' AND A.contractId IN (";
 
-            if(contracts.Count > 0)
-            {
-                query += contracts[0].Id;
+            query += contracts[0].Id;
 
-                for(var i = 1; i < contracts.Count; i++)
-                {
-                    query += ", " + contracts[i].Id;
-                }
+            for(var i = 1; i < contracts.Count; i++)
+            {
+                query += ", " + contracts[i].Id;
             }
 
             query += ")";
