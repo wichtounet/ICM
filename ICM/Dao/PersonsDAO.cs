@@ -66,9 +66,8 @@ namespace ICM.Dao
         /// <param name="phone">The name of the person</param>
         /// <param name="email">The name of the person</param>
         /// <param name="department">The department of the person</param>
-        /// <param name="transaction"></param>
-        /// <param name="connection"></param>
-        public void SavePerson(int id, string firstname, string name, string phone, string email, int department, SqlTransaction transaction, SqlConnection connection)
+        /// <param name="transaction">The transaction to use</param>
+        public void SavePerson(int id, string firstname, string name, string phone, string email, int department, SqlTransaction transaction)
         {
             Logger.Debug("Saving person {0}", id);
 
@@ -82,7 +81,7 @@ namespace ICM.Dao
                 {"@department", department.ToString()},
             };
 
-            DBUtils.ExecuteNonQuery(connection, 
+            DBUtils.ExecuteNonQuery(
                 "UPDATE [Person] SET firstname = @firstname, name = @name, phone = @phone, email = @email, departmentId = @department WHERE id = @id",
                 transaction, parameters);
 
@@ -183,17 +182,22 @@ namespace ICM.Dao
         {
             using (var connection = DBManager.GetInstance().GetNewConnection())
             {
-                var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
-
-                var person = GetPersonByID(id, transaction, connection);
-
-                transaction.Commit();
-
-                return person;
+                return GetPersonByID(id, connection);
             }
         }
 
-        public Person GetPersonByID(int id, SqlTransaction transaction, SqlConnection connection)
+        public Person GetPersonByID(int id, SqlConnection connection)
+        {
+            var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
+
+            var person = GetPersonByID(id, transaction);
+
+            transaction.Commit();
+
+            return person;
+        }
+
+        public Person GetPersonByID(int id, SqlTransaction transaction)
         {
             Logger.Debug("Search person by ID ({0})", id);
 
@@ -204,7 +208,7 @@ namespace ICM.Dao
                 {"@id", id.ToString()},
             };
 
-            using (var reader = DBUtils.ExecuteTransactionQuery(GetBaseQuery() + " WHERE P.id = @id", connection, transaction, parameters))
+            using (var reader = DBUtils.ExecuteTransactionQuery(GetBaseQuery() + " WHERE P.id = @id", transaction, parameters))
             {
                 while (reader.Read())
                 {
@@ -226,7 +230,7 @@ namespace ICM.Dao
             return null;
         }
 
-        public void LockPerson(int id, SqlTransaction transaction, SqlConnection connection)
+        public void LockPerson(int id, SqlTransaction transaction)
         {
             Logger.Debug("Lock Person with ID ({0})", id);
 
@@ -235,8 +239,7 @@ namespace ICM.Dao
                 {"@id", id.ToString()},
             };
 
-            var command = new SqlCommand("UPDATE PERSON set name = name WHERE id = @id", connection, transaction)
-                              {CommandTimeout = 3};
+            var command = new SqlCommand("UPDATE PERSON set name = name WHERE id = @id", transaction.Connection, transaction){CommandTimeout = 3};
 
             foreach (var key in parameters.AllKeys)
             {
@@ -250,13 +253,13 @@ namespace ICM.Dao
         /// Returns all the persons of the database. 
         /// </summary>
         /// <returns>a List containing all the persons</returns>
-        public List<Person> GetAllPersons()
+        public List<Person> GetAllPersons(SqlConnection connection)
         {
             Logger.Debug("Get all persons");
 
             var persons = new List<Person>();
 
-            using (var reader = DBUtils.ExecuteQuery(GetBaseQuery(), IsolationLevel.ReadUncommitted))
+            using (var reader = DBUtils.ExecuteQuery(GetBaseQuery(), connection, IsolationLevel.ReadUncommitted, new NameValueCollection()))
             {
                 while (reader.Read())
                 {
@@ -275,7 +278,7 @@ namespace ICM.Dao
         ///<param name="transaction">The transaction to use</param>
         ///<param name="contracts">All the contracts we want the persons for. </param>
         ///<returns>All the persons related with the given contracts</returns>
-        public List<Person> HistoSearch(SqlConnection connection, SqlTransaction transaction, List<Contract> contracts)
+        public List<Person> HistoSearch(SqlTransaction transaction, List<Contract> contracts)
         {
             var persons = new List<Person>();
 
@@ -297,7 +300,7 @@ namespace ICM.Dao
 
             Logger.Debug("Histo search using query \"{0}\"", query);
 
-            using (var reader = DBUtils.ExecuteTransactionQuery(query, connection, transaction, new NameValueCollection()))
+            using (var reader = DBUtils.ExecuteTransactionQuery(query, transaction, new NameValueCollection()))
             {
                 while (reader.Read())
                 {

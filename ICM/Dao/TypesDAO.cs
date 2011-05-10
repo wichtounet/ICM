@@ -1,4 +1,6 @@
-﻿using ICM.Model;
+﻿using System.Collections.Specialized;
+using System.Data.SqlClient;
+using ICM.Model;
 using ICM.Utils;
 using System.Data;
 using System.Collections.Generic;
@@ -18,13 +20,19 @@ namespace ICM.Dao
         /// Creates and fills a list containing all the types stored in the database.
         /// </summary>
         /// <returns>The list of types.</returns>
-        public List<TypeContract> GetAllTypes()
+
+        public List<TypeContract> GetAllTypes(SqlConnection connection)
+
+        /// <summary>
+        /// Creates and fills a list containing all the types stored in the database.
+        /// </summary>
+        /// <returns>The list of types.</returns>
         {
             var types = new List<TypeContract>();
 
             Logger.Debug("Retrieving all the types.");
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT name FROM [typeContract]", IsolationLevel.ReadUncommitted))
+            using (var reader = DBUtils.ExecuteQuery("SELECT name FROM [typeContract]", connection, IsolationLevel.ReadUncommitted, new NameValueCollection()))
             {
                 while (reader.Read())
                 {
@@ -44,11 +52,7 @@ namespace ICM.Dao
         /// <returns>The initialized TypeContract object.</returns>
         private TypeContract BindType(SqlResult reader)
         {
-            TypeContract type = new TypeContract();
-
-            type.Name= reader["name"].ToString();
-
-            return type;
+            return new TypeContract {Name = reader["name"].ToString()};
         }
     }
 }

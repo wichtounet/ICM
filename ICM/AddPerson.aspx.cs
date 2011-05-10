@@ -38,7 +38,7 @@ namespace ICM
                         
                         var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
                         
-                        new PersonsDAO().LockPerson(id, transaction, connection);
+                        new PersonsDAO().LockPerson(id, transaction);
 
                         var tr = Interlocked.Increment(ref transactionId);
 
@@ -47,7 +47,7 @@ namespace ICM
 
                         ViewState["transaction"] = tr;
 
-                        var person = new PersonsDAO().GetPersonByID(id, transaction, connection);
+                        var person = new PersonsDAO().GetPersonByID(id, transaction);
 
                         IDLabel.Text = person.Id.ToString();
                         NameTextBox.Text = person.Name;
@@ -59,18 +59,20 @@ namespace ICM
 
                         IDLabel.Text = id.ToString();
 
-                        //TODO Use the same transaction if possible
-                        var dataSource = new InstitutionsDAO().GetInstitutionsClean();
+                        using(var connectionSelect = DBManager.GetInstance().GetNewConnection())
+                        {
+                            var dataSource = new InstitutionsDAO().GetInstitutionsClean(connectionSelect);
 
-                        InstitutionList.DataBind(dataSource, "Name", "Id");
+                            InstitutionList.DataBind(dataSource, "Name", "Id");
 
-                        InstitutionList.SelectedValue = person.Department.InstitutionId.ToString();
+                            InstitutionList.SelectedValue = person.Department.InstitutionId.ToString();
 
-                        var institution = new InstitutionsDAO().GetInstitutionClean(person.Department.InstitutionId);
+                            var institution = new InstitutionsDAO().GetInstitution(person.Department.InstitutionId, connectionSelect);
 
-                        DepartmentList.DataBind(institution.Departments, "Name", "Id");
+                            DepartmentList.DataBind(institution.Departments, "Name", "Id");
 
-                        DepartmentList.SelectedValue = person.Department.Id.ToString();
+                            DepartmentList.SelectedValue = person.Department.Id.ToString();
+                        }
                     };
 
                     this.Verified(operation, ErrorLabel);
@@ -150,7 +152,7 @@ namespace ICM
                     } 
                     else
                     {
-                        new PersonsDAO().SavePerson(id, FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text, departmentId, transaction, connection);
+                        new PersonsDAO().SavePerson(id, FirstNameTextBox.Text, NameTextBox.Text, PhoneTextBox.Text, MailTextBox.Text, departmentId, transaction);
 
                         transaction.Commit();
 

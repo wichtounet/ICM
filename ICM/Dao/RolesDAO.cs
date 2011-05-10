@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data;
+using System.Data.SqlClient;
 using ICM.Model;
 using ICM.Utils;
 using NLog;
@@ -18,13 +20,13 @@ namespace ICM.Dao
         /// Returns all the roles of the database. 
         /// </summary>
         /// <returns>a List containing all the roles</returns>
-        public List<Role> GetAllRoles()
+        public List<Role> GetAllRoles(SqlConnection connection)
         {
             Logger.Debug("Get all roles");
 
             var roles = new List<Role>();
 
-            using (var reader = DBUtils.ExecuteQuery("Select * from [Role]", IsolationLevel.ReadUncommitted))
+            using (var reader = DBUtils.ExecuteQuery("Select * from [Role]", connection, IsolationLevel.ReadUncommitted, new NameValueCollection()))
             {
                 while (reader.Read())
                 {

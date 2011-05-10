@@ -63,12 +63,12 @@ namespace ICM
                     {
                         var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
-                        var contracts = new ContractsDAO().HistoSearch(connection, transaction, year, institutionId, departmentId);
+                        var contracts = new ContractsDAO().HistoSearch(transaction, year, institutionId, departmentId);
 
                         ContractsView.DataSource = contracts;
                         ContractsView.DataBind();
 
-                        PersonsView.DataSource = new PersonsDAO().HistoSearch(connection, transaction, contracts);
+                        PersonsView.DataSource = new PersonsDAO().HistoSearch(transaction, contracts);
                         PersonsView.DataBind();
 
                         transaction.Commit();

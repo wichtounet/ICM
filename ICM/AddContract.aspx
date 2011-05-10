@@ -67,11 +67,14 @@
                 <asp:Button runat="server" id="Save" text="Sauvegarder" onclick="Save_Click"  Visible="false" />
             </td>
         </tr>
-    </table>        
+    </table>
+    
+    <asp:Label ForeColor="Red" ID="ErrorLabel" Visible="false" runat="server" />
     
      <script type="text/javascript">
          $(function () {
              $("[id$=StartDate]").datepicker();
+             $("[id$=EndDate]").datepicker();
              //$("[id$=startDate]").datepicker("option", "dateFormat", "dd.mm.yy");
              //$("[id$=startDate]").datepicker("setDate", new Date(2008, 9, 03));
          });
@@ -82,8 +85,6 @@
 
          $(function () {
              $("[id$=Add]").button();
-         });
-         $(function () {
              $("[id$=Save]").button();
          });
 

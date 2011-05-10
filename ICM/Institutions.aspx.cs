@@ -20,13 +20,13 @@ namespace ICM
             Extensions.SqlOperation operation = () =>
             {
                 //Fill language list
-                List<Language> languages = (new LanguagesDAO()).GetAllLanguages();
+            List<Language> languages = new LanguagesDAO().GetAllLanguages();
                 languages.Insert(0, new Language() { Name = "" });
                 LanguagesList.DataSource = languages;
                 LanguagesList.DataBind();
 
                 //Fill continent list
-                List<Continent> continents = (new CountriesDAO()).GetAllContinents();
+            List<Continent> continents = new CountriesDAO().GetAllContinents();
                 continents.Insert(0, new Continent() { Name = "" });
                 ContinentsList.DataSource = continents;
                 ContinentsList.DataBind();

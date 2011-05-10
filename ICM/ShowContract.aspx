@@ -58,6 +58,8 @@
         </tr>
     </table>
     
+    <asp:Label ForeColor="Red" ID="ErrorLabel" Visible="false" runat="server" />
+
     <p>
         <asp:Button ID="EditButton" runat="server" Text="Modifier" OnClick="EditContract" /> 
         <asp:Button ID="DeleteButton" runat="server" Text="Archiver" OnClick="ArchiveContract" />
