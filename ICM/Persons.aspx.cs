@@ -87,7 +87,7 @@ namespace ICM
 
                 if(id > 0)
                 {
-                    var institution = new InstitutionsDAO().GetInstitutionClean(id);
+                    var institution = new InstitutionsDAO().GetInstitution(id);
 
                     if (institution != null)
                     {

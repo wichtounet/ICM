@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Data.SqlClient;
@@ -46,8 +45,7 @@ namespace ICM.Dao
                 };
 
                 var id = DBUtils.ExecuteInsert(
-                    "INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)",
-                    IsolationLevel.ReadUncommitted, parameters, "Person", transaction);
+                    "INSERT INTO [Person] (firstname,name,phone,email,archived,departmentId) VALUES (@firstname,@name,@phone,@email,@archived,@department)", parameters, "Person", transaction);
 
                 transaction.Commit();
 
@@ -186,6 +184,12 @@ namespace ICM.Dao
             }
         }
 
+        ///<summary>
+        /// Return the person with the given id. 
+        ///</summary>
+        /// <param name="id">The id of the person to search</param>
+        ///<param name="connection">The connection to use. </param>
+        /// <returns>the person with the given ID or null if there is no person with this person</returns>
         public Person GetPersonByID(int id, SqlConnection connection)
         {
             var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
@@ -197,6 +201,12 @@ namespace ICM.Dao
             return person;
         }
 
+        ///<summary>
+        /// Return the person with the given id. 
+        ///</summary>
+        /// <param name="id">The id of the person to search</param>
+        ///<param name="transaction">The transactiont to use</param>
+        /// <returns>the person with the given ID or null if there is no person with this person</returns>
         public Person GetPersonByID(int id, SqlTransaction transaction)
         {
             Logger.Debug("Search person by ID ({0})", id);
@@ -230,6 +240,11 @@ namespace ICM.Dao
             return null;
         }
 
+        ///<summary>
+        /// Lock a person. It seems that this person cannot be update anymore by an other transaction. 
+        ///</summary>
+        ///<param name="id">The id of the person. </param>
+        ///<param name="transaction">The transaction to use. </param>
         public void LockPerson(int id, SqlTransaction transaction)
         {
             Logger.Debug("Lock Person with ID ({0})", id);

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using NLog;
 
 namespace ICM.Utils
@@ -14,21 +12,9 @@ namespace ICM.Utils
 
         private static readonly DBManager Instance = new DBManager();
 
-        private SqlConnection connection;
-
         private DBManager()
         {
             Logger.Debug("Create DBManager");
-        }
-
-        public SqlConnection GetConnection()
-        {
-            if (connection == null || connection.State == ConnectionState.Closed || connection.State == ConnectionState.Broken)
-            {
-                connection = GetNewConnection();
-            }
-
-            return connection;
         }
 
         ///<summary>
@@ -55,18 +41,6 @@ namespace ICM.Utils
             Logger.Debug("Close connection");
 
             connection.Close();
-        }
-
-        public void Close()
-        {
-            if (connection != null)
-            {
-                Logger.Debug("Close connection");
-
-                connection.Close();
-
-                connection = null;
-            }
         }
 
         ///<summary>

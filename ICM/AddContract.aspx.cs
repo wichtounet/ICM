@@ -5,10 +5,8 @@ using System.Threading;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
-using ICM.Model;
 using ICM.Dao;
 using ICM.Utils;
-using System.Collections.Generic;
 using System.Collections;
 using System.Xml;
 using NLog;
@@ -113,7 +111,7 @@ namespace ICM
 
             Extensions.SqlOperation operation = () =>
             {
-                var institution = new InstitutionsDAO().GetInstitutionClean(id);
+                var institution = new InstitutionsDAO().GetInstitution(id);
 
                 if (institution != null)
                 {

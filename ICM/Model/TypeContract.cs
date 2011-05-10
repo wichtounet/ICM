@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace ICM.Model
+﻿namespace ICM.Model
 {
     /// <summary>
     /// Represents the type of a contract stored in the database.

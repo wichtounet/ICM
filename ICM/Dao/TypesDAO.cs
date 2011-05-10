@@ -20,13 +20,7 @@ namespace ICM.Dao
         /// Creates and fills a list containing all the types stored in the database.
         /// </summary>
         /// <returns>The list of types.</returns>
-
         public List<TypeContract> GetAllTypes(SqlConnection connection)
-
-        /// <summary>
-        /// Creates and fills a list containing all the types stored in the database.
-        /// </summary>
-        /// <returns>The list of types.</returns>
         {
             var types = new List<TypeContract>();
 
@@ -50,7 +44,7 @@ namespace ICM.Dao
         /// </summary>
         /// <param name="reader">The SqlResult object used to read data from the database.</param>
         /// <returns>The initialized TypeContract object.</returns>
-        private TypeContract BindType(SqlResult reader)
+        private static TypeContract BindType(SqlResult reader)
         {
             return new TypeContract {Name = reader["name"].ToString()};
         }

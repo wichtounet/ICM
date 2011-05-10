@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Data.SqlClient;
 using ICM.Model;
-using ICM.Dao;
 using ICM.Utils;
 using NLog;
 
@@ -21,28 +19,29 @@ namespace ICM.Dao
         /// <returns>The users list.</returns>
         public List<User> GetUsers()
         {
-            List<User> users = new List<User>();
-            SqlResult reader;
-
-            var connection = DBManager.GetInstance().GetConnection();
+            var users = new List<User>();
 
             Logger.Debug("Retrieving all the users.");
 
-            using (reader = DBUtils.ExecuteQuery("SELECT * FROM [User]", connection, System.Data.IsolationLevel.ReadUncommitted, new NameValueCollection()))
+            using(var connection = DBManager.GetInstance().GetNewConnection())
             {
-                while (reader.Read())
+                using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [User]", connection, System.Data.IsolationLevel.ReadUncommitted, new NameValueCollection()))
                 {
-                    User user = new User();
-                    user.Login = (string)reader["login"];
-                    user.Admin = (bool)reader["admin"];
-                    user.Password = (string)reader["password"];
-                    users.Add(user);
+                    while (reader.Read())
+                    {
+                        var user = new User
+                        {
+                            Login = (string) reader["login"],
+                            Admin = (bool) reader["admin"],
+                            Password = (string) reader["password"]
+                        };
+
+                        users.Add(user);
+                    }
                 }
             }
 
-            connection.Close();
-
-            Logger.Debug("Retrieved all the users.");
+            Logger.Debug("Retrieved {0} users", users.Count);
 
             return users;
         }

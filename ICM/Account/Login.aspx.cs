@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Web.Security;
 using ICM.Model;
 using ICM.Utils;
@@ -21,8 +17,8 @@ namespace ICM.Account
         {
             Extensions.SqlOperation operation = () =>
             {
-                List<User> users = new UsersDAO().GetUsers();
-                User user = users.GetUserByLogin(UserName.Text);
+                var users = new UsersDAO().GetUsers();
+                var user = users.GetUserByLogin(UserName.Text);
 
                 if (user == null)   //Wrong login
                 {
@@ -37,7 +33,7 @@ namespace ICM.Account
                 }
 
                 Session["userLogin"] = user.Login;
-                string privilege = user.Admin ? "Admin" : "Guest";
+                var privilege = user.Admin ? "Admin" : "Guest";
                 FormsAuthentication.RedirectFromLoginPage(privilege, RememberCheckBox.Checked);
             };
             this.Verified(operation, ErrorLabel);

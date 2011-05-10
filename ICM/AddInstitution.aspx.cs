@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Collections.Generic;
@@ -8,7 +9,6 @@ using System.Threading;
 using ICM.Model;
 using ICM.Dao;
 using ICM.Utils;
-using NLog;
 
 namespace ICM
 {
@@ -24,14 +24,14 @@ namespace ICM
             Extensions.SqlOperation operation = () =>
             {
                 //Languages databound
-                LanguagesDAO languagesDAO = new LanguagesDAO();
-                List<Language> languages = languagesDAO.GetAllLanguages();
+                var languagesDAO = new LanguagesDAO();
+                var languages = languagesDAO.GetAllLanguages();
                 LanguageList.DataSource = languages;
                 LanguageList.DataBind();
 
                 //Continents databound
-                CountriesDAO countriesDAO = new CountriesDAO();
-                List<Continent> continents = countriesDAO.GetAllContinents();
+                var countriesDAO = new CountriesDAO();
+                var continents = countriesDAO.GetAllContinents();
                 ContinentList.DataSource = continents;
                 ContinentList.DataBind();
 
@@ -42,14 +42,14 @@ namespace ICM
                     AddButton.Visible = true;
 
                     //Contries databound
-                    List<Country> countries = countriesDAO.GetCountries(continents[0]);
+                    var countries = countriesDAO.GetCountries(continents[0]);
                     CountryList.DataSource = countries;
                     CountryList.DataBind();
                 }
                 //Edit institution
                 else
                 {
-                    int institutionId = Request.QueryString["institution"].ToInt();
+                    var institutionId = Request.QueryString["institution"].ToInt();
 
                     var connection = DBManager.GetInstance().GetNewConnection();
                     var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
@@ -67,7 +67,7 @@ namespace ICM
                     EditButton.Visible = true;
                     AddButton.Visible = false;
 
-                    Institution institution = new InstitutionsDAO().GetInstitution(institutionId, transaction);
+                    var institution = new InstitutionsDAO().GetInstitution(institutionId, transaction);
 
                     NameText.Text = institution.Name;
                     DescriptionText.Text = institution.Description;
@@ -75,7 +75,7 @@ namespace ICM
                     ContinentList.SelectedValue = institution.Country.Continent.Name;
 
                     //Contries databound
-                    List<Country> countries = countriesDAO.GetCountries(institution.Country.Continent);
+                    var countries = countriesDAO.GetCountries(institution.Country.Continent);
                     CountryList.DataSource = countries;
                     CountryList.DataBind();
 
@@ -96,8 +96,8 @@ namespace ICM
         {
             Extensions.SqlOperation operation = () =>
             {
-                CountriesDAO countriesDAO = new CountriesDAO();
-                List<Country> countries = countriesDAO.GetCountries(new Continent() { Name = ContinentList.SelectedValue });
+                var countriesDAO = new CountriesDAO();
+                var countries = countriesDAO.GetCountries(new Continent { Name = ContinentList.SelectedValue });
                 CountryList.DataSource = countries;
                 CountryList.DataBind();
             };
@@ -108,20 +108,15 @@ namespace ICM
         {
             Extensions.SqlOperation operation = () =>
             {
-                InstitutionsDAO institutionsDAO = new InstitutionsDAO();
+                var institutionsDAO = new InstitutionsDAO();
 
-                //Instantiate and fill department list
-                List<Department> departments = new List<Department>();
-                foreach (ListItem department in DepartmentList.Items)
-                {
-                    departments.Add(new Department() { Name = department.Text });
-                }
+                var departments = (from ListItem department in DepartmentList.Items select new Department {Name = department.Text}).ToList();
 
                 //Intantiate institution
-                Language language = new Language() { Name = LanguageList.SelectedValue };
-                Continent continent = new Continent() { Name = ContinentList.SelectedValue };
-                Country country = new Country() { Name = CountryList.SelectedValue, Continent = continent };
-                Institution institution = new Institution(-1,
+                var language = new Language { Name = LanguageList.SelectedValue };
+                var continent = new Continent { Name = ContinentList.SelectedValue };
+                var country = new Country { Name = CountryList.SelectedValue, Continent = continent };
+                var institution = new Institution(-1,
                                                             NameText.Text,
                                                             DescriptionText.Text,
                                                             CityText.Text,
@@ -130,7 +125,7 @@ namespace ICM
                                                             country,
                                                             departments,
                                                             false);
-                int institutionId = institutionsDAO.AddInstitution(institution);
+                var institutionId = institutionsDAO.AddInstitution(institution);
                 Response.Redirect("ShowInstitution.aspx?institution=" + institutionId);
             };
             this.Verified(operation, ErrorLabel);
@@ -143,7 +138,7 @@ namespace ICM
                 DepartmentLabel.Visible = true;
                 return;
             }
-            DepartmentList.Items.Add(new ListItem() {Text=DepartmentText.Text});
+            DepartmentList.Items.Add(new ListItem {Text=DepartmentText.Text});
             DepartmentText.Text = "";
         }
 
@@ -156,26 +151,22 @@ namespace ICM
         {
             Extensions.SqlOperation operation = () =>
             {
-                var tr = (int)ViewState["transaction"];
-                var transaction = (SqlTransaction)Session["transaction" + tr];
-                var connection = (SqlConnection)Session["connection" + tr];
+                var tr = (int) ViewState["transaction"];
+                var transaction = (SqlTransaction) Session["transaction" + tr];
+                var connection = (SqlConnection) Session["connection" + tr];
 
 
-                int institutionId = Request.QueryString["institution"].ToInt();
-                InstitutionsDAO institutionsDAO = new InstitutionsDAO();
+                var institutionId = Request.QueryString["institution"].ToInt();
+                var institutionsDAO = new InstitutionsDAO();
 
                 //Instantiate and fill department list
-                List<Department> departments = new List<Department>();
-                foreach (ListItem department in DepartmentList.Items)
-                {
-                    departments.Add(new Department() { Name = department.Text });
-                }
+                var departments = (from ListItem department in DepartmentList.Items select new Department {Name = department.Text}).ToList();
 
                 //Intantiate institution
-                Language language = new Language() { Name = LanguageList.SelectedValue };
-                Continent continent = new Continent() { Name = ContinentList.SelectedValue };
-                Country country = new Country() { Name = CountryList.SelectedValue, Continent = continent };
-                Institution institution = new Institution(institutionId,
+                var language = new Language { Name = LanguageList.SelectedValue };
+                var continent = new Continent { Name = ContinentList.SelectedValue };
+                var country = new Country { Name = CountryList.SelectedValue, Continent = continent };
+                var institution = new Institution(institutionId,
                                                             NameText.Text,
                                                             DescriptionText.Text,
                                                             CityText.Text,

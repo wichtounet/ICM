@@ -39,16 +39,15 @@ namespace ICM.Dao
                {"@id", id.ToString()},
            };
 
-            Contract c = new Contract();
-            List<Person> persons = new List<Person>();
-            List<Department> departments = new List<Department>();
+            var c = new Contract();
+            var persons = new List<Person>();
+            var departments = new List<Department>();
 
             using (var reader = DBUtils.ExecuteTransactionQuery("SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived " +
                                                      "FROM [Contract] C " +
                                                      "WHERE C.id = @id"
                                                     , transaction, parameters))
             {
-
                 if (reader.Read())
                 {
                     c = BindContract(reader);
@@ -64,11 +63,14 @@ namespace ICM.Dao
             {
                 while (readerAssoc.Read())
                 {
-                    Person p = new Person();
-                    p.Id = (int)readerAssoc["personId"];
-                    p.Role = (string)readerAssoc["roleName"];
-                    p.FirstName = (string)readerAssoc["firstname"];
-                    p.Name = (string)readerAssoc["name"];
+                    var p = new Person
+                    {
+                        Id = (int) readerAssoc["personId"],
+                        Role = (string) readerAssoc["roleName"],
+                        FirstName = (string) readerAssoc["firstname"],
+                        Name = (string) readerAssoc["name"]
+                    };
+
                     persons.Add(p);
                 }
             }
@@ -83,14 +85,18 @@ namespace ICM.Dao
             {
                 while (readerDestination.Read())
                 {
-                    Department d = new Department();
-                    d.Id = (int)readerDestination["departementId"];
-                    d.Name = (string)readerDestination["depName"];
-                    d.InstitutionName = (string)readerDestination["insName"];
-                    d.InstitutionId = (int)readerDestination["institutionId"];
+                    var d = new Department
+                    {
+                        Id = (int) readerDestination["departementId"],
+                        Name = (string) readerDestination["depName"],
+                        InstitutionName = (string) readerDestination["insName"],
+                        InstitutionId = (int) readerDestination["institutionId"]
+                    };
+
                     departments.Add(d);
                 }
             }
+
             c.persons = persons;
             c.departments = departments;
             contracts.Add(c);
@@ -156,8 +162,7 @@ namespace ICM.Dao
                 };
 
                 var contractId = DBUtils.ExecuteInsert(
-                    "INSERT INTO [Contract] (title, start, [end], fileId, xmlContent, userLogin, typeContractName, archived) VALUES (@title, @start, @end, @fileId, @xmlContent, @userLogin, @typeContractName, @archived)",
-                    IsolationLevel.ReadUncommitted, parameters, "Contract", transaction);
+                    "INSERT INTO [Contract] (title, start, [end], fileId, xmlContent, userLogin, typeContractName, archived) VALUES (@title, @start, @end, @fileId, @xmlContent, @userLogin, @typeContractName, @archived)", parameters, "Contract", transaction);
 
                 AddContacts(transaction, contractId, persons);
                 AddDestinations(transaction, contractId, destinations);
@@ -195,7 +200,7 @@ namespace ICM.Dao
             UpdateDestinations(transaction, id, destinations);
         }
 
-        private int addFile(SqlTransaction transaction, int fileSize, string fileMIMEType, byte[] fileBinaryBuffer)
+        private static int addFile(SqlTransaction transaction, int fileSize, string fileMIMEType, byte[] fileBinaryBuffer)
         {
 
             var fileToDbQueryStr = @"INSERT INTO ContractFile (fileSize, fileMIMEType, fileBinaryData) VALUES(@fileSize, @fileMIMEType, @fileBinaryData)";
@@ -224,7 +229,7 @@ namespace ICM.Dao
             return id;
         }
 
-        private void updateFile(int contractFileId, SqlTransaction transaction, int fileSize, string fileMIMEType, byte[] fileBinaryBuffer)
+        private static void updateFile(int contractFileId, SqlTransaction transaction, int fileSize, string fileMIMEType, byte[] fileBinaryBuffer)
         {
             var fileToDbQueryStr = @"UPDATE [ContractFile] SET fileSize = @fileSize, fileMIMEType = @fileMIMEType, fileBinaryData = @fileBinaryData WHERE id = @contractFileId";
             var command = new SqlCommand(fileToDbQueryStr, transaction.Connection, transaction);
@@ -268,7 +273,7 @@ namespace ICM.Dao
             AddContacts(transaction, contractId, persons);
         }
 
-        private void UpdateDestinations(SqlTransaction transaction, int contractId, int[] destinations)
+        private static void UpdateDestinations(SqlTransaction transaction, int contractId, int[] destinations)
         {
             var parameters = new NameValueCollection
                 {
@@ -368,7 +373,7 @@ namespace ICM.Dao
         
         private static Contract BindContract(SqlResult reader)
         {
-            Contract contract = new Contract();
+            var contract = new Contract();
 
             contract.Id = (int)reader["id"];
             contract.Title = (string)reader["title"];
