@@ -3,6 +3,7 @@ using System.Data;
 using ICM.Model;
 using ICM.Utils;
 using NLog;
+using System.Collections.Specialized;
 
 namespace ICM.Dao
 {
@@ -20,17 +21,21 @@ namespace ICM.Dao
         /// <returns>a List containing all the languages</returns>
         public List<Language> GetAllLanguages()
         {
+            var connection = DBManager.GetInstance().GetNewConnection();
+
             Logger.Debug("Get all languages");
 
             var languages = new List<Language>();
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Language]", IsolationLevel.ReadUncommitted))
+            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Language]", connection, IsolationLevel.ReadUncommitted, new NameValueCollection()))
             {
                 while (reader.Read())
                 {
                     languages.Add(BindLanguage(reader));
                 }
             }
+
+            connection.Close();
 
             Logger.Debug("Found {0} languages", languages.Count);
 

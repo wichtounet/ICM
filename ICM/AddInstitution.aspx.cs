@@ -2,16 +2,23 @@
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Collections.Generic;
-using ICM.Dao;
+using System.Data;
+using System.Data.SqlClient;
+using System.Threading;
 using ICM.Model;
+using ICM.Dao;
 using ICM.Utils;
+using NLog;
 
 namespace ICM
 {
     public partial class AddInstitution : Page
     {
+        private static int transactionId;
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            DepartmentLabel.Visible = false;
             if (IsPostBack)
                 return;
             Extensions.SqlOperation operation = () =>
@@ -42,28 +49,25 @@ namespace ICM
                 //Edit institution
                 else
                 {
-                    //TODO: start transaction to commit add button click
-                    EditButton.Visible = true;
-                    AddButton.Visible = false;
-
                     int institutionId = Request.QueryString["institution"].ToInt();
-                    Institution institution = new InstitutionsDAO().GetInstitution(institutionId);
 
-
-                    /*
                     var connection = DBManager.GetInstance().GetNewConnection();
-
                     var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
-                    new PersonsDAO().LockPerson(id, transaction, connection);
+                    new InstitutionsDAO().LockInstitution(institutionId, transaction);
 
                     var tr = Interlocked.Increment(ref transactionId);
-                
+
                     Session["connection" + tr] = connection;
                     Session["transaction" + tr] = transaction;
 
                     ViewState["transaction"] = tr;
-                    */
+
+                    //TODO: start transaction to commit add button click
+                    EditButton.Visible = true;
+                    AddButton.Visible = false;
+
+                    Institution institution = new InstitutionsDAO().GetInstitution(institutionId, transaction);
 
                     NameText.Text = institution.Name;
                     DescriptionText.Text = institution.Description;
@@ -126,13 +130,19 @@ namespace ICM
                                                             country,
                                                             departments,
                                                             false);
-                institutionsDAO.AddInstitution(institution);
+                int institutionId = institutionsDAO.AddInstitution(institution);
+                Response.Redirect("ShowInstitution.aspx?institution=" + institutionId);
             };
             this.Verified(operation, ErrorLabel);
         }
 
         protected void AddDepartmentButton_Click(object sender, EventArgs e)
         {
+            if (DepartmentText.Text.Equals(""))
+            {
+                DepartmentLabel.Visible = true;
+                return;
+            }
             DepartmentList.Items.Add(new ListItem() {Text=DepartmentText.Text});
             DepartmentText.Text = "";
         }
@@ -146,6 +156,11 @@ namespace ICM
         {
             Extensions.SqlOperation operation = () =>
             {
+                var tr = (int)ViewState["transaction"];
+                var transaction = (SqlTransaction)Session["transaction" + tr];
+                var connection = (SqlConnection)Session["connection" + tr];
+
+
                 int institutionId = Request.QueryString["institution"].ToInt();
                 InstitutionsDAO institutionsDAO = new InstitutionsDAO();
 
@@ -169,7 +184,13 @@ namespace ICM
                                                             country,
                                                             departments,
                                                             false);
-                institutionsDAO.UpdateInstitution(institution);
+
+                institutionsDAO.UpdateInstitution(institution, transaction);
+
+                transaction.Commit();
+                connection.Close();
+
+                Response.Redirect("ShowInstitution.aspx?institution=" + institutionId);
             };
             this.Verified(operation, ErrorLabel);
         }

@@ -24,9 +24,11 @@ namespace ICM.Dao
             List<User> users = new List<User>();
             SqlResult reader;
 
+            var connection = DBManager.GetInstance().GetConnection();
+
             Logger.Debug("Retrieving all the users.");
 
-            using (reader = DBUtils.ExecuteQuery("SELECT * FROM [User]", System.Data.IsolationLevel.ReadUncommitted))
+            using (reader = DBUtils.ExecuteQuery("SELECT * FROM [User]", connection, System.Data.IsolationLevel.ReadUncommitted, new NameValueCollection()))
             {
                 while (reader.Read())
                 {
@@ -37,6 +39,8 @@ namespace ICM.Dao
                     users.Add(user);
                 }
             }
+
+            connection.Close();
 
             Logger.Debug("Retrieved all the users.");
 

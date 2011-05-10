@@ -25,13 +25,17 @@ namespace ICM.Dao
 
             var continents = new List<Continent>();
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Continent]", IsolationLevel.ReadUncommitted))
+            var connection = DBManager.GetInstance().GetNewConnection();
+
+            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Continent]", connection, IsolationLevel.ReadUncommitted, new NameValueCollection()))
             {
                 while (reader.Read())
                 {
                     continents.Add(BindContinent(reader));
                 }
             }
+
+            connection.Close();
 
             Logger.Debug("Found {0} continents", continents.Count);
 
@@ -49,18 +53,22 @@ namespace ICM.Dao
 
             var countries = new List<Country>();
 
+            var connection = DBManager.GetInstance().GetNewConnection();
+
             var parameters = new NameValueCollection
             {
                 {"@continent", continent.Name}
             };
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Country] WHERE continentName = @continent", IsolationLevel.ReadUncommitted, parameters))
+            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Country] WHERE continentName = @continent", connection, IsolationLevel.ReadUncommitted, parameters))
             {
                 while (reader.Read())
                 {
                     countries.Add(BindCountry(reader));
                 }
             }
+
+            connection.Close();
 
             Logger.Debug("Found {0} countries", countries.Count);
 
