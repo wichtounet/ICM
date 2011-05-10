@@ -46,6 +46,10 @@ namespace ICM.Utils
             return newConnection;
         }
 
+        ///<summary>
+        /// Close the given connection. 
+        ///</summary>
+        ///<param name="connection">The connection to close</param>
         public void CloseConnection(SqlConnection connection)
         {
             Logger.Debug("Close connection");
