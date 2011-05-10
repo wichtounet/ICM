@@ -120,7 +120,7 @@ namespace ICM.Dao
                         if (reader.Read())
                         {
                             var mimeType = ((string) reader["fileMIMEType"]);
-                            var extension = mimeType.Substring(mimeType.LastIndexOf("/"));
+                            var extension = mimeType.Substring(mimeType.LastIndexOf("/") + 1);
 
                             context.Response.ClearHeaders();
                             context.Response.ClearContent();
