@@ -297,7 +297,6 @@ namespace ICM.Dao
         ///<returns>All the institutions of the database. </returns>
         public List<Institution> GetInstitutionsClean()
         {
-
             using(var connection = DBManager.GetInstance().GetNewConnection())
             {
                 return GetInstitutionsClean(connection);
