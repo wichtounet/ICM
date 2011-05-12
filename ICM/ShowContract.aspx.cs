@@ -2,6 +2,8 @@
 using System.Web.UI;
 using ICM.Dao;
 using ICM.Utils;
+using System.Xml.Xsl;
+using System.Xml;
 
 namespace ICM
 {
@@ -28,13 +30,14 @@ namespace ICM
 
                     IDLabel.Text = contract.Id.ToString();
                     TitreLabel.Text = contract.Title;
-                    dateDebutLabel.Text = contract.Start.ToString("d");
-                    dateFinLabel.Text = contract.End.ToString("d");//TODO: A CHANGER 
+                    dateDebutLabel.Text = contract.Start.ToString("yyyy-MM-dd");
+                    dateFinLabel.Text = contract.End.ToString("yyyy-MM-dd");//TODO: A CHANGER 
                     userLabel.Text = contract.User;
                     typeLabel.Text = contract.Type;
                     userLabel.Text = contract.User;
                     StateLabel.Text = contract.Archived ? "Oui" : "Non";
                     downloadFile.NavigateUrl = "ContractFile.aspx?id=" + contract.fileId;
+                    viewContractXML.NavigateUrl = "ContractOutput.aspx?contract=" + contract.fileId;
 
                     PersonList.DataSource = contract.persons;
                     PersonList.DataBind();
@@ -50,6 +53,7 @@ namespace ICM
                 DeleteButton.Enabled = false;
             } 
         }
+
 
         /// <summary>
         /// Edit the current contract. 

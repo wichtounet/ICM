@@ -58,6 +58,10 @@ h2
 {
     font-size: 1.5em;
     font-weight: 600;
+    border-bottom:1px solid #999;
+    border-left:1px solid #999;
+    padding-left:2px;
+    margin-bottom:3px;
 }
 
 h3
@@ -133,11 +137,12 @@ first child of the left and right table columns */
 {
     color: #4e5766;
     padding: 8px 0px 0px 0px;
-    margin: 0px auto;
+    margin: 0;
     text-align: center;
     line-height: normal;
+    border-top:6px double gray;
+    bottom:0;
 }
-
 
 /* TAB MENU   
 ----------------------------------------------------------*/
@@ -303,6 +308,7 @@ div.accountInfo
 #rightContent 
 {
     float: left;
+    padding-left:10px;
 }
 
 /* Formulaire */
@@ -314,4 +320,34 @@ div.accountInfo
     float:left;
 
 }
-
+#leftContent
+{
+    border-right:1px solid #bbb;
+    min-height: 500px;
+}
+#leftContent ul
+{
+    padding-left:0;
+    padding-right:5px;
+}
+#leftContent ul li
+{
+    text-decoration:none;  
+    list-style:none;
+    background-color: #4B6C9E;
+    border:1px solid #555;
+}
+#leftContent ul li a:hover
+{
+    background-color: #465C71;
+    color:#000;
+}
+#leftContent ul li a, #leftContent ul li a:visited
+{
+    text-decoration:none;
+    color:#DDE4EC;
+    line-height: 1.35em;
+    padding:5px 0 5px 5px;
+    text-decoration: none;  
+    display: block;
+}

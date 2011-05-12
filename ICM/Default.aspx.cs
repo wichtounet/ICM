@@ -10,6 +10,7 @@ namespace ICM
     ///<summary>
     /// This page allow the user to make search of contracts. 
     ///</summary>
+    /// <remarks>Vincent Ischi</remarks>
     public partial class _Default : Page
     {
         /// <summary>
@@ -28,6 +29,9 @@ namespace ICM
             }
         }
 
+        /// <summary>
+        /// Load the lists of the page. 
+        /// </summary>
         private void LoadLists()
         {
             using(var connection = DBManager.GetInstance().GetNewConnection())

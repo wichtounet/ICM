@@ -47,10 +47,11 @@
         </div>
         <div class="clear">
         </div>
+        <div class="footer">
+        <p>HES-SO Fribourg - Vincent Ischi, Baptiste Wicht, Kean Mariotti</p>
     </div>
-    <div class="footer">
-        
     </div>
+    
     </form>
 </body>
 </html>

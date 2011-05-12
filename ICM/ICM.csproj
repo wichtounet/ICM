@@ -62,6 +62,7 @@
     <Content Include="AddInstitution.aspx" />
     <Content Include="AddPerson.aspx" />
     <Content Include="ContractFile.aspx" />
+    <Content Include="ContractOutput.aspx" />
     <Content Include="HistoPDF.aspx" />
     <Content Include="Lib\itextsharp.dll" />
     <Content Include="Lib\NLog.dll" />
@@ -79,6 +80,8 @@
     <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.4.1.js" />
     <Content Include="Scripts\jquery-1.4.1.min.js" />
+    <Content Include="Styles\Contract.css" />
+    <Content Include="contract.xslt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -122,6 +125,13 @@
     </Compile>
     <Compile Include="ContractFile.aspx.designer.cs">
       <DependentUpon>ContractFile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ContractOutput.aspx.cs">
+      <DependentUpon>ContractOutput.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ContractOutput.aspx.designer.cs">
+      <DependentUpon>ContractOutput.aspx</DependentUpon>
     </Compile>
     <Compile Include="HistoPDF.aspx.cs">
       <DependentUpon>HistoPDF.aspx</DependentUpon>
@@ -253,6 +263,9 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

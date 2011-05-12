@@ -4,15 +4,35 @@
     <h2>
         Rechercher une personne
     </h2>
-    <p>
-        <asp:Label Visible="false" ID="IDLabel" Text="-1" runat="server" />
-        Nom : <asp:TextBox ID="NameLabel" Columns="15" runat="server" /> <br />
-        Prénom : <asp:TextBox ID="FirstNameLabel" Columns="15" runat="server" /> <br />
-        Institution : <asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected" AutoPostBack="true" />  <br />
-        Départment : <asp:DropDownList ID="DepartmentList" runat="server" />  <br />
-        <asp:CheckBox Text="Rechercher les personnes archivées ?" runat="server" ID="ArchivedCheckBox" />
-        <asp:Button ID="SearchButton" runat="server" Text="Rechercher" OnClick="SearchPerson" />
-    </p>
+    <table>
+        <tr>
+            <td>Nom : </td>
+            <td>
+                <asp:Label Visible="false" ID="IDLabel" Text="-1" runat="server" />
+                <asp:TextBox ID="NameLabel" Columns="15" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td>Prénom : </td>
+            <td><asp:TextBox ID="FirstNameLabel" Columns="15" runat="server" /></td>
+        </tr>
+        <tr>
+            <td>Institution : </td>
+            <td><asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected" AutoPostBack="true" /></td>
+        </tr>
+        <tr>
+            <td>Départment : </td>
+            <td><asp:DropDownList ID="DepartmentList" runat="server" /></td>
+        </tr>
+        <tr>
+            <td>Personne archivée :</td>
+            <td><asp:CheckBox runat="server" ID="ArchivedCheckBox" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><asp:Button ID="SearchButton" runat="server" Text="Rechercher" OnClick="SearchPerson" /></td>
+        </tr>
+    </table>
 
     <asp:ListView ID="ResultsView" runat="server" OnItemDeleting="PersonDeleting">
         <LayoutTemplate>

@@ -7,62 +7,117 @@
     <h2>
         Nouveau contrat
     </h2>
-    <table>
+    <table width="700px">
         <tr>
             <td>Title : </td>
-            <td><asp:TextBox ID="TitleText" Columns="15" runat="server" /></td>
+            <td>
+                <asp:TextBox ID="TitleText" Columns="15" runat="server" />
+                <asp:RequiredFieldValidator runat="server" id="RequiredTitleValidator" ControlToValidate="TitleText" errormessage="Veuillez entrer un titre !" Enabled="false"/>
+            </td>
             
         </tr>
         <tr>
             <td>Type : </td>
-            <td><asp:DropDownList ID="ContractTypeList" runat="server" /></td>
+            <td>
+                <asp:DropDownList ID="ContractTypeList" runat="server" />
+                <asp:RequiredFieldValidator ID="RequiredTypeValidator" runat="server" ControlToValidate="ContractTypeList" 
+                    InitialValue="" Text="Veuillez choisir un type !" Enabled="false"/>
+            </td>
             
         </tr>
         <tr>
+            <td> </td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td colspan=2>
+                <fieldset>
+                    <legend>Département :</legend>
+                    <table>
+                        <tr>
+                            <td>Institution :</td>
+                            <td><asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected"  AutoPostBack="true"/><br /></td>
+                        </tr>
+                        <tr>
+                            <td>Département :</td>
+                            <td>
+                                <asp:DropDownList ID="DepartmentList" runat="server" />
+                                <asp:Button ID="AddDepartment" runat="server" Text="+" OnClick="AddDepartment_Click" CausesValidation="false" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Département choisis :</td>
+                            <td>
+                                <asp:DropDownList ID="DepartmentSelectedList" runat="server" />
+                                <asp:Button ID="DeleteDepartment" runat="server" Text="-" OnClick="DeleteDepartment_Click" CausesValidation="false" />    
+                                <asp:Label ID="DepartmentLabel" runat="server" />
+                                <asp:RequiredFieldValidator ID="RequiredDepartmentValidator" runat="server" ControlToValidate="DepartmentSelectedList" 
+                                    InitialValue="" Text="Veuillez choisir un département !" Enabled="false" />
+                            </td>
+                        </tr>
+                    </table> 
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan=2>
+                <fieldset>
+                    <legend>Contact :</legend>
+                    <table>
+                        <tr>
+                            <td>Personne :</td>
+                            <td>
+                                <asp:DropDownList ID="PersonList" runat="server" />
+                                Rôle : <asp:DropDownList ID="RoleList" runat="server" />
+                                <asp:Button ID="AddPerson" runat="server" Text="+" OnClick="AddPerson_Click" CausesValidation="false"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Personne choisies :</td>
+                            <td>
+                                <asp:DropDownList ID="PersonSelectedList" runat="server" />
+                                <asp:Button ID="DeletePerson" runat="server" Text="-" OnClick="DeletePerson_Click" CausesValidation="false" />    
+                                <asp:Label ID="PersonLabel" runat="server" />
+                                <asp:RequiredFieldValidator ID="RequiredPersonValidator" runat="server" ControlToValidate="PersonSelectedList" 
+                                InitialValue="" Text="Veuillez choisir une personne de contact !" Enabled="false" />
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </td>            
+        </tr>
+        <tr>
             <td>Date début : </td>
-            <td><asp:TextBox ID="StartDate" Columns="15" runat="server" /></td>
+            <td>
+                <asp:TextBox ID="StartDate" Columns="15" runat="server"  CausesValidation="false"/><asp:Label ID="StartValue" Visible="false" runat="server" Text="" />
+                <asp:RequiredFieldValidator runat="server" id="RequiredStartValidator" ControlToValidate="StartDate" errormessage="Veuillez entrer une date !" Enabled="false"/>
+            </td>
             
         </tr>
         <tr>
             <td>Date fin : </td>
-            <td><asp:TextBox ID="EndDate" Columns="15" runat="server" /></td>
-            
-        </tr>
-        <tr>
-            <td>Institution : </td>
             <td>
-                <asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected"  AutoPostBack="true"/>
-            </td>
-        </tr>
-        <tr>
-            <td>Département :</td>
-            <td>
-                <asp:DropDownList ID="DepartmentList" runat="server" />
-                <asp:Button ID="AddDepartment" runat="server" Text="+" OnClick="AddDepartment_Click" />    
-                <asp:DropDownList ID="DepartmentSelectedList" runat="server" />
-                <asp:Button ID="DeleteDepartment" runat="server" Text="-" OnClick="DeleteDepartment_Click" />    
-                <asp:Label ID="DepartmentLabel" runat="server" />
-            </td>
-        </tr>
-        <tr>
-            <td>Personne de contact : </td>
-            <td>
-                <asp:DropDownList ID="PersonList" runat="server" />
-                Rôle : <asp:DropDownList ID="RoleList" runat="server" />
-                <asp:Button ID="AddPerson" runat="server" Text="+" OnClick="AddPerson_Click" />    
-                <asp:DropDownList ID="PersonSelectedList" runat="server" />
-                <asp:Button ID="DeletePerson" runat="server" Text="-" OnClick="DeletePerson_Click" />    
-                <asp:Label ID="PersonLabel" runat="server" />
+                <asp:TextBox ID="EndDate" Columns="15" runat="server" /><asp:Label ID="EndValue" Visible="false" runat="server" Text=""/>
+                <asp:RequiredFieldValidator runat="server" id="RequiredEndValidator" ControlToValidate="EndDate" errormessage="Veuillez entrer une date !" Enabled="false" />
+                <asp:CompareValidator ID="CompareDate" runat="server" ControlToCompare="StartDate"
+                    ControlToValidate="EndDate" ErrorMessage="Veuillez entrer une date supérieure à la date de début !" Operator="GreaterThan" Type="Date" Enabled="false" />
             </td>
             
         </tr>
         <tr>
-            <td>Fichier binaire :</td>
-            <td><asp:HyperLink ID="downloadFile" NavigateUrl="ContractFile.aspx" Text="Télécharger" Target="_blank" runat="server" /><asp:FileUpload ID="UploadImageFile" runat="server" /></td>
+            <td>Source pdf :</td>
+            <td>
+                <asp:HyperLink ID="downloadFile" NavigateUrl="ContractFile.aspx" Text="Télécharger" Target="_blank" runat="server" />
+                <asp:FileUpload ID="UploadImageFile" runat="server" />
+                <asp:CustomValidator ID="CustomValidatorUpload" runat="server" 
+                    ClientValidationFunction="ValidateFileUpload" ErrorMessage="Veuillez choisir un fichier .pdf" Enabled="false" />
+            </td>
         </tr>
         <tr>
-            <td> </td>
-            <td> 
+            <td></td>
+            <td>
                 <asp:Button runat="server" id="Add" text="Ajouter" onclick="Add_Click"  Visible="false" />
                 <asp:Button runat="server" id="Save" text="Sauvegarder" onclick="Save_Click"  Visible="false" />
             </td>
@@ -72,17 +127,35 @@
     <asp:Label ForeColor="Red" ID="ErrorLabel" Visible="false" runat="server" />
     
      <script type="text/javascript">
+         //alert("la:"+document.getElementById('StartValue').InnerHTML);
+
+         function ValidateFileUpload(Source, args) {
+             var fuData = document.getElementById('<%= UploadImageFile.ClientID %>');
+             var FileUploadPath = fuData.value;
+
+             if (FileUploadPath == '') {
+                 // There is no file selected 
+                 args.IsValid = false;
+             }
+             else {
+                 var Extension = FileUploadPath.substring(FileUploadPath.lastIndexOf('.') + 1).toLowerCase();
+
+                 if (Extension == "pdf") {
+                     args.IsValid = true; // Valid file type
+                 }
+                 else {
+                     args.IsValid = false; // Not valid file type
+                 }
+             }
+         }
+
          $(function () {
              $("[id$=StartDate]").datepicker();
+             $("[id$=StartDate]").datepicker("option", "dateFormat", "yy-mm-dd");
              $("[id$=EndDate]").datepicker();
-             //$("[id$=startDate]").datepicker("option", "dateFormat", "dd.mm.yy");
-             //$("[id$=startDate]").datepicker("setDate", new Date(2008, 9, 03));
+             $("[id$=EndDate]").datepicker("option", "dateFormat", "yy-mm-dd");
+             //$("[id$=StartDate]").datepicker("setDate", new Date("2011-11-22"));
          });
-         $(function () {
-             $("[id$=temp]").datepicker();
-             //$("[id$=endDate]").datepicker("option", "dateFormat", "dd.mm.yy");
-         });
-
          $(function () {
              $("[id$=Add]").button();
              $("[id$=Save]").button();
