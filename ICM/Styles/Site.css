@@ -351,3 +351,8 @@ div.accountInfo
     text-decoration: none;  
     display: block;
 }
+
+#rightContent a
+{
+    color:#fff;
+}
