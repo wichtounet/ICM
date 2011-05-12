@@ -1,111 +1,144 @@
 ﻿using System;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Collections.Generic;
-using ICM.Dao;
+using System.Data;
+using System.Data.SqlClient;
+using System.Threading;
 using ICM.Model;
+using ICM.Dao;
 using ICM.Utils;
 
 namespace ICM
 {
     public partial class AddInstitution : Page
     {
+        private static int transactionId;
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            DepartmentLabel.Visible = false;
             if (IsPostBack)
                 return;
-
-            //Languages databound
-            LanguagesDAO languagesDAO = new LanguagesDAO();
-            List<Language> languages = languagesDAO.GetAllLanguages();
-            LanguageList.DataSource = languages;
-            LanguageList.DataBind();
-
-            //Continents databound
-            CountriesDAO countriesDAO = new CountriesDAO();
-            List<Continent> continents = countriesDAO.GetAllContinents();
-            ContinentList.DataSource = continents;
-            ContinentList.DataBind();
-
-            //Add institution
-            if (Request.QueryString["institution"] == null)
+            Extensions.SqlOperation operation = () =>
             {
-                EditButton.Visible = false;
-                AddButton.Visible = true;
+                //Languages databound
+                var languagesDAO = new LanguagesDAO();
+                var languages = languagesDAO.GetAllLanguages();
+                LanguageList.DataSource = languages;
+                LanguageList.DataBind();
 
-                //Contries databound
-                List<Country> countries = countriesDAO.GetCountries(continents[0]);
-                CountryList.DataSource = countries;
-                CountryList.DataBind();
-            }
-            //Edit institution
-            else
-            {
-                //TODO: start transaction to commit add button click
-                EditButton.Visible = true;
-                AddButton.Visible = false;
+                //Continents databound
+                var countriesDAO = new CountriesDAO();
+                var continents = countriesDAO.GetAllContinents();
+                ContinentList.DataSource = continents;
+                ContinentList.DataBind();
 
-                int institutionId = Request.QueryString["institution"].ToInt();
-                Institution institution = new InstitutionsDAO().GetInstitution(institutionId);
-                
-                NameText.Text = institution.Name;
-                DescriptionText.Text = institution.Description;
-                CityText.Text = institution.City;
-                ContinentList.SelectedValue = institution.Country.Continent.Name;
+                //Add institution
+                if (Request.QueryString["institution"] == null)
+                {
+                    EditButton.Visible = false;
+                    AddButton.Visible = true;
 
-                //Contries databound
-                List<Country> countries = countriesDAO.GetCountries(institution.Country.Continent);
-                CountryList.DataSource = countries;
-                CountryList.DataBind();
+                    //Contries databound
+                    var countries = countriesDAO.GetCountries(continents[0]);
+                    CountryList.DataSource = countries;
+                    CountryList.DataBind();
+                }
+                //Edit institution
+                else
+                {
+                    var institutionId = Request.QueryString["institution"].ToInt();
 
-                LanguageList.SelectedValue = institution.Language.Name;
-                InterestText.Text = institution.Interest;
+                    var connection = DBManager.GetInstance().GetNewConnection();
+                    var transaction = connection.BeginTransaction(IsolationLevel.ReadUncommitted);
 
-                //Departments databound
-                DepartmentList.DataSource = institution.Departments;
-                DepartmentList.DataBind();
-            }
+                    new InstitutionsDAO().LockInstitution(institutionId, transaction);
+
+                    var tr = Interlocked.Increment(ref transactionId);
+
+                    Session["connection" + tr] = connection;
+                    Session["transaction" + tr] = transaction;
+
+                    ViewState["transaction"] = tr;
+
+                    //TODO: start transaction to commit add button click
+                    EditButton.Visible = true;
+                    AddButton.Visible = false;
+
+                    var institution = new InstitutionsDAO().GetInstitution(institutionId, transaction);
+
+                    NameText.Text = institution.Name;
+                    DescriptionText.Text = institution.Description;
+                    CityText.Text = institution.City;
+                    ContinentList.SelectedValue = institution.Country.Continent.Name;
+
+                    //Contries databound
+                    var countries = countriesDAO.GetCountries(institution.Country.Continent);
+                    CountryList.DataSource = countries;
+                    CountryList.DataBind();
+
+                    LanguageList.SelectedValue = institution.Language.Name;
+                    InterestText.Text = institution.Interest;
+
+                    //Departments databound
+                    DepartmentList.DataSource = institution.Departments;
+                    DepartmentList.DataBind();
+                }
+            };
+
+            this.Verified(operation, ErrorLabel);
         }
 
         //Update CountryList contents
         protected void ContinentList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CountriesDAO countriesDAO = new CountriesDAO();
-            List<Country> countries = countriesDAO.GetCountries(new Continent() { Name = ContinentList.SelectedValue });
-            CountryList.DataSource = countries;
-            CountryList.DataBind();
+            Extensions.SqlOperation operation = () =>
+            {
+                var countriesDAO = new CountriesDAO();
+                var countries = countriesDAO.GetCountries(new Continent { Name = ContinentList.SelectedValue });
+                CountryList.DataSource = countries;
+                CountryList.DataBind();
+            };
+            this.Verified(operation, ErrorLabel);
         }
 
         protected void AddButton_Click(object sender, EventArgs e)
         {
-            InstitutionsDAO institutionsDAO = new InstitutionsDAO();
-
-            //Instantiate and fill department list
-            List<Department> departments = new List<Department>();
-            foreach (ListItem department in DepartmentList.Items)
+            Extensions.SqlOperation operation = () =>
             {
-                departments.Add(new Department() { Name = department.Text });
-            }
+                var institutionsDAO = new InstitutionsDAO();
 
-            //Intantiate institution
-            Language language = new Language() {Name = LanguageList.SelectedValue};
-            Continent continent = new Continent() {Name = ContinentList.SelectedValue};
-            Country country = new Country() {Name = CountryList.SelectedValue, Continent = continent };
-            Institution institution = new Institution(  -1,
-                                                        NameText.Text,
-                                                        DescriptionText.Text,
-                                                        CityText.Text,
-                                                        InterestText.Text,
-                                                        language,
-                                                        country,
-                                                        departments,
-                                                        false);
-            institutionsDAO.AddInstitution(institution);
+                var departments = (from ListItem department in DepartmentList.Items select new Department {Name = department.Text}).ToList();
+
+                //Intantiate institution
+                var language = new Language { Name = LanguageList.SelectedValue };
+                var continent = new Continent { Name = ContinentList.SelectedValue };
+                var country = new Country { Name = CountryList.SelectedValue, Continent = continent };
+                var institution = new Institution(-1,
+                                                            NameText.Text,
+                                                            DescriptionText.Text,
+                                                            CityText.Text,
+                                                            InterestText.Text,
+                                                            language,
+                                                            country,
+                                                            departments,
+                                                            false);
+                var institutionId = institutionsDAO.AddInstitution(institution);
+                Response.Redirect("ShowInstitution.aspx?institution=" + institutionId);
+            };
+            this.Verified(operation, ErrorLabel);
         }
 
         protected void AddDepartmentButton_Click(object sender, EventArgs e)
         {
-            DepartmentList.Items.Add(new ListItem() {Text=DepartmentText.Text});
+            if (DepartmentText.Text.Equals(""))
+            {
+                DepartmentLabel.Visible = true;
+                return;
+            }
+            DepartmentList.Items.Add(new ListItem {Text=DepartmentText.Text});
             DepartmentText.Text = "";
         }
 
@@ -116,30 +149,41 @@ namespace ICM
 
         protected void EditButton_Click(object sender, EventArgs e)
         {
-            int institutionId = Request.QueryString["institution"].ToInt();
-            InstitutionsDAO institutionsDAO = new InstitutionsDAO();
-
-            //Instantiate and fill department list
-            List<Department> departments = new List<Department>();
-            foreach (ListItem department in DepartmentList.Items)
+            Extensions.SqlOperation operation = () =>
             {
-                departments.Add(new Department() { Name = department.Text });
-            }
+                var tr = (int) ViewState["transaction"];
+                var transaction = (SqlTransaction) Session["transaction" + tr];
+                var connection = (SqlConnection) Session["connection" + tr];
 
-            //Intantiate institution
-            Language language = new Language() { Name = LanguageList.SelectedValue };
-            Continent continent = new Continent() { Name = ContinentList.SelectedValue };
-            Country country = new Country() { Name = CountryList.SelectedValue, Continent = continent };
-            Institution institution = new Institution(  institutionId,
-                                                        NameText.Text,
-                                                        DescriptionText.Text,
-                                                        CityText.Text,
-                                                        InterestText.Text,
-                                                        language,
-                                                        country,
-                                                        departments,
-                                                        false);
-            institutionsDAO.UpdateInstitution(institution);
+
+                var institutionId = Request.QueryString["institution"].ToInt();
+                var institutionsDAO = new InstitutionsDAO();
+
+                //Instantiate and fill department list
+                var departments = (from ListItem department in DepartmentList.Items select new Department {Name = department.Text}).ToList();
+
+                //Intantiate institution
+                var language = new Language { Name = LanguageList.SelectedValue };
+                var continent = new Continent { Name = ContinentList.SelectedValue };
+                var country = new Country { Name = CountryList.SelectedValue, Continent = continent };
+                var institution = new Institution(institutionId,
+                                                            NameText.Text,
+                                                            DescriptionText.Text,
+                                                            CityText.Text,
+                                                            InterestText.Text,
+                                                            language,
+                                                            country,
+                                                            departments,
+                                                            false);
+
+                institutionsDAO.UpdateInstitution(institution, transaction);
+
+                transaction.Commit();
+                connection.Close();
+
+                Response.Redirect("ShowInstitution.aspx?institution=" + institutionId);
+            };
+            this.Verified(operation, ErrorLabel);
         }
     }
 }

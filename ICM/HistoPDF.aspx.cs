@@ -65,6 +65,7 @@ namespace ICM
                 document.Close();
 
                 Response.Clear();
+                Response.AppendHeader("content-disposition", "attachment; filename=" + "histo.pdf");
                 Response.ContentType = "Application/pdf";
                 Response.BinaryWrite(m.GetBuffer());
                 Response.End();

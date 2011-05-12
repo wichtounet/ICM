@@ -9,15 +9,15 @@ namespace ICM.Utils
     ///  This utility class contains several methods that aims to simplify the use of database. 
     /// </summary>
     /// <remarks>Baptiste Wicht</remarks>
-    public class DBUtils
+    public static class DBUtils
     {
-        public static SqlTransaction BeginTransaction(IsolationLevel level)
-        {
-            var connection = DBManager.GetInstance().GetConnection();
-            var transaction = connection.BeginTransaction(level);
-            return transaction;
-        }
-
+        ///<summary>
+        /// Execute a simple query in the given transaction and return the result of the query. 
+        ///</summary>
+        ///<param name="sql">The sql query to execute. </param>
+        ///<param name="transaction">The transaction to use. </param>
+        ///<param name="parameters">The parameters of the query. </param>
+        ///<returns>The SQL result</returns>
         public static SqlResult ExecuteTransactionQuery(string sql, SqlTransaction transaction, NameValueCollection parameters)
         {
             var command = new SqlCommand(sql, transaction.Connection, transaction);
@@ -32,12 +32,26 @@ namespace ICM.Utils
             return new SqlResult(null, reader);
         }
 
+        ///<summary>
+        /// Execute a simple query in the given transaction and return the result of the query. 
+        ///</summary>
+        ///<param name="sql">The sql query to execute. </param>
+        ///<param name="transaction">The transaction to use. </param>
+        ///<returns>The SQL result</returns>
         public static SqlResult ExecuteTransactionQuery(string sql, SqlTransaction transaction)
         {
             return ExecuteTransactionQuery(sql, transaction, new NameValueCollection());
         }
 
-        public static int ExecuteTransactionInsert(string sql, SqlTransaction transaction, NameValueCollection parameters, string tableName)
+        ///<summary>
+        /// Execute a simple insert query in the given transaction and return the id of the inserted object. 
+        ///</summary>
+        ///<param name="sql">The sql query to execute. </param>
+        ///<param name="transaction">The transaction to use. </param>
+        ///<param name="parameters">The parameters of the query. </param>
+        ///<param name="tableName">The name of the table</param>
+        ///<returns>The id of the insert object</returns>
+        public static int ExecuteInsert(string sql, NameValueCollection parameters, string tableName, SqlTransaction transaction)
         {
             ExecuteNonQuery(sql, transaction, parameters);
 
@@ -48,7 +62,8 @@ namespace ICM.Utils
             using (var reader = getCommand.ExecuteReader())
             {
                 reader.Read();
-                id = reader["ID"].ToString().ToInt();
+
+                id = (int) reader["ID"];
             }
 
             return id;
@@ -75,24 +90,12 @@ namespace ICM.Utils
             }
         }
         
-        public static int ExecuteInsert(string sql, IsolationLevel level, NameValueCollection parameters, string tableName, SqlTransaction transaction)
-        {
-            ExecuteNonQuery(sql, transaction, parameters);
-
-            var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", transaction.Connection, transaction);
-            getCommand.Parameters.AddWithValue("table", tableName);
-
-            int id;
-            using (var reader = getCommand.ExecuteReader())
-            {
-                reader.Read();
-
-                id = reader["ID"].ToString().ToInt();
-            }
-
-            return id;
-        }
-
+        ///<summary>
+        /// Execute an update query in the given transaction. 
+        ///</summary>
+        ///<param name="sql">The sql query to execute. </param>
+        ///<param name="transaction">The transaction to use. </param>
+        ///<param name="parameters">The parameters of the query. </param>
         public static void ExecuteNonQuery(string sql, SqlTransaction transaction, NameValueCollection parameters)
         {
             var command = new SqlCommand(sql, transaction.Connection, transaction);
@@ -105,6 +108,14 @@ namespace ICM.Utils
             command.ExecuteNonQuery();
         }
 
+        ///<summary>
+        /// Execute a query in the given connection in a new transaction. 
+        ///</summary>
+        ///<param name="sql">The sql query to execute. </param>
+        ///<param name="connection">The connection to use. </param>
+        ///<param name="parameters">The parameters of the query. </param>
+        ///<param name="level">The isolation level to use for the new transaction</param>
+        ///<returns>The SQL Result</returns>
         public static SqlResult ExecuteQuery(string sql, SqlConnection connection, IsolationLevel level, NameValueCollection parameters)
         {
             var transaction = connection.BeginTransaction(level);
@@ -120,47 +131,40 @@ namespace ICM.Utils
 
             return new SqlResult(transaction, reader);
         }
-
-        public static SqlResult ExecuteQuery(string sql, IsolationLevel level, NameValueCollection parameters)
-        {
-            var connection = DBManager.GetInstance().GetConnection();
-
-            var transaction = connection.BeginTransaction(level);
-
-            var command = new SqlCommand(sql, connection, transaction);
-
-            foreach (var key in parameters.AllKeys)
-            {
-                command.Parameters.AddWithValue(key, parameters.Get(key));
-            }
-
-            var reader = command.ExecuteReader();
-
-            return new SqlResult(transaction, reader);
-        }
-
-        public static SqlResult ExecuteQuery(string sql, IsolationLevel level)
-        {
-            return ExecuteQuery(sql, level, new NameValueCollection());
-        }
     }
 
+    ///<summary>
+    /// A simple container for a data reader. 
+    ///</summary>
     public class SqlResult : IDisposable
     {
         private readonly SqlDataReader reader;
         private readonly SqlTransaction transaction;
 
+        ///<summary>
+        /// Create a new SqlResult with the given transaction and reader. If transaction is not null, it will be closed on dispose. 
+        ///</summary>
+        ///<param name="transaction">The transaction</param>
+        ///<param name="reader">The reader to use</param>
         public SqlResult(SqlTransaction transaction, SqlDataReader reader)
         {
             this.transaction = transaction;
             this.reader = reader;
         }
 
+        ///<summary>
+        /// Read on the reader. 
+        ///</summary>
+        ///<returns>true if the reader has more data otherwise false</returns>
         public bool Read()
         {
             return reader.Read();
         }
 
+        ///<summary>
+        /// Return the object with the given name. 
+        ///</summary>
+        ///<param name="name">The name of the object in the reader</param>
         public object this[string name]
         {
             get { return reader[name]; }

@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Web.Security;
 using ICM.Model;
 using ICM.Utils;
@@ -19,23 +15,28 @@ namespace ICM.Account
 
         protected void LoginButton_Click(object sender, EventArgs e)
         {
-            List<User> users = new UsersDAO().GetUsers();
-            User user = users.GetUserByLogin(UserName.Text);
-
-            if (user == null)   //Wrong login
+            Extensions.SqlOperation operation = () =>
             {
-                FailureLiteral.Text = "Login ou password incorrect";
-                return;
-            }
+                var users = new UsersDAO().GetUsers();
+                var user = users.GetUserByLogin(UserName.Text);
 
-            if (!Password.Text.Equals(user.Password))//Wrong password
-            {
-                FailureLiteral.Text = "Login ou password incorrect";
-                return;
-            }
+                if (user == null)   //Wrong login
+                {
+                    FailureLiteral.Text = "Login ou password incorrect";
+                    return;
+                }
 
-            string privilege = user.Admin ? "Admin" : "Guest";
-            FormsAuthentication.RedirectFromLoginPage(privilege, RememberCheckBox.Checked);
+                if (!Password.Text.Equals(user.Password))//Wrong password
+                {
+                    FailureLiteral.Text = "Login ou password incorrect";
+                    return;
+                }
+
+                Session["userLogin"] = user.Login;
+                var privilege = user.Admin ? "Admin" : "Guest";
+                FormsAuthentication.RedirectFromLoginPage(privilege, RememberCheckBox.Checked);
+            };
+            this.Verified(operation, ErrorLabel);
         }
     }
 }

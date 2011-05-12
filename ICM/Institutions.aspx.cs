@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 using ICM.Dao;
 using ICM.Model;
@@ -17,49 +14,69 @@ namespace ICM
             if (IsPostBack)
                 return;
 
-            //Fill language list
-            List<Language> languages = new LanguagesDAO().GetAllLanguages();
-            languages.Insert(0, new Language() { Name = "" });
-            LanguagesList.DataSource = languages;
-            LanguagesList.DataBind();
+            Extensions.SqlOperation operation = () =>
+            {
+                //Fill language list
+                var languages = new LanguagesDAO().GetAllLanguages();
+                languages.Insert(0, new Language { Name = "" });
+                LanguagesList.DataSource = languages;
+                LanguagesList.DataBind();
 
-            //Fill continent list
-            List<Continent> continents = new CountriesDAO().GetAllContinents();
-            continents.Insert(0, new Continent() { Name = "" });
-            ContinentsList.DataSource = continents;
-            ContinentsList.DataBind();
+                    //Fill continent list
+                var continents = new CountriesDAO().GetAllContinents();
+                continents.Insert(0, new Continent { Name = "" });
+                ContinentsList.DataSource = continents;
+                ContinentsList.DataBind();
+            };
+
+            this.Verified(operation, ErrorLabel);
         }
 
         protected void ContinentsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CountriesDAO countriesDAO = new CountriesDAO();
-            List<Country> countries = countriesDAO.GetCountries(new Continent() { Name = ContinentsList.SelectedValue });
-            countries.Insert(0, new Country() { Name = "" });
-            CountriesList.DataSource = countries;
-            CountriesList.DataBind();
+            Extensions.SqlOperation operation = () =>
+            {
+                var countriesDAO = new CountriesDAO();
+                var countries = countriesDAO.GetCountries(new Continent { Name = ContinentsList.SelectedValue });
+                countries.Insert(0, new Country { Name = "" });
+                CountriesList.DataSource = countries;
+                CountriesList.DataBind();
+            };
+
+            this.Verified(operation, ErrorLabel);
         }
 
         protected void SearchButton_Click(object sender, EventArgs e)
         {
-            InstitutionsDAO institutionsDAO = new InstitutionsDAO();
+            Extensions.SqlOperation operation = () =>
+            {
+                var institutionsDAO = new InstitutionsDAO();
 
-            List<Institution> institutions = institutionsDAO.SearchInstitutions(NameText.Text,
-                                                LanguagesList.SelectedValue,
-                                                ContinentsList.SelectedValue,
-                                                CountriesList.SelectedValue,
-                                                ArchivedCheckBox.Checked);
+                var institutions = institutionsDAO.SearchInstitutions(NameText.Text,
+                                                    LanguagesList.SelectedValue,
+                                                    ContinentsList.SelectedValue,
+                                                    CountriesList.SelectedValue,
+                                                    ArchivedCheckBox.Checked);
 
-            ResultsView.DataSource = institutions;
-            ResultsView.DataBind();
+                ResultsView.DataSource = institutions;
+                ResultsView.DataBind();
+            };
+
+            this.Verified(operation, ErrorLabel);
         }
 
         protected void InstitutionArchiving(object sender, ListViewDeleteEventArgs e)
         {
-            ListViewItem myItem = ResultsView.Items[e.ItemIndex];
-            Label labelId = (Label)myItem.FindControl("LabelID");
-            new InstitutionsDAO().ArchiveInstitution(labelId.Text.ToInt());
-            //ResultsView.DeleteItem(e.ItemIndex);
-            SearchButton_Click(sender, e); //Refresh the page
+            Extensions.SqlOperation operation = () =>
+            {
+                ListViewItem myItem = ResultsView.Items[e.ItemIndex];
+                var labelId = (Label)myItem.FindControl("LabelID");
+                new InstitutionsDAO().ArchiveInstitution(labelId.Text.ToInt());
+
+                SearchButton_Click(sender, e); //Refresh the page
+            };
+
+            this.Verified(operation, ErrorLabel);
         }
     }
 }

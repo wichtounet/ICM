@@ -58,7 +58,7 @@ namespace ICM
         {
             var id = InstitutionList.SelectedValue.ToInt();
 
-            var institution = new InstitutionsDAO().GetInstitutionClean(id);
+            var institution = new InstitutionsDAO().GetInstitution(id);
 
             if (institution != null)
             {

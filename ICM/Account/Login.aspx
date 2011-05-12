@@ -38,5 +38,8 @@
             <asp:Button ID="LoginButton" runat="server" CommandName="Login" Text="Log In" 
                 ValidationGroup="LoginUserValidationGroup" onclick="LoginButton_Click"/>
         </p>
+        <p>
+            <asp:Label ID="ErrorLabel" runat="server" ForeColor="Red"></asp:Label>
+        </p>
     </div>
 </asp:Content>

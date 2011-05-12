@@ -5,10 +5,6 @@ namespace ICM.Model
 {
     public class Contract
     {
-        public Contract()
-        {
-            //Nothing to do
-        }
         public string Title
         {
             get;

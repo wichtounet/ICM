@@ -61,7 +61,7 @@ namespace ICM
 
                         using(var connectionSelect = DBManager.GetInstance().GetNewConnection())
                         {
-                            var dataSource = new InstitutionsDAO().GetInstitutionsClean(connectionSelect);
+                            var dataSource = new InstitutionsDAO().GetInstitutions(connectionSelect);
 
                             InstitutionList.DataBind(dataSource, "Name", "Id");
 
@@ -177,7 +177,7 @@ namespace ICM
             {
                 var id = InstitutionList.SelectedValue.ToInt();
 
-                var institution = new InstitutionsDAO().GetInstitutionClean(id);
+                var institution = new InstitutionsDAO().GetInstitution(id);
 
                 if (institution != null)
                 {

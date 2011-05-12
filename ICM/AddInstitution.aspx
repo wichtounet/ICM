@@ -18,7 +18,8 @@
             <td><asp:DropDownList ID="ContinentList" runat="server" AutoPostBack="True" 
                     onselectedindexchanged="ContinentList_SelectedIndexChanged" /><asp:DropDownList ID="CountryList" runat="server" />
                 <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" 
-                    ControlToValidate="CountryList" ErrorMessage="Pays doit être spécifié"></asp:RequiredFieldValidator>
+                    ControlToValidate="CountryList" ErrorMessage="Pays doit être spécifié" 
+                    ForeColor="Red"></asp:RequiredFieldValidator>
             </td>
         </tr>
         <tr>
@@ -36,6 +37,8 @@
             &nbsp;&nbsp;
                 <asp:Button ID="AddDepartmentButton" runat="server" 
                     Text="Ajouter" onclick="AddDepartmentButton_Click" />
+                <asp:Label ID="DepartmentLabel" runat="server" ForeColor="Red" 
+                    Text="Le nom du départment doit être spécifié" Visible="False"></asp:Label>
             </td>
         </tr>
         <tr>
@@ -55,13 +58,16 @@
             <td> </td>
         </tr>
         <tr>
-            <td> </td>
+            <td> &nbsp;</td>
             <td><asp:Button ID="AddButton" runat="server" Text="Ajouter institution" 
                     onclick="AddButton_Click" />
                 <asp:Button ID="EditButton" runat="server" onclick="EditButton_Click" 
                     Text="Modifier institution" />
             </td>
         </tr>
+        <tr><td></td><td>
+            <asp:Label ID="ErrorLabel" runat="server" ForeColor="Red"></asp:Label>
+            </td></tr>
     </table>        
     
      <script type="text/javascript">
