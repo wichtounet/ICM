@@ -137,11 +137,12 @@ first child of the left and right table columns */
 {
     color: #4e5766;
     padding: 8px 0px 0px 0px;
-    margin: 0px auto;
+    margin: 0;
     text-align: center;
     line-height: normal;
+    border-top:6px double gray;
+    bottom:0;
 }
-
 
 /* TAB MENU   
 ----------------------------------------------------------*/

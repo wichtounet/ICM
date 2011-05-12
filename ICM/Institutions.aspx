@@ -1,21 +1,50 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Institutions.master" AutoEventWireup="true" CodeBehind="Institutions.aspx.cs" Inherits="ICM.Institutions" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="InstitutionsContent" runat="server">
-    <p>
-        Nom : <asp:TextBox ID="NameText" Columns="15" runat="server" /> <br />
-        Langue :  
-        <asp:DropDownList ID="LanguagesList" runat="server">
-        </asp:DropDownList>
-        <br />
-        Continent : <asp:DropDownList ID="ContinentsList" runat="server" AutoPostBack="True" onselectedindexchanged="ContinentsList_SelectedIndexChanged" />
-        &nbsp;&nbsp; Pays : <asp:DropDownList ID="CountriesList" runat="server" />
-        <br />
-        <asp:CheckBox Text="Rechercher aussi les institutions archivées ?" runat="server" ID="ArchivedCheckBox" />
-        <br />
-        <br /> 
-        <asp:Button ID="SearchButton" runat="server" Text="Rechercher" 
-            onclick="SearchButton_Click" />
-    </p>
+    <h2>
+        Recherche une institution
+    </h2>
+    <table>
+        <tr>
+            <td>Nom : </td>
+            <td>
+                <asp:TextBox ID="NameText" Columns="15" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td>Langue :  </td>
+            <td>
+                <asp:DropDownList ID="LanguagesList" runat="server">
+                </asp:DropDownList>
+            </td>
+        </tr>
+        <tr>
+            <td>Continent : </td>
+            <td>
+                <asp:DropDownList ID="ContinentsList" runat="server" AutoPostBack="True" onselectedindexchanged="ContinentsList_SelectedIndexChanged" />
+            </td>
+        </tr>
+        <tr>
+            <td>Pays : </td>
+            <td>
+                <asp:DropDownList ID="CountriesList" runat="server" />
+            </td>
+        </tr>
+        <tr>
+            <td>Institution archivées :</td>
+            <td>
+                <asp:CheckBox runat="server" ID="ArchivedCheckBox" />
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <asp:Button ID="SearchButton" runat="server" Text="Rechercher" 
+                    onclick="SearchButton_Click" />
+            </td>
+        </tr>
+    </table>    
+
     <asp:ListView ID="ResultsView" runat="server" OnItemDeleting="InstitutionArchiving">
         <LayoutTemplate>
             <ul>
