@@ -9,6 +9,7 @@ using System.Collections.Specialized;
 using System.Data.SqlClient;
 using System.Collections;
 using NLog;
+using System.Xml;
 
 namespace ICM.Dao
 {
@@ -133,6 +134,29 @@ namespace ICM.Dao
             {
                 context.Response.Write(ex.ToString());
             } 
+        }
+
+
+        public XmlDocument getContractXMLById(int id)
+        {
+            Logger.Debug("Get Contract XML of {0}", id.ToString());
+
+            var xmlDoc = new XmlDocument();
+
+            var parameters = new NameValueCollection
+            {
+                {"@id", id.ToString()}
+            };
+
+            using (var reader = DBUtils.ExecuteQuery("SELECT xmlContent FROM [Contract] WHERE id = @id", IsolationLevel.ReadUncommitted, parameters))
+            {
+                if (reader.Read())
+                {
+                    xmlDoc.LoadXml((string)reader["XmlContent"]);
+                }
+            }
+
+            return xmlDoc;
         }
         
         public int AddContract(string title, string start, string end, string typeContractName, string xml, string userName, SortedList persons, int[] destinations, int fileSize, string fileMIMEType, System.IO.BinaryReader fileBinaryReader, byte[] fileBinaryBuffer)
@@ -436,7 +460,7 @@ namespace ICM.Dao
 
             return contracts;
         }
-        
+
         public void LockContract(int id, SqlTransaction transaction)
         {
             Logger.Debug("Lock Contract with ID ({0})", id);

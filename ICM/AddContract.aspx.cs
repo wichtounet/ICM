@@ -60,8 +60,8 @@ namespace ICM
                     var contract = new ContractsDAO().GetContractById(id, transaction);
 
                     TitleText.Text = contract.Title;
-                    StartDate.Text = contract.Start.ToString("d"); // 05/17/2011
-                    EndDate.Text = contract.End.ToShortDateString();
+                    StartValue.Text = contract.Start.ToString("yyyy-MM-dd");
+                    StartValue.Text = contract.End.ToString("yyyy-MM-dd");
 
                     if (contract.departments.Count != 0)
                     {
@@ -126,13 +126,21 @@ namespace ICM
 
         protected void AddPerson_Click(object sender, EventArgs e)
         {
+
             if (isValueInList(PersonList.SelectedItem.Value + ";" + RoleList.SelectedItem.Value, PersonSelectedList))
             {
                 PersonLabel.Text = "Personne déjà présente dans la liste";
             }
             else
             {
-                PersonSelectedList.Items.Add(new ListItem(RoleList.SelectedItem.Text + ": " + PersonList.SelectedItem.Text, PersonList.SelectedItem.Value + ";" + RoleList.SelectedItem.Value));
+                if (!"".Equals(RoleList.SelectedItem.Text) && !"".Equals(PersonList.SelectedItem.Text))
+                {
+                    PersonSelectedList.Items.Add(new ListItem(RoleList.SelectedItem.Text + ": " + PersonList.SelectedItem.Text, PersonList.SelectedItem.Value + ";" + RoleList.SelectedItem.Value));
+                }
+                else
+                {
+                    PersonLabel.Text = "Veuillez choisir une personne ET un rôle";
+                }
             }
         }
         
@@ -149,7 +157,11 @@ namespace ICM
             }
             else
             {
-                DepartmentSelectedList.Items.Add(new ListItem(DepartmentList.SelectedItem.Text, DepartmentList.SelectedItem.Value));
+                if (!"".Equals(DepartmentList.SelectedItem.Text))
+                {
+                    DepartmentSelectedList.Items.Add(new ListItem(DepartmentList.SelectedItem.Text, DepartmentList.SelectedItem.Value));
+                }
+                
             }
         }
 
@@ -173,6 +185,10 @@ namespace ICM
 
         protected void Add_Click(object sender, EventArgs e)
         {
+            EnableValidator();
+
+            Page.Validate();
+
             if (Page.IsValid)
             {
                 this.Verified(Submit, ErrorLabel);
@@ -181,10 +197,38 @@ namespace ICM
 
         protected void Save_Click(object sender, EventArgs e)
         {
+            EnableValidator();
+
+            Page.Validate();
+
             if (Page.IsValid)
             {
                 this.Verified(Submit, ErrorLabel);
             }
+        }
+
+        private void EnableValidator()
+        {
+            RequiredTitleValidator.Enabled = true;
+            RequiredTypeValidator.Enabled = true;
+            RequiredStartValidator.Enabled = true;
+            RequiredEndValidator.Enabled = true;
+            CompareDate.Enabled = true;
+            RequiredDepartmentValidator.Enabled = true;
+            RequiredPersonValidator.Enabled = true;
+            CustomValidatorUpload.Enabled = true;
+        }
+
+        private void DisableValidator()
+        {
+            RequiredTitleValidator.Enabled = false;
+            RequiredTypeValidator.Enabled = false;
+            RequiredStartValidator.Enabled = false;
+            RequiredEndValidator.Enabled = false;
+            CompareDate.Enabled = false;
+            RequiredDepartmentValidator.Enabled = false;
+            RequiredPersonValidator.Enabled = false;
+            CustomValidatorUpload.Enabled = false;
         }
 
         private void Submit()
@@ -215,7 +259,7 @@ namespace ICM
 
             if (Request.QueryString["contract"] == null)
             {
-                var id = new ContractsDAO().AddContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.ToString(), "vincent", persons, destination, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+                var id = new ContractsDAO().AddContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.DocumentElement.OuterXml, "vincent", persons, destination, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
                 
                 Response.Redirect("ShowContract.aspx?contract=" + id);
             }
@@ -240,7 +284,7 @@ namespace ICM
                 }
                 else
                 {
-                    new ContractsDAO().SaveContract(transaction, id, TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.ToString(), "vincent", persons, destination, contractFileId, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+                    new ContractsDAO().SaveContract(transaction, id, TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.DocumentElement.OuterXml, "vincent", persons, destination, contractFileId, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
 
                     transaction.Commit();
 
@@ -263,8 +307,8 @@ namespace ICM
 
             // Create the root element
             var rootNode = xmlDoc.CreateElement("contract");
-            rootNode.SetAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-            rootNode.SetAttribute("xsi:noNamespaceSchemaLocation", "contract.xsd");
+            rootNode.SetAttribute("noNamespaceSchemaLocation", "http://www.w3.org/2001/XMLSchema-instance", "contract.xsd"); 
+
             rootNode.SetAttribute("title", TitleText.Text);
             rootNode.SetAttribute("startDate", StartDate.Text);
             rootNode.SetAttribute("endDate", EndDate.Text);
@@ -286,7 +330,6 @@ namespace ICM
                     var w = PersonSelectedList.Items[i].Value.Split(';');
                     var person = personsDAO.GetPersonByID(w[0].ToInt(), connection);
                     var personNode = xmlDoc.CreateElement("person");
-                    personNode.SetAttribute("id", w[0]);
                     personNode.SetAttribute("name", person.Name);
                     personNode.SetAttribute("firstName", person.FirstName);
                     personNode.SetAttribute("phone", person.Phone);

@@ -56,6 +56,10 @@
             <td>Archivé : </td>
             <td><asp:Label ID="StateLabel" runat="server" /></td>
         </tr>
+        <tr>
+            <td>Fiche descriptive : </td>
+            <td><asp:HyperLink ID="viewContractXML" NavigateUrl="ContractOutput.aspx" Text="voir" Target="_blank" runat="server" /></td>
+        </tr>
     </table>
     
     <asp:Label ForeColor="Red" ID="ErrorLabel" Visible="false" runat="server" />
