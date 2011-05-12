@@ -40,7 +40,7 @@
                             <td>Institution :</td>
                             <td>
                                 <asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected"  AutoPostBack="true"/>
-                                <a href='AddInstitution.aspx' target="_blank">Ajouter une nouvelle</a>
+                                <a class="AddLink" href='AddInstitution.aspx' target="_blank">Ajouter une nouvelle</a>
                             </td>
                         </tr>
                         <tr>
@@ -73,7 +73,7 @@
                             <td>Personne :</td>
                             <td>
                                 <asp:DropDownList ID="PersonList" runat="server" />
-                                <a href='AddPerson.aspx' target="_blank">Ajouter une nouvelle</a>                                
+                                <a class="AddLink" href='AddPerson.aspx' target="_blank">Ajouter une nouvelle</a>                                
                             </td>
                         </tr>
                         <tr>
@@ -118,7 +118,7 @@
         <tr>
             <td>Source pdf :</td>
             <td>
-                <asp:HyperLink ID="downloadFile" NavigateUrl="ContractFile.aspx" Text="Télécharger" Target="_blank" runat="server" />
+                <asp:HyperLink class="AddLink" ID="downloadFile" NavigateUrl="ContractFile.aspx" Text="Télécharger" Target="_blank" runat="server" />
                 <asp:FileUpload ID="UploadImageFile" runat="server" />
                 <asp:CustomValidator ID="CustomValidatorUpload" runat="server" 
                     ClientValidationFunction="ValidateFileUpload" ErrorMessage="Veuillez choisir un fichier .pdf" Enabled="false" />

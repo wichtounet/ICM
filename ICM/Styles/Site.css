@@ -352,7 +352,7 @@ div.accountInfo
     display: block;
 }
 
-#rightContent a
+.AddLink:visited, .AddLink:link
 {
     color:#fff;
 }
