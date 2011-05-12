@@ -153,16 +153,20 @@ namespace ICM.Dao
 
             var xmlDoc = new XmlDocument();
 
-            var parameters = new NameValueCollection
-            {
-                {"@id", id.ToString()}
-            };
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT xmlContent FROM [Contract] WHERE id = @id", IsolationLevel.ReadUncommitted, parameters))
+            using (var connection = DBManager.GetInstance().GetNewConnection())
             {
-                if (reader.Read())
+                var parameters = new NameValueCollection
+                    {
+                        {"@id", id.ToString()}
+                    };
+
+                using (var reader = DBUtils.ExecuteQuery("SELECT xmlContent FROM [Contract] WHERE id = @id", connection, IsolationLevel.ReadUncommitted, parameters))
                 {
-                    xmlDoc.LoadXml((string)reader["XmlContent"]);
+                    if (reader.Read())
+                    {
+                        xmlDoc.LoadXml((string)reader["XmlContent"]);
+                    }
                 }
             }
 

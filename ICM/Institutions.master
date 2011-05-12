@@ -5,8 +5,10 @@
 
 <asp:Content ID="Menu" runat="server" ContentPlaceHolderID="MainContent">
     <div id="leftContent">
-        <a href="Institutions.aspx">Recherche des institutions</a><br />
-        <a href="AddInstitution.aspx">Ajouter une institution</a><br />
+        <ul>
+            <li><a href="Institutions.aspx">Recherche des institutions</a></li>
+            <li><a href="AddInstitution.aspx">Ajouter une institution</a></li>
+        </ul>
     </div>
     <div id="rightContent">
         <asp:ContentPlaceHolder ID="InstitutionsContent" runat="server"/>

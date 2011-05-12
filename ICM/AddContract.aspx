@@ -7,7 +7,7 @@
     <h2>
         Nouveau contrat
     </h2>
-    <table width="600px">
+    <table width="700px">
         <tr>
             <td>Title : </td>
             <td>
@@ -35,14 +35,29 @@
             <td colspan=2>
                 <fieldset>
                     <legend>Département :</legend>
-                    Institution :<asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected"  AutoPostBack="true"/><br />
-                    Département :<asp:DropDownList ID="DepartmentList" runat="server" />
-                    <asp:Button ID="AddDepartment" runat="server" Text="+" OnClick="AddDepartment_Click" CausesValidation="false" /><br />
-                    Département choisis :<asp:DropDownList ID="DepartmentSelectedList" runat="server" />
-                    <asp:Button ID="DeleteDepartment" runat="server" Text="-" OnClick="DeleteDepartment_Click" CausesValidation="false" />    
-                    <asp:Label ID="DepartmentLabel" runat="server" />
-                    <asp:RequiredFieldValidator ID="RequiredDepartmentValidator" runat="server" ControlToValidate="DepartmentSelectedList" 
-                        InitialValue="" Text="Veuillez choisir un département !" Enabled="false" />
+                    <table>
+                        <tr>
+                            <td>Institution :</td>
+                            <td><asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected"  AutoPostBack="true"/><br /></td>
+                        </tr>
+                        <tr>
+                            <td>Département :</td>
+                            <td>
+                                <asp:DropDownList ID="DepartmentList" runat="server" />
+                                <asp:Button ID="AddDepartment" runat="server" Text="+" OnClick="AddDepartment_Click" CausesValidation="false" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Département choisis :</td>
+                            <td>
+                                <asp:DropDownList ID="DepartmentSelectedList" runat="server" />
+                                <asp:Button ID="DeleteDepartment" runat="server" Text="-" OnClick="DeleteDepartment_Click" CausesValidation="false" />    
+                                <asp:Label ID="DepartmentLabel" runat="server" />
+                                <asp:RequiredFieldValidator ID="RequiredDepartmentValidator" runat="server" ControlToValidate="DepartmentSelectedList" 
+                                    InitialValue="" Text="Veuillez choisir un département !" Enabled="false" />
+                            </td>
+                        </tr>
+                    </table> 
                 </fieldset>
             </td>
         </tr>
@@ -50,14 +65,26 @@
             <td colspan=2>
                 <fieldset>
                     <legend>Contact :</legend>
-                    Personne :<asp:DropDownList ID="PersonList" runat="server" />
-                    Rôle : <asp:DropDownList ID="RoleList" runat="server" />
-                    <asp:Button ID="AddPerson" runat="server" Text="+" OnClick="AddPerson_Click" CausesValidation="false"/>    <br />
-                    Personne choisies :<asp:DropDownList ID="PersonSelectedList" runat="server" />
-                    <asp:Button ID="DeletePerson" runat="server" Text="-" OnClick="DeletePerson_Click" CausesValidation="false" />    
-                    <asp:Label ID="PersonLabel" runat="server" />
-                    <asp:RequiredFieldValidator ID="RequiredPersonValidator" runat="server" ControlToValidate="PersonSelectedList" 
-                    InitialValue="" Text="Veuillez choisir une personne de contact !" Enabled="false" />
+                    <table>
+                        <tr>
+                            <td>Personne :</td>
+                            <td>
+                                <asp:DropDownList ID="PersonList" runat="server" />
+                                Rôle : <asp:DropDownList ID="RoleList" runat="server" />
+                                <asp:Button ID="AddPerson" runat="server" Text="+" OnClick="AddPerson_Click" CausesValidation="false"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Personne choisies :</td>
+                            <td>
+                                <asp:DropDownList ID="PersonSelectedList" runat="server" />
+                                <asp:Button ID="DeletePerson" runat="server" Text="-" OnClick="DeletePerson_Click" CausesValidation="false" />    
+                                <asp:Label ID="PersonLabel" runat="server" />
+                                <asp:RequiredFieldValidator ID="RequiredPersonValidator" runat="server" ControlToValidate="PersonSelectedList" 
+                                InitialValue="" Text="Veuillez choisir une personne de contact !" Enabled="false" />
+                            </td>
+                        </tr>
+                    </table>
                 </fieldset>
             </td>            
         </tr>
@@ -80,7 +107,7 @@
             
         </tr>
         <tr>
-            <td>Fichier binaire :</td>
+            <td>Source pdf :</td>
             <td>
                 <asp:HyperLink ID="downloadFile" NavigateUrl="ContractFile.aspx" Text="Télécharger" Target="_blank" runat="server" />
                 <asp:FileUpload ID="UploadImageFile" runat="server" />
@@ -89,8 +116,8 @@
             </td>
         </tr>
         <tr>
-            <td> </td>
-            <td> 
+            <td></td>
+            <td>
                 <asp:Button runat="server" id="Add" text="Ajouter" onclick="Add_Click"  Visible="false" />
                 <asp:Button runat="server" id="Save" text="Sauvegarder" onclick="Save_Click"  Visible="false" />
             </td>

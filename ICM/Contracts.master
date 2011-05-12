@@ -5,9 +5,11 @@
 
 <asp:Content ID="Menu" runat="server" ContentPlaceHolderID="MainContent">
     <div id="leftContent">
-        <a href="Default.aspx">Recherche des contrats</a><br />
-        <a href="AddContract.aspx">Ajouter un contrat</a><br />
-        <a href="Histo.aspx">Historique</a><br />
+        <ul>
+            <li><a href="Default.aspx">Recherche des contrats</a></li>
+            <li><a href="AddContract.aspx">Ajouter un contrat</a></li>
+            <li><a href="Histo.aspx">Historique</a></li>
+        </ul>
     </div>
     <div id="rightContent">
         <asp:ContentPlaceHolder ID="ContractsContent" runat="server"/>
