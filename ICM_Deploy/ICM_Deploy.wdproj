@@ -10,7 +10,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.30319</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{00000000-0000-0000-0000-000000000000}</ProjectGuid>
+    <ProjectGuid>{246D338F-31CF-4B1D-A385-396D9F0F7D88}</ProjectGuid>
     <SourceWebPhysicalPath>..\ICM</SourceWebPhysicalPath>
     <SourceWebProject>{6CB920E6-B795-4104-9406-9BF719DBD065}|ICM\ICM.csproj</SourceWebProject>
     <SourceWebVirtualPath>/ICM.csproj</SourceWebVirtualPath>

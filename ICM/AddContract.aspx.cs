@@ -323,7 +323,7 @@ namespace ICM
 
             if (Request.QueryString["contract"] == null)
             {
-                var id = new ContractsDAO().AddContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.DocumentElement.OuterXml, "vincent", persons, destination, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+                var id = new ContractsDAO().AddContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.OuterXml, "vincent", persons, destination, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
                 
                 Response.Redirect("ShowContract.aspx?contract=" + id);
             }
@@ -337,10 +337,10 @@ namespace ICM
                     contractFileId = FileID.Text.ToInt();
                 }
 
-                var tr = (int)ViewState["transaction"];
+                var tr = (int) ViewState["transaction"];
 
-                var transaction = (SqlTransaction)Session["transaction" + tr];
-                var connection = (SqlConnection)Session["connection" + tr];
+                var transaction = (SqlTransaction) Session["transaction" + tr];
+                var connection = (SqlConnection) Session["connection" + tr];
 
                 if (transaction == null || connection == null)
                 {
@@ -348,7 +348,7 @@ namespace ICM
                 }
                 else
                 {
-                    new ContractsDAO().SaveContract(transaction, id, TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.DocumentElement.OuterXml, "vincent", persons, destination, contractFileId, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+                    new ContractsDAO().SaveContract(transaction, id, TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.OuterXml, "vincent", persons, destination, contractFileId, fileSize, fileMIMEType, fileBinaryBuffer);
 
                     transaction.Commit();
 
@@ -371,7 +371,7 @@ namespace ICM
             var xmlDoc = new XmlDocument();
 
             // Write down the XML declaration
-            var xmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", null);
+            var xmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", "UTF-16", null);
 
             // Create the root element
             var rootNode = xmlDoc.CreateElement("contract");

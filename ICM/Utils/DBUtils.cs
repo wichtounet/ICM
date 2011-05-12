@@ -56,14 +56,14 @@ namespace ICM.Utils
             ExecuteNonQuery(sql, transaction, parameters);
 
             var getCommand = new SqlCommand("SELECT IDENT_CURRENT(@table) AS ID", transaction.Connection, transaction);
-            getCommand.Parameters.AddWithValue("table", tableName);
+            getCommand.Parameters.AddWithValue("@table", tableName);
 
             int id;
             using (var reader = getCommand.ExecuteReader())
             {
                 reader.Read();
 
-                id = (int) reader["ID"];
+                id = Int32.Parse(reader["ID"].ToString());
             }
 
             return id;
