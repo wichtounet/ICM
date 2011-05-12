@@ -13,12 +13,21 @@ using NLog;
 
 namespace ICM
 {
+    /// <summary>
+    ///  This page enable the users to add or edit a contract. 
+    /// </summary>
+    /// <remarks>Vincent Ischi</remarks>
     public partial class AddContract : Page
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static int transactionId;
 
+        /// <summary>
+        /// Load the contract and all the lists of the page. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void Page_Load(object sender, EventArgs e)
         {
             //In order to not refill the form at postback
@@ -30,6 +39,9 @@ namespace ICM
             }
         }
 
+        /// <summary>
+        /// Load the contract and all lists of the page. 
+        /// </summary>
         private void LoadContract()
         {
             using (var connectionSelect = DBManager.GetInstance().GetNewConnection())
@@ -101,7 +113,7 @@ namespace ICM
         }
 
         /// <summary>
-        /// An institution has been selected
+        /// An institution has been selected, loading of departement's list
         /// </summary>
         /// <param name="sender">The sender of the events</param>
         /// <param name="e">The args of the event</param>
@@ -122,6 +134,11 @@ namespace ICM
             this.Verified(operation, ErrorLabel);
         }
 
+        /// <summary>
+        /// Add a selected person with his role in the second list
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void AddPerson_Click(object sender, EventArgs e)
         {
 
@@ -141,12 +158,22 @@ namespace ICM
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Delete a selected person 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void DeletePerson_Click(object sender, EventArgs e)
         {
             PersonSelectedList.Items.Remove(PersonSelectedList.SelectedItem);
         }
 
+        /// <summary>
+        /// Add a selected department in the second list
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void AddDepartment_Click(object sender, EventArgs e)
         {
             if(isValueInList(DepartmentList.SelectedItem.Value, DepartmentSelectedList))
@@ -163,6 +190,21 @@ namespace ICM
             }
         }
 
+        /// <summary>
+        /// Delete a selected person 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
+        protected void DeleteDepartment_Click(object sender, EventArgs e)
+        {
+            DepartmentSelectedList.Items.Remove(DepartmentSelectedList.SelectedItem);
+        }
+
+        /// <summary>
+        /// Check if value is in a ListControl 
+        /// </summary>
+        /// <param name="p">The value</param>
+        /// <param name="list">The ListControl</param>
         private static bool isValueInList(string p, ListControl list)
         {
             for (var i = 0; i < list.Items.Count; i++)
@@ -176,11 +218,11 @@ namespace ICM
             return false;
         }
 
-        protected void DeleteDepartment_Click(object sender, EventArgs e)
-        {
-            DepartmentSelectedList.Items.Remove(DepartmentSelectedList.SelectedItem);
-        }
-
+        /// <summary>
+        /// Submit the form 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void Add_Click(object sender, EventArgs e)
         {
             EnableValidator();
@@ -193,6 +235,11 @@ namespace ICM
             }
         }
 
+        /// <summary>
+        /// Submit the form 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void Save_Click(object sender, EventArgs e)
         {
             EnableValidator();
@@ -205,6 +252,9 @@ namespace ICM
             }
         }
 
+        /// <summary>
+        /// Enable all Validator of form 
+        /// </summary>
         private void EnableValidator()
         {
             RequiredTitleValidator.Enabled = true;
@@ -217,6 +267,9 @@ namespace ICM
             CustomValidatorUpload.Enabled = true;
         }
 
+        /// <summary>
+        /// Disable all Validator of form 
+        /// </summary>
         private void DisableValidator()
         {
             RequiredTitleValidator.Enabled = false;
@@ -229,6 +282,9 @@ namespace ICM
             CustomValidatorUpload.Enabled = false;
         }
 
+        /// <summary>
+        /// Submit the form 
+        /// </summary>
         private void Submit()
         {
             //File
@@ -293,6 +349,10 @@ namespace ICM
             }
         }
 
+        /// <summary>
+        /// Create a XMLDocument with contract field
+        /// </summary>
+        /// <returns>A XMLDocument</returns>
         private XmlDocument createXML()
         {
             var departmentTab = new int[PersonSelectedList.Items.Count + DepartmentSelectedList.Items.Count];

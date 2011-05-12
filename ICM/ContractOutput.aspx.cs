@@ -11,8 +11,17 @@ using System.Xml.Xsl;
 
 namespace ICM
 {
+    ///<summary>
+    /// This page enable the user to show a page of the contract. 
+    ///</summary>
+    /// <remarks>Vincent Ischi</remarks>
     public partial class ContractOutput : System.Web.UI.Page
     {
+        /// <summary>
+        /// Show the contract description. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Request.QueryString["contract"] != null)
@@ -33,6 +42,11 @@ namespace ICM
             }
         }
 
+        /// <summary>
+        /// Create a HTML page with contract
+        /// </summary>
+        /// <param name="id">ID of contract</param>
+        /// <returns>A new HTML page</returns>
         private string CreateContractOuput(int id)
         {
             XmlDocument xmlDoc = new ContractsDAO().getContractXMLById(id);
@@ -41,6 +55,13 @@ namespace ICM
             return outputHtml;
         }
 
+        /// <summary>
+        /// Convert a XML file to a HTML page with XSLT transformation
+        /// </summary>
+        /// <param name="InputXMLDocument">XML input</param>
+        /// <param name="XSLTFilePath">XSLT file path</param>
+        /// <param name="XSLTArgs">List of XSLT args</param>
+        /// <returns>A HTML page</returns>
         public static string ConvertXML(XmlDocument InputXMLDocument, string XSLTFilePath, XsltArgumentList XSLTArgs)
         {
             System.IO.StringWriter sw = new System.IO.StringWriter();
