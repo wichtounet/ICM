@@ -62,10 +62,10 @@
         </tr>
         <tr>
             <td> &nbsp;</td>
-            <td><asp:Button ID="AddButton" runat="server" Text="Ajouter institution" 
+            <td><asp:Button ID="AddButton" runat="server" Text="Ajouter l'institution" 
                     onclick="AddButton_Click" />
                 <asp:Button ID="EditButton" runat="server" onclick="EditButton_Click" 
-                    Text="Modifier institution" />
+                    Text="Sauvegarder" />
             </td>
         </tr>
         <tr><td></td><td>
@@ -75,7 +75,7 @@
     
      <script type="text/javascript">
          $(function () {
-             $("[id$=ajouterButton]").button();
+             $("[id$=AddButton], [id$=EditButton], a", "#rightContent").button();
          });
 
     </script>

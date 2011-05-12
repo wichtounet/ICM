@@ -40,7 +40,7 @@
                             <td>Institution :</td>
                             <td>
                                 <asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected"  AutoPostBack="true"/>
-                                <a class="AddLink" href='AddInstitution.aspx' target="_blank">Ajouter une nouvelle</a>
+                                <a class="AddLink" href='AddInstitution.aspx' target="_blank">Ajouter</a>
                             </td>
                         </tr>
                         <tr>
@@ -73,7 +73,7 @@
                             <td>Personne :</td>
                             <td>
                                 <asp:DropDownList ID="PersonList" runat="server" />
-                                <a class="AddLink" href='AddPerson.aspx' target="_blank">Ajouter une nouvelle</a>                                
+                                <a class="AddLink" href='AddPerson.aspx' target="_blank">Ajouter</a>                                
                             </td>
                         </tr>
                         <tr>

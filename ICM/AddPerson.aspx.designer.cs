@@ -130,6 +130,15 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.RegularExpressionValidator ValidEmailValidator;
         
         /// <summary>
+        /// Contrôle Refresh.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Refresh;
+        
+        /// <summary>
         /// Contrôle AddButton.
         /// </summary>
         /// <remarks>
