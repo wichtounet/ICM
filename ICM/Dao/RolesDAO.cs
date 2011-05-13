@@ -26,7 +26,7 @@ namespace ICM.Dao
 
             var roles = new List<Role>();
 
-            using (var reader = DBUtils.ExecuteQuery("Select * from [Role]", connection, IsolationLevel.ReadUncommitted, new NameValueCollection()))
+            using (var reader = DBUtils.ExecuteQuery("Select name from [Role]", connection, IsolationLevel.ReadUncommitted, new NameValueCollection()))
             {
                 while (reader.Read())
                 {

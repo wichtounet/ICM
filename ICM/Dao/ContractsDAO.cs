@@ -136,7 +136,8 @@ namespace ICM.Dao
                         {"@id", id.ToString()}
                     };
 
-                    using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [ContractFile] WHERE id = @id", connection, IsolationLevel.ReadUncommitted, parameters))
+                    using (var reader = DBUtils.ExecuteQuery("SELECT fileMIMEType, fileBinaryData FROM [ContractFile] WHERE id = @id", 
+                        connection, IsolationLevel.ReadUncommitted, parameters))
                     {
                         if (reader.Read())
                         {
@@ -176,7 +177,6 @@ namespace ICM.Dao
             Logger.Debug("Get Contract XML of {0}", id.ToString());
 
             var xmlDoc = new XmlDocument();
-
 
             using (var connection = DBManager.GetInstance().GetNewConnection())
             {
@@ -299,7 +299,7 @@ namespace ICM.Dao
         /// <summary>
         /// Add a file in 'ContractFile' table
         /// </summary>
-        /// <param name="transcation">Transaction opened</param>
+        /// <param name="transaction">Transaction opened</param>
         /// <param name="fileSize">Size of file upload of contract</param>
         /// <param name="fileMIMEType">Type of file upload of contract</param>
         /// <param name="fileBinaryBuffer">Buffer of file upload of contract</param>

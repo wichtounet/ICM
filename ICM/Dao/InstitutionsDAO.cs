@@ -114,7 +114,7 @@ namespace ICM.Dao
                 {"@id", id.ToString()},
             };
 
-            using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution] WHERE id = @id", transaction, parameters))
+            using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT id, name, description, city, interest, languageName, countryName, archived FROM [Institution] WHERE id = @id", transaction, parameters))
             {
                 if (institutionReader.Read())
                 {
@@ -165,7 +165,7 @@ namespace ICM.Dao
 
             var transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
-            using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution] WHERE id = @id", transaction, parameters))
+            using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT id, name, description, city, interest, languageName, countryName, archived FROM [Institution] WHERE id = @id", transaction, parameters))
             {
                 if (institutionReader.Read())
                 {
@@ -282,7 +282,7 @@ namespace ICM.Dao
             Logger.Debug("Retrieving all the institutions from database");
 
             //Instantiate institutions without department list
-            using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Institution]", transaction))
+            using (var institutionReader = DBUtils.ExecuteTransactionQuery("SELECT id, name, description, city, interest, languageName, countryName, archived FROM [Institution]", transaction))
             {
                 while (institutionReader.Read())
                 {
@@ -384,8 +384,7 @@ namespace ICM.Dao
                 {"@institutionId", institutionId.ToString()}
             };
 
-            using (var departmentReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Department] WHERE institutionId = @institutionId and archived=0", transaction, parameters))
-
+            using (var departmentReader = DBUtils.ExecuteTransactionQuery("SELECT id, name FROM [Department] WHERE institutionId = @institutionId and archived=0", transaction, parameters))
             {
                 //Fill departments list
                 while (departmentReader.Read())
@@ -420,7 +419,7 @@ namespace ICM.Dao
                 {"@countryName", countryName}
             };
 
-            using (var countryReader = DBUtils.ExecuteTransactionQuery("SELECT * FROM [Country] WHERE name = @countryName", transaction, parameters))
+            using (var countryReader = DBUtils.ExecuteTransactionQuery("SELECT continentName FROM [Country] WHERE name = @countryName", transaction, parameters))
             {
                 countryReader.Read();
                 continentName = (string)countryReader["continentName"];
@@ -453,7 +452,7 @@ namespace ICM.Dao
             };
 
             // Create query string
-            var query =  "SELECT * FROM [Institution] WHERE name LIKE(@name) AND languageName LIKE(@languageName)";
+            var query = "SELECT id, name, description, city, interest, languageName, countryName, archived FROM [Institution] WHERE name LIKE(@name) AND languageName LIKE(@languageName)";
             
             if (!archived)
             {
@@ -537,14 +536,17 @@ namespace ICM.Dao
             {
                 while (readerDestination.Read())
                 {
-                    Department d = new Department();
-                    d.Id = (int)readerDestination["depId"];
-                    d.Name = (string)readerDestination["depName"];
-                    d.InstitutionName = (string)readerDestination["insName"];
-                    d.InstitutionId = (int)readerDestination["institutionId"];
-                    d.InstitutionCity = (string)readerDestination["city"];
-                    d.InstitutionCountry = (string)readerDestination["countryName"];
-                    d.InstitutionLanguage = (string)readerDestination["languageName"];
+                    var d = new Department
+                    {
+                        Id = (int) readerDestination["depId"],
+                        Name = (string) readerDestination["depName"],
+                        InstitutionName = (string) readerDestination["insName"],
+                        InstitutionId = (int) readerDestination["institutionId"],
+                        InstitutionCity = (string) readerDestination["city"],
+                        InstitutionCountry = (string) readerDestination["countryName"],
+                        InstitutionLanguage = (string) readerDestination["languageName"]
+                    };
+
                     departments.Add(d);
                 }
             }
