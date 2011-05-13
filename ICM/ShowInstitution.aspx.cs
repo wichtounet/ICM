@@ -56,6 +56,11 @@ namespace ICM
             this.Verified(operation, ErrorLabel);
         }
 
+        /// <summary>
+        /// Archive the current institution. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void ArchiveButton_Click(object sender, EventArgs e)
         {
             Extensions.SqlOperation operation = () =>
@@ -69,6 +74,11 @@ namespace ICM
             this.Verified(operation, ErrorLabel);
         }
 
+        /// <summary>
+        /// Edit the current institution. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void EditButton_Click(object sender, EventArgs e)
         {
             var institutionId = Request.QueryString["institution"].ToInt();

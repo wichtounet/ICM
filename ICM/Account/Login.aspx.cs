@@ -10,11 +10,21 @@ namespace ICM.Account
     ///</summary>
     public partial class Login : System.Web.UI.Page
     {
+        /// <summary>
+        /// Load the page. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void Page_Load(object sender, EventArgs e)
         {
             //Nothing to do here
         }
 
+        /// <summary>
+        /// Login to the page. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void LoginButton_Click(object sender, EventArgs e)
         {
             Extensions.SqlOperation operation = () =>
