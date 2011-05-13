@@ -68,27 +68,46 @@
             set;
         }
 
+        ///<summary>
+        /// The "FirstName Name" name couple of the person. 
+        ///</summary>
         public string NameFirstName
         {
             get { return FirstName + " " + Name; }
         }
 
+        ///<summary>
+        /// The role of the person.
+        ///</summary>
         public string Role
         {
             get;
             set;
         }
 
+        ///<summary>
+        /// The "Role:NameFirstName" couple of the person. 
+        ///</summary>
         public string RoleFirstName
         {
             get { return Role +": " + NameFirstName; }
         }
 
+        ///<summary>
+        /// The "Id;Role" couple of the person. 
+        ///</summary>
         public string RoleId
         {
             get { return Id + ";" + Role; }
         }
 
+        /// <summary>
+        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
         public override string ToString()
         {
             return FirstName + " " + Name;

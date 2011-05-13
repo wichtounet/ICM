@@ -45,15 +45,16 @@ namespace ICM.Dao
         /// Get a contract by an ID with a specify transaction already opened
         /// </summary>
         /// <param name="id">ID of contract</param>
+        /// <param name="transaction">The transaction to use</param>
         /// <returns>The contract with this ID</returns>
         public Contract GetContractById(int id, SqlTransaction transaction)
         {
             var contracts = new List<Contract>();
 
             var parameters = new NameValueCollection
-           {
-               {"@id", id.ToString()},
-           };
+            {
+                {"@id", id.ToString()},
+            };
 
             var c = new Contract();
             var persons = new List<Person>();
@@ -137,6 +138,7 @@ namespace ICM.Dao
                     };
 
                     using (var reader = DBUtils.ExecuteQuery("SELECT fileMIMEType,fileBinaryData FROM [ContractFile] WHERE id = @id", connection, IsolationLevel.ReadUncommitted, parameters))
+                        connection, IsolationLevel.ReadUncommitted, parameters))
                     {
                         if (reader.Read())
                         {
@@ -176,7 +178,6 @@ namespace ICM.Dao
             Logger.Debug("Get Contract XML of {0}", id.ToString());
 
             var xmlDoc = new XmlDocument();
-
 
             using (var connection = DBManager.GetInstance().GetNewConnection())
             {
@@ -299,7 +300,7 @@ namespace ICM.Dao
         /// <summary>
         /// Add a file in 'ContractFile' table
         /// </summary>
-        /// <param name="transcation">Transaction opened</param>
+        /// <param name="transaction">Transaction opened</param>
         /// <param name="fileSize">Size of file upload of contract</param>
         /// <param name="fileMIMEType">Type of file upload of contract</param>
         /// <param name="fileBinaryBuffer">Buffer of file upload of contract</param>
@@ -346,6 +347,7 @@ namespace ICM.Dao
         /// <param name="userName">UserName who create the contract</param>
         /// <param name="persons">List of contacts of contract</param>
         /// <param name="destinations">List of destination (department) of contract</param>
+        /// <param name="contractFileId">The id of the contract file</param>
         /// <param name="fileSize">Size of file upload of contract</param>
         /// <param name="fileMIMEType">Type of file upload of contract</param>
         /// <param name="fileBinaryBuffer">Buffer of file upload of contract</param>
@@ -396,7 +398,7 @@ namespace ICM.Dao
         /// Update a file in 'ContractFile' table
         /// </summary>
         /// <param name="contractFileId">id of file in table</param>
-        /// <param name="transcation">Transaction opened</param>
+        /// <param name="transaction">Transaction opened</param>
         /// <param name="fileSize">Size of file upload of contract</param>
         /// <param name="fileMIMEType">Type of file upload of contract</param>
         /// <param name="fileBinaryBuffer">Buffer of file upload of contract</param>

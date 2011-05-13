@@ -7,45 +7,58 @@ using ICM.Utils;
 
 namespace ICM
 {
+    ///<summary>
+    /// Enable the user to search for institutions. 
+    ///</summary>
     public partial class Institutions : System.Web.UI.Page
     {
+        /// <summary>
+        /// Load the lists
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (IsPostBack)
+            {
                 return;
+            }
 
             Extensions.SqlOperation operation = () =>
             {
                 //Fill language list
                 var languages = new LanguagesDAO().GetAllLanguages();
-                languages.Insert(0, new Language { Name = "" });
-                LanguagesList.DataSource = languages;
-                LanguagesList.DataBind();
+                LanguagesList.DataBindWithEmptyElement(languages, "Name", "Name");
 
-                    //Fill continent list
+                //Fill continent list
                 var continents = new CountriesDAO().GetAllContinents();
-                continents.Insert(0, new Continent { Name = "" });
-                ContinentsList.DataSource = continents;
-                ContinentsList.DataBind();
+                ContinentsList.DataBindWithEmptyElement(continents, "Name", "Name");
             };
 
             this.Verified(operation, ErrorLabel);
         }
 
+        /// <summary>
+        /// A continent has been selected
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void ContinentsList_SelectedIndexChanged(object sender, EventArgs e)
         {
             Extensions.SqlOperation operation = () =>
             {
-                var countriesDAO = new CountriesDAO();
-                var countries = countriesDAO.GetCountries(new Continent { Name = ContinentsList.SelectedValue });
-                countries.Insert(0, new Country { Name = "" });
-                CountriesList.DataSource = countries;
-                CountriesList.DataBind();
+                var countries = new CountriesDAO().GetCountries(new Continent { Name = ContinentsList.SelectedValue });
+                CountriesList.DataBindWithEmptyElement(countries, "Name", "Name");
             };
 
             this.Verified(operation, ErrorLabel);
         }
 
+        /// <summary>
+        /// Search for institutions. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void SearchButton_Click(object sender, EventArgs e)
         {
             Extensions.SqlOperation operation = () =>
@@ -65,6 +78,11 @@ namespace ICM
             this.Verified(operation, ErrorLabel);
         }
 
+        /// <summary>
+        /// Archive the selected institution. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void InstitutionArchiving(object sender, ListViewDeleteEventArgs e)
         {
             Extensions.SqlOperation operation = () =>

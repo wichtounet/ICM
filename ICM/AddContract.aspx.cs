@@ -345,7 +345,7 @@ namespace ICM
 
             if (Request.QueryString["contract"] == null)
             {
-                var id = new ContractsDAO().AddContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.OuterXml, "vincent", persons, destination, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+                var id = new ContractsDAO().AddContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.OuterXml, (string) Session["userLogin"], persons, destination, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
                 
                 Response.Redirect("ShowContract.aspx?contract=" + id);
             }
@@ -370,7 +370,7 @@ namespace ICM
                 }
                 else
                 {
-                    new ContractsDAO().SaveContract(transaction, id, TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.OuterXml, "vincent", persons, destination, contractFileId, fileSize, fileMIMEType, fileBinaryBuffer);
+                    new ContractsDAO().SaveContract(transaction, id, TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.OuterXml, (string)Session["userLogin"], persons, destination, contractFileId, fileSize, fileMIMEType, fileBinaryBuffer);
 
                     transaction.Commit();
 

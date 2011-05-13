@@ -27,7 +27,7 @@ namespace ICM.Dao
 
             var languages = new List<Language>();
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Language]", connection, IsolationLevel.ReadUncommitted, new NameValueCollection()))
+            using (var reader = DBUtils.ExecuteQuery("SELECT name FROM [Language]", connection, IsolationLevel.ReadUncommitted, new NameValueCollection()))
             {
                 while (reader.Read())
                 {

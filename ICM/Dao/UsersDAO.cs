@@ -25,7 +25,7 @@ namespace ICM.Dao
 
             using(var connection = DBManager.GetInstance().GetNewConnection())
             {
-                using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [User]", connection, System.Data.IsolationLevel.ReadUncommitted, new NameValueCollection()))
+                using (var reader = DBUtils.ExecuteQuery("SELECT login, admin, password FROM [User]", connection, System.Data.IsolationLevel.ReadUncommitted, new NameValueCollection()))
                 {
                     while (reader.Read())
                     {

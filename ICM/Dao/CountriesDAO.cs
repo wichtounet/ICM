@@ -27,7 +27,7 @@ namespace ICM.Dao
 
             var connection = DBManager.GetInstance().GetNewConnection();
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Continent]", connection, IsolationLevel.ReadUncommitted, new NameValueCollection()))
+            using (var reader = DBUtils.ExecuteQuery("SELECT name FROM [Continent]", connection, IsolationLevel.ReadUncommitted, new NameValueCollection()))
             {
                 while (reader.Read())
                 {
@@ -60,7 +60,7 @@ namespace ICM.Dao
                 {"@continent", continent.Name}
             };
 
-            using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [Country] WHERE continentName = @continent", connection, IsolationLevel.ReadUncommitted, parameters))
+            using (var reader = DBUtils.ExecuteQuery("SELECT name FROM [Country] WHERE continentName = @continent", connection, IsolationLevel.ReadUncommitted, parameters))
             {
                 while (reader.Read())
                 {

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading;
@@ -12,10 +11,18 @@ using ICM.Utils;
 
 namespace ICM
 {
+    ///<summary>
+    /// Enable the user to save or add an institution. 
+    ///</summary>
     public partial class AddInstitution : Page
     {
         private static int transactionId;
 
+        /// <summary>
+        /// Load the page, fill the lists and load the informations about the instituion. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void Page_Load(object sender, EventArgs e)
         {
             DepartmentLabel.Visible = false;
@@ -91,7 +98,11 @@ namespace ICM
             this.Verified(operation, ErrorLabel);
         }
 
-        //Update CountryList contents
+        /// <summary>
+        /// A continent has been selected
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void ContinentList_SelectedIndexChanged(object sender, EventArgs e)
         {
             Extensions.SqlOperation operation = () =>
@@ -104,6 +115,11 @@ namespace ICM
             this.Verified(operation, ErrorLabel);
         }
 
+        /// <summary>
+        /// Add the institution. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void AddButton_Click(object sender, EventArgs e)
         {
             Extensions.SqlOperation operation = () =>
@@ -131,6 +147,11 @@ namespace ICM
             this.Verified(operation, ErrorLabel);
         }
 
+        /// <summary>
+        /// Add a department to the institution. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void AddDepartmentButton_Click(object sender, EventArgs e)
         {
             if (DepartmentText.Text.Equals(""))
@@ -142,11 +163,21 @@ namespace ICM
             DepartmentText.Text = "";
         }
 
+        /// <summary>
+        /// Remove the selected department from the institution
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void RemoveDepartmentButton_Click(object sender, EventArgs e)
         {
             DepartmentList.Items.Remove(DepartmentList.SelectedItem);
         }
 
+        /// <summary>
+        /// Save the changes. 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
         protected void EditButton_Click(object sender, EventArgs e)
         {
             Extensions.SqlOperation operation = () =>
@@ -154,7 +185,6 @@ namespace ICM
                 var tr = (int) ViewState["transaction"];
                 var transaction = (SqlTransaction) Session["transaction" + tr];
                 var connection = (SqlConnection) Session["connection" + tr];
-
 
                 var institutionId = Request.QueryString["institution"].ToInt();
                 var institutionsDAO = new InstitutionsDAO();
