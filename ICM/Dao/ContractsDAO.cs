@@ -136,7 +136,7 @@ namespace ICM.Dao
                         {"@id", id.ToString()}
                     };
 
-                    using (var reader = DBUtils.ExecuteQuery("SELECT * FROM [ContractFile] WHERE id = @id", connection, IsolationLevel.ReadUncommitted, parameters))
+                    using (var reader = DBUtils.ExecuteQuery("SELECT fileMIMEType,fileBinaryData FROM [ContractFile] WHERE id = @id", connection, IsolationLevel.ReadUncommitted, parameters))
                     {
                         if (reader.Read())
                         {

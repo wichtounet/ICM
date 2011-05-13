@@ -211,15 +211,6 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.Label StartValue;
         
         /// <summary>
-        /// Contrôle RequiredStartValidator.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredStartValidator;
-        
-        /// <summary>
         /// Contrôle EndDate.
         /// </summary>
         /// <remarks>
@@ -236,15 +227,6 @@ namespace ICM {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label EndValue;
-        
-        /// <summary>
-        /// Contrôle RequiredEndValidator.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredEndValidator;
         
         /// <summary>
         /// Contrôle CompareDate.
