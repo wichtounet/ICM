@@ -38,7 +38,10 @@
                     <table>
                         <tr>
                             <td>Institution :</td>
-                            <td><asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected"  AutoPostBack="true"/><br /></td>
+                            <td>
+                                <asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected"  AutoPostBack="true"/>
+                                <a class="AddLink" href='AddInstitution.aspx' target="_blank">Ajouter</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Département :</td>
@@ -70,7 +73,13 @@
                             <td>Personne :</td>
                             <td>
                                 <asp:DropDownList ID="PersonList" runat="server" />
-                                Rôle : <asp:DropDownList ID="RoleList" runat="server" />
+                                <a class="AddLink" href='AddPerson.aspx' target="_blank">Ajouter</a>                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Rôle : </td>
+                            <td>
+                                <asp:DropDownList ID="RoleList" runat="server" />
                                 <asp:Button ID="AddPerson" runat="server" Text="+" OnClick="AddPerson_Click" CausesValidation="false"/>
                             </td>
                         </tr>
@@ -109,7 +118,7 @@
         <tr>
             <td>Source pdf :</td>
             <td>
-                <asp:HyperLink ID="downloadFile" NavigateUrl="ContractFile.aspx" Text="Télécharger" Target="_blank" runat="server" />
+                <asp:HyperLink class="AddLink" ID="downloadFile" NavigateUrl="ContractFile.aspx" Text="Télécharger" Target="_blank" runat="server" />
                 <asp:FileUpload ID="UploadImageFile" runat="server" />
                 <asp:CustomValidator ID="CustomValidatorUpload" runat="server" 
                     ClientValidationFunction="ValidateFileUpload" ErrorMessage="Veuillez choisir un fichier .pdf" Enabled="false" />
@@ -118,6 +127,7 @@
         <tr>
             <td></td>
             <td>
+                <asp:Button ID="Refresh" runat="server" Text="Rafraichir" OnClick="Refresh_Click" CausesValidation="false"/>
                 <asp:Button runat="server" id="Add" text="Ajouter" onclick="Add_Click"  Visible="false" />
                 <asp:Button runat="server" id="Save" text="Sauvegarder" onclick="Save_Click"  Visible="false" />
             </td>
@@ -157,8 +167,7 @@
              //$("[id$=StartDate]").datepicker("setDate", new Date("2011-11-22"));
          });
          $(function () {
-             $("[id$=Add]").button();
-             $("[id$=Save]").button();
+             $("[id$=Refresh], [id$=MorePerson],[id$=MoreInstitution] ,[id$=Save] , [id$=Add], a", "#rightContent").button();
          });
 
     </script>

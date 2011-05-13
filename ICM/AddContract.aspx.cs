@@ -253,6 +253,16 @@ namespace ICM
         }
 
         /// <summary>
+        /// Refresh all Lists 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
+        protected void Refresh_Click(object sender, EventArgs e)
+        {
+            LoadContract();
+        }
+
+        /// <summary>
         /// Enable all Validator of form 
         /// </summary>
         private void EnableValidator()

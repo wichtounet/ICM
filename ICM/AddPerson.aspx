@@ -17,7 +17,10 @@
         </tr>
         <tr>
             <td>Institution : </td>
-            <td><asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected" AutoPostBack="true" /></td>
+            <td>
+                <asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected" AutoPostBack="true" />
+                <a class="AddLink" href='AddInstitution.aspx' target="_blank">Ajouter</a>
+            </td>
         </tr>
         <tr>
             <td>Département : </td>
@@ -42,6 +45,7 @@
         <tr>
             <td></td>
             <td>
+                <asp:Button ID="Refresh" runat="server" Text="Rafraichir" OnClick="Refresh_Click" CausesValidation="false"/>
                 <asp:Button ID="AddButton" runat="server" Text="Ajouter" OnClick="CreatePerson" Visible="false" />
                 <asp:Button ID="SaveButton" runat="server" Text="Sauvegarder" OnClick="SavePerson" Visible="false" />
             </td>
@@ -52,8 +56,7 @@
 
      <script type="text/javascript">
          $(function () {
-             $("[id$=AddButton]").button();
-             $("[id$=SaveButton]").button();
+             $("[id$=AddButton], [id$=SaveButton], [id$=Refresh], a", "#rightContent").button();
          });
     </script>
 </asp:Content>

@@ -121,9 +121,9 @@ namespace ICM.Utils
             {
                 label.Visible = true;
 
-                if(exception.Message.StartsWith("Timeout expired."))
+                if (exception.Message.StartsWith("Timeout expired.") || exception.Message.StartsWith("Expiration du Timeout"))
                 {
-                    label.Text = "Cet objet est verrouillé par un autre utilisateur, vous ne pourrez le modifier que lorsqu'il aura terminé. ";
+                    label.Text = "Cet objet est verrouillé par un autre utilisateur, <BR />vous ne pourrez le modifier que lorsqu'il aura terminé. ";
 
                     LogManager.GetLogger(page.GetType().FullName).Debug("Concurrency modification exception");
                     LogManager.GetLogger(page.GetType().FullName).DebugException("SQL Exception on a page : ", exception);

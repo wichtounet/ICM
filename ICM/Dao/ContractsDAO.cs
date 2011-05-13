@@ -448,19 +448,13 @@ namespace ICM.Dao
         {
             var contracts = new List<Contract>();
 
-            var query = "SELECT C.id, C.title, C.start, C.[end], C.fileId, C.xmlContent, C.userLogin, C.typeContractName, C.archived, D.department, P.institutionId FROM [Contract] C" +
-                         " LEFT OUTER JOIN Association A" +
-                         " ON A.contractId = C.id"+
-                         " LEFT OUTER JOIN Destination D" +
-                         " ON D.contract = C.id" +
-                         " LEFT OUTER JOIN Department P" +
-                         " ON P.id = D.department" +
+            var query = "SELECT DISTINCT C.id, C.title FROM [Contract] C"+
                          " WHERE C.title LIKE(@title) AND C.typeContractName LIKE(@contractType)";
 
 
             if (person != -1)
             {
-                query += " AND A.person = @person";
+                query += " AND C.id IN (SELECT DISTINCT contractId FROM [Association] WHERE person = @person AND contractId = C.id)";
             }
             if (year > 0)
             {
@@ -469,11 +463,11 @@ namespace ICM.Dao
             
             if (department != -1)
             {
-                query += " AND D.department = @department";
+                query += " AND C.id IN (SELECT DISTINCT contract FROM [Destination] WHERE department =  @department AND contract = C.id)";
             }
             else if (institution != -1)
             {
-                query += " AND P.institutionId = @institution";
+                query += " AND C.id IN (SELECT DISTINCT contract FROM [Destination] WHERE department IN (SELECT DISTINCT id FROM [department] WHERE institutionId = @institution)) ";
             } 
             if (archived)
             {
@@ -496,7 +490,10 @@ namespace ICM.Dao
                 {
                     while (reader.Read())
                     {
-                        contracts.Add(BindContract(reader));
+                        Contract c = new Contract();
+                        c.Id = (int)reader["id"];
+                        c.Title = (string)reader["title"];
+                        contracts.Add(c);
                     }
                 }
             }

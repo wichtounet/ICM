@@ -351,3 +351,8 @@ div.accountInfo
     text-decoration: none;  
     display: block;
 }
+
+.AddLink:visited, .AddLink:link
+{
+    color:#fff;
+}

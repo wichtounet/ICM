@@ -105,6 +105,16 @@ namespace ICM
         }
 
         /// <summary>
+        /// Refresh all Lists 
+        /// </summary>
+        /// <param name="sender">The sender of the events</param>
+        /// <param name="e">The args of the event</param>
+        protected void Refresh_Click(object sender, EventArgs e)
+        {
+            LoadLists();
+        }
+
+        /// <summary>
         /// Create a person with the given informations. 
         /// </summary>
         /// <param name="sender">The sender of the events</param>
