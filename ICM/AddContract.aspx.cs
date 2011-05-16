@@ -381,7 +381,6 @@ namespace ICM
             rootNode.SetAttribute("startDate", StartDate.Text);
             rootNode.SetAttribute("endDate", EndDate.Text);
             rootNode.SetAttribute("contractType", ContractTypeList.SelectedValue);
-            //rootNode.SetAttribute("destinationDepartment", "");
             rootNode.SetAttribute("authorLogin", "");
 
             xmlDoc.InsertBefore(xmlDeclaration, xmlDoc.DocumentElement);
@@ -440,8 +439,6 @@ namespace ICM
                     departmentsNode.AppendChild(departmentNode);
                 }
             }
-
-            xmlDoc.Save(Server.MapPath("contract.xml"));
 
             return xmlDoc;
         }
