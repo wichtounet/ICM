@@ -1,9 +1,6 @@
-﻿<%@ Page Title="Log In" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
-    CodeBehind="Login.aspx.cs" Inherits="ICM.Account.Login" %>
+﻿<%@ Page Title="Connection" Language="C#" MasterPageFile="~/Contracts.master" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="ICM.Account.Login" %>
 
-<asp:Content ID="HeadContentLogin" runat="server" ContentPlaceHolderID="HeadContent">
-</asp:Content>
-<asp:Content ID="MainContentLogin" runat="server" ContentPlaceHolderID="MainContent">
+<asp:Content ID="Content1" ContentPlaceHolderID="ContractsContent" runat="server">
     <h2>
         Log In
     </h2>
