@@ -71,7 +71,7 @@ namespace ICM
 
                     TitleText.Text = contract.Title;
                     StartValue.Text = contract.Start.ToString("yyyy-MM-dd");
-                    StartValue.Text = contract.End.ToString("yyyy-MM-dd");
+                    EndValue.Text = contract.End.ToString("yyyy-MM-dd");
 
                     if (contract.departments.Count != 0)
                     {
@@ -111,6 +111,8 @@ namespace ICM
                 }
             }
         }
+
+
 
         /// <summary>
         /// An institution has been selected, loading of departement's list
@@ -157,6 +159,30 @@ namespace ICM
                     PersonLabel.Text = "Veuillez choisir une personne ET un rôle";
                 }
             }
+        }
+        public string getStartDate()
+        {
+            if (Request.QueryString["contract"] != null)
+            {
+                return StartValue.Text;
+            }
+            else
+            {
+                return "";
+            }
+            
+        }
+        public string getEndDate()
+        {
+            if (Request.QueryString["contract"] != null)
+            {
+                return EndValue.Text;
+            }
+            else
+            {
+                return "";
+            }
+
         }
 
         /// <summary>
@@ -269,8 +295,6 @@ namespace ICM
         {
             RequiredTitleValidator.Enabled = true;
             RequiredTypeValidator.Enabled = true;
-            RequiredStartValidator.Enabled = true;
-            RequiredEndValidator.Enabled = true;
             CompareDate.Enabled = true;
             RequiredDepartmentValidator.Enabled = true;
             RequiredPersonValidator.Enabled = true;
@@ -284,8 +308,6 @@ namespace ICM
         {
             RequiredTitleValidator.Enabled = false;
             RequiredTypeValidator.Enabled = false;
-            RequiredStartValidator.Enabled = false;
-            RequiredEndValidator.Enabled = false;
             CompareDate.Enabled = false;
             RequiredDepartmentValidator.Enabled = false;
             RequiredPersonValidator.Enabled = false;

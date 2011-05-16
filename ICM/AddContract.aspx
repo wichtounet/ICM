@@ -40,7 +40,7 @@
                             <td>Institution :</td>
                             <td>
                                 <asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected"  AutoPostBack="true"/>
-                                <a class="AddLink" href='AddInstitution.aspx' target="_blank">Ajouter</a>
+                                Pas dans la liste? <a class="AddLink" href='AddInstitution.aspx' target="_blank">Ajouter</a>
                             </td>
                         </tr>
                         <tr>
@@ -73,7 +73,7 @@
                             <td>Personne :</td>
                             <td>
                                 <asp:DropDownList ID="PersonList" runat="server" />
-                                <a class="AddLink" href='AddPerson.aspx' target="_blank">Ajouter</a>                                
+                                Pas dans la liste? <a class="AddLink" href='AddPerson.aspx' target="_blank">Ajouter</a>                                
                             </td>
                         </tr>
                         <tr>
@@ -101,7 +101,6 @@
             <td>Date début : </td>
             <td>
                 <asp:TextBox ID="StartDate" Columns="15" runat="server"  CausesValidation="false"/><asp:Label ID="StartValue" Visible="false" runat="server" Text="" />
-                <asp:RequiredFieldValidator runat="server" id="RequiredStartValidator" ControlToValidate="StartDate" errormessage="Veuillez entrer une date !" Enabled="false"/>
             </td>
             
         </tr>
@@ -109,7 +108,6 @@
             <td>Date fin : </td>
             <td>
                 <asp:TextBox ID="EndDate" Columns="15" runat="server" /><asp:Label ID="EndValue" Visible="false" runat="server" Text=""/>
-                <asp:RequiredFieldValidator runat="server" id="RequiredEndValidator" ControlToValidate="EndDate" errormessage="Veuillez entrer une date !" Enabled="false" />
                 <asp:CompareValidator ID="CompareDate" runat="server" ControlToCompare="StartDate"
                     ControlToValidate="EndDate" ErrorMessage="Veuillez entrer une date supérieure à la date de début !" Operator="GreaterThan" Type="Date" Enabled="false" />
             </td>
@@ -137,8 +135,7 @@
     <asp:Label ForeColor="Red" ID="ErrorLabel" Visible="false" runat="server" />
     
      <script type="text/javascript">
-         //alert("la:"+document.getElementById('StartValue').InnerHTML);
-
+         
          function ValidateFileUpload(Source, args) {
              var fuData = document.getElementById('<%= UploadImageFile.ClientID %>');
              var FileUploadPath = fuData.value;
@@ -164,10 +161,15 @@
              $("[id$=StartDate]").datepicker("option", "dateFormat", "yy-mm-dd");
              $("[id$=EndDate]").datepicker();
              $("[id$=EndDate]").datepicker("option", "dateFormat", "yy-mm-dd");
-             //$("[id$=StartDate]").datepicker("setDate", new Date("2011-11-22"));
+             $("[id$=StartDate]").datepicker("setDate", new Date("<%= getStartDate() %>"));
+             $("[id$=EndDate]").datepicker("setDate", new Date("<%= getEndDate() %>"));
          });
          $(function () {
              $("[id$=Refresh], [id$=MorePerson],[id$=MoreInstitution] ,[id$=Save] , [id$=Add], a", "#rightContent").button();
+         });
+
+         $(document).ready(function () {
+             LoadDateControls();
          });
 
     </script>
