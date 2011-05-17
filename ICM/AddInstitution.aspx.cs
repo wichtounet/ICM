@@ -45,6 +45,7 @@ namespace ICM
                 //Add institution
                 if (Request.QueryString["institution"] == null)
                 {
+                    EditAddLabel.Text = "Nouvelle";
                     EditButton.Visible = false;
                     AddButton.Visible = true;
 
@@ -56,6 +57,7 @@ namespace ICM
                 //Edit institution
                 else
                 {
+                    EditAddLabel.Text = "Modification";
                     var institutionId = Request.QueryString["institution"].ToInt();
 
                     var connection = DBManager.GetInstance().GetNewConnection();
