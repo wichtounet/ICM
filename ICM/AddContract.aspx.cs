@@ -69,6 +69,7 @@ namespace ICM
 
                     var contract = new ContractsDAO().GetContractById(id, transaction);
 
+                    EditAddLabel.Text = "Modification";
                     TitleText.Text = contract.Title;
                     StartValue.Text = contract.Start.ToString("yyyy-MM-dd");
                     EndValue.Text = contract.End.ToString("yyyy-MM-dd");
@@ -108,6 +109,7 @@ namespace ICM
                 {
                     Add.Visible = true;
                     downloadFile.Visible = false;
+                    EditAddLabel.Text = "Nouveau";
                 }
             }
         }
