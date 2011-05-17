@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionsTest.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="PersonsDAOTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

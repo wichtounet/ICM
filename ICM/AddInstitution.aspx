@@ -1,7 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Institutions.master" AutoEventWireup="true" CodeBehind="AddInstitution.aspx.cs" Inherits="ICM.AddInstitution" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="InstitutionsContent" runat="server">
     <h2>
-        Nouvelle institution
+        &nbsp;<asp:Label ID="EditAddLabel" runat="server" Text="Nouvelle"></asp:Label>
+&nbsp;institution
     </h2>
     <table>
         <tr>
@@ -13,7 +14,9 @@
         </tr>
         <tr>
             <td>Description : </td>
-            <td><asp:TextBox ID="DescriptionText" Columns="15" runat="server" /></td>
+            <td>
+                <asp:TextBox ID="DescriptionText" Columns="15" runat="server" />
+            </td>
         </tr>
         <tr>
             <td>Ville : </td>
