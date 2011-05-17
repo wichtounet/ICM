@@ -45,7 +45,7 @@ namespace ICM
                         Session["connection" + tr] = connection;
                         Session["transaction" + tr] = transaction;
 
-                        ViewState["transaction"] = tr;
+                        ViewState["transaction"] = tr; 
 
                         var person = new PersonsDAO().GetPersonByID(id, transaction);
 

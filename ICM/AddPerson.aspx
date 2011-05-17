@@ -10,7 +10,7 @@
             <td><asp:TextBox ID="NameTextBox" Columns="15" runat="server" /></td>
             <td><asp:RequiredFieldValidator runat="server" id="RequiredNameValidator" ControlToValidate="NameTextBox" errormessage="Veuillez entrer un nom !" /></td>
         </tr>
-        <tr>
+        <tr> 
             <td>Prénom : </td>
             <td><asp:TextBox ID="FirstNameTextBox" Columns="15" runat="server" /></td>
             <td><asp:RequiredFieldValidator runat="server" ID="RequiredFirstNameValidator" ControlToValidate="FirstNameTextBox" errormessage="Veuillez entrer un prénom !" /></td>
