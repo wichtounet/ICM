@@ -470,9 +470,9 @@ namespace ICM.Dao
             {
                 query += " AND C.id IN (SELECT DISTINCT contract FROM [Destination] WHERE department IN (SELECT DISTINCT id FROM [department] WHERE institutionId = @institution)) ";
             } 
-            if (archived)
+            if (!archived)
             {
-                query += " AND archived = 1";
+                query += " AND C.archived = 0";
             }
 
             var parameters = new NameValueCollection

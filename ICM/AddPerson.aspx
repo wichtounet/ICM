@@ -19,7 +19,9 @@
             <td>Institution : </td>
             <td>
                 <asp:DropDownList ID="InstitutionList" runat="server" OnSelectedIndexChanged="InstitutionSelected" AutoPostBack="true" />
-                <a class="AddLink" href='AddInstitution.aspx' target="_blank">Ajouter</a>
+            </td>
+            <td>
+                Pas dans la liste? <a class="AddLink" href='AddInstitution.aspx' target="_blank">Ajouter</a>
             </td>
         </tr>
         <tr>

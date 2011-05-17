@@ -43,15 +43,6 @@
                         <asp:PlaceHolder ID="itemPlaceholder" runat="server" />
                     </ul>
                 </p>
-
-                <p>
-                    Page:
-                    <asp:DataPager ID="SaisieDataPager" runat="server" PageSize="5">
-                        <Fields>
-                            <asp:NumericPagerField ButtonCount="5" />
-                        </Fields>
-                    </asp:DataPager>
-                </p>
             </LayoutTemplate>
 
             <ItemTemplate>

@@ -37,7 +37,7 @@ namespace ICM
                     userLabel.Text = contract.User;
                     StateLabel.Text = contract.Archived ? "Oui" : "Non";
                     downloadFile.NavigateUrl = "ContractFile.aspx?id=" + contract.fileId;
-                    viewContractXML.NavigateUrl = "ContractOutput.aspx?contract=" + contract.fileId;
+                    viewContractXML.NavigateUrl = "ContractOutput.aspx?contract=" + id.ToString();
 
                     PersonList.DataSource = contract.persons;
                     PersonList.DataBind();

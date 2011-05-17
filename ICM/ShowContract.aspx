@@ -42,7 +42,7 @@
         </tr>
         <tr>
             <td>fichier source : </td>
-            <td><asp:HyperLink ID="downloadFile" NavigateUrl="ContractFile.aspx" Text="Télécharger" Target="_blank" runat="server" /></td>
+            <td><asp:HyperLink ID="downloadFile" NavigateUrl="ContractFile.aspx" Text="Télécharger" Target="_self" runat="server" /></td>
         </tr>
         <tr>
             <td>Type de Contrat : </td>

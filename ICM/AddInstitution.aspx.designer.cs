@@ -22,6 +22,15 @@ namespace ICM {
         protected global::System.Web.UI.WebControls.TextBox NameText;
         
         /// <summary>
+        /// Contrôle RequiredTitleValidator.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredTitleValidator;
+        
+        /// <summary>
         /// Contrôle DescriptionText.
         /// </summary>
         /// <remarks>

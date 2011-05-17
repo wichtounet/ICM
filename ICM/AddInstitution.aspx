@@ -6,7 +6,10 @@
     <table>
         <tr>
             <td>Nom : </td>
-            <td><asp:TextBox ID="NameText" Columns="15" runat="server" /></td>
+            <td>
+                <asp:TextBox ID="NameText" Columns="15" runat="server" />
+                <asp:RequiredFieldValidator runat="server" id="RequiredTitleValidator" ControlToValidate="NameText" errormessage="Veuillez entrer un nom !"/>
+            </td>
         </tr>
         <tr>
             <td>Description : </td>
@@ -15,6 +18,7 @@
         <tr>
             <td>Ville : </td>
             <td><asp:TextBox ID="CityText" Columns="15" runat="server" /></td>
+
         </tr>
         <tr>
             <td>Pays : </td>
