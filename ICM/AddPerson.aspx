@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Ajouter une personne" Language="C#" MasterPageFile="~/Persons.master" AutoEventWireup="true" CodeBehind="AddPerson.aspx.cs" Inherits="ICM.AddPerson" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="PersonsContent" runat="server">
     <h2>
-        Ajouter une personne
+        <asp:Label ID="EditAddLabel" runat="server" Text="Nouveau" /> personne
     </h2>
     <table>
         <asp:Label ID="IDLabel" Visible="false" runat="server" Text="-1" />
