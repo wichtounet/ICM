@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Ajouter une personne" Language="C#" MasterPageFile="~/Persons.master" AutoEventWireup="true" CodeBehind="AddPerson.aspx.cs" Inherits="ICM.AddPerson" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="PersonsContent" runat="server">
     <h2>
-        Ajouter une personne
+        <asp:Label ID="EditAddLabel" runat="server" Text="Nouveau" /> personne
     </h2>
     <table>
         <asp:Label ID="IDLabel" Visible="false" runat="server" Text="-1" />
@@ -32,7 +32,7 @@
             <td>Téléphone : </td>
             <td><asp:TextBox ID="PhoneTextBox" Columns="15" runat="server" /></td>
             <td>
-                <asp:RequiredFieldValidator runat="server" ID="RequiredPhoneValidator" ControlToValidate="PhoneTextBox" errormessage="Veuillez entrer un numéro de téléphone !" />
+                <asp:RequiredFieldValidator runat="server" ID="RequiredPhoneValidator" ControlToValidate="PhoneTextBox" errormessage="Veuillez entrer un numéro de téléphone !<br /> format XXX/XXX.XX.XX" />
                 <asp:RegularExpressionValidator runat="server" ID="ValidPhoneValidator" ControlToValidate="PhoneTextBox" ValidationExpression="[0-9]{3}/[0-9]{3}\.[0-9]{2}\.[0-9]{2}" errormessage="Numéro de téléphone invalide" />
             </td>
         </tr>
@@ -40,7 +40,7 @@
             <td>Email : </td>
             <td><asp:TextBox ID="MailTextBox" Columns="15" runat="server" /></td>
             <td>
-                <asp:RequiredFieldValidator runat="server" ID="RequiredMailValidator" ControlToValidate="MailTextBox" errormessage="Veuillez entrer une adresse email !" />
+                <asp:RequiredFieldValidator runat="server" ID="RequiredMailValidator" ControlToValidate="MailTextBox" errormessage="Veuillez entrer une adresse email !<br /> format xxx@xxx.xx" />
                 <asp:RegularExpressionValidator runat="server" ID="ValidEmailValidator" ControlToValidate="MailTextBox" ValidationExpression="^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$" errormessage="Email invalide !" />
             </td>
         </tr>

@@ -49,6 +49,7 @@ namespace ICM
 
                         var person = new PersonsDAO().GetPersonByID(id, transaction);
 
+                        EditAddLabel.Text = "Modification";
                         IDLabel.Text = person.Id.ToString();
                         NameTextBox.Text = person.Name;
                         FirstNameTextBox.Text = person.FirstName;
@@ -84,6 +85,7 @@ namespace ICM
                 if ("-1".Equals(IDLabel.Text))
                 {
                     AddButton.Visible = true;
+                    EditAddLabel.Text = "Nouvelle";
 
                     this.Verified(LoadLists, ErrorLabel);
 

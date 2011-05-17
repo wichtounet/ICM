@@ -5,7 +5,7 @@
    <asp:Label ID="stateForm" Visible="false" runat="server" Text="-1" />
    <asp:Label ID="FileID" Visible="false" runat="server" Text="-1" />
     <h2>
-        Nouveau contrat
+        <asp:Label ID="EditAddLabel" runat="server" Text="Nouveau" /> contrat
     </h2>
     <table width="700px">
         <tr>
