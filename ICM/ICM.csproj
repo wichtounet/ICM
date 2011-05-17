@@ -82,7 +82,9 @@
     <Content Include="Scripts\jquery-1.4.1.min.js" />
     <Content Include="Styles\Contract.css" />
     <Content Include="contract.xslt" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -98,6 +100,7 @@
     <Compile Include="Account\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Account\NamespaceDoc.cs" />
     <Compile Include="AddContract.aspx.cs">
       <DependentUpon>AddContract.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -133,6 +136,7 @@
     <Compile Include="ContractOutput.aspx.designer.cs">
       <DependentUpon>ContractOutput.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Dao\NamespaceDoc.cs" />
     <Compile Include="HistoPDF.aspx.cs">
       <DependentUpon>HistoPDF.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -150,8 +154,10 @@
     </Compile>
     <Compile Include="Model\Contract.cs" />
     <Compile Include="Model\Institution.cs" />
+    <Compile Include="Model\NamespaceDoc.cs" />
     <Compile Include="Model\TypeContract.cs" />
     <Compile Include="Model\User.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="ShowContract.aspx.cs">
       <DependentUpon>ShowContract.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -242,6 +248,7 @@
     </Compile>
     <Compile Include="Utils\DBUtils.cs" />
     <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Utils\NamespaceDoc.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

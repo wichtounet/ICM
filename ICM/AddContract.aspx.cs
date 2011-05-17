@@ -160,29 +160,23 @@ namespace ICM
                 }
             }
         }
-        public string getStartDate()
-        {
-            if (Request.QueryString["contract"] != null)
-            {
-                return StartValue.Text;
-            }
-            else
-            {
-                return "";
-            }
-            
-        }
-        public string getEndDate()
-        {
-            if (Request.QueryString["contract"] != null)
-            {
-                return EndValue.Text;
-            }
-            else
-            {
-                return "";
-            }
 
+        ///<summary>
+        /// Returns the current start date.
+        ///</summary>
+        ///<returns>The start date on the form of a string. </returns>
+        protected string getStartDate()
+        {
+            return Request.QueryString["contract"] != null ? StartValue.Text : "";
+        }
+
+        ///<summary>
+        /// Returns the current end date.
+        ///</summary>
+        ///<returns>The end date on the form of a string. </returns>
+        protected string getEndDate()
+        {
+            return Request.QueryString["contract"] != null ? EndValue.Text : "";
         }
 
         /// <summary>
@@ -302,19 +296,6 @@ namespace ICM
         }
 
         /// <summary>
-        /// Disable all Validator of form 
-        /// </summary>
-        private void DisableValidator()
-        {
-            RequiredTitleValidator.Enabled = false;
-            RequiredTypeValidator.Enabled = false;
-            CompareDate.Enabled = false;
-            RequiredDepartmentValidator.Enabled = false;
-            RequiredPersonValidator.Enabled = false;
-            CustomValidatorUpload.Enabled = false;
-        }
-
-        /// <summary>
         /// Submit the form 
         /// </summary>
         private void Submit()
@@ -343,9 +324,10 @@ namespace ICM
 
             var xml = createXML();
 
+            var userName = Session["userLogin"] == null ? "admin" : (string) Session["userLogin"];
             if (Request.QueryString["contract"] == null)
             {
-                var id = new ContractsDAO().AddContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.OuterXml, (string) Session["userLogin"], persons, destination, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
+                var id = new ContractsDAO().AddContract(TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.OuterXml, userName, persons, destination, fileSize, fileMIMEType, fileBinaryReader, fileBinaryBuffer);
                 
                 Response.Redirect("ShowContract.aspx?contract=" + id);
             }
@@ -370,7 +352,7 @@ namespace ICM
                 }
                 else
                 {
-                    new ContractsDAO().SaveContract(transaction, id, TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.OuterXml, (string)Session["userLogin"], persons, destination, contractFileId, fileSize, fileMIMEType, fileBinaryBuffer);
+                    new ContractsDAO().SaveContract(transaction, id, TitleText.Text, StartDate.Text, EndDate.Text, ContractTypeList.SelectedItem.Value, xml.OuterXml, userName, persons, destination, contractFileId, fileSize, fileMIMEType, fileBinaryBuffer);
 
                     transaction.Commit();
 

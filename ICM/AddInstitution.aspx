@@ -13,7 +13,9 @@
         </tr>
         <tr>
             <td>Description : </td>
-            <td><asp:TextBox ID="DescriptionText" Columns="15" runat="server" /></td>
+            <td>
+                <asp:TextBox ID="DescriptionText" Columns="15" runat="server" />
+            </td>
         </tr>
         <tr>
             <td>Ville : </td>

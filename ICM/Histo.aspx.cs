@@ -35,11 +35,6 @@ namespace ICM
             var dataSource = new InstitutionsDAO().GetInstitutionsClean();
 
             InstitutionList.DataBindWithEmptyElement(dataSource, "Name", "Id");
-
-            if (dataSource.Count > 0)
-            {
-                DepartmentList.DataBindWithEmptyElement(dataSource[0].Departments, "Name", "Id");
-            }
         }
 
         /// <summary>
