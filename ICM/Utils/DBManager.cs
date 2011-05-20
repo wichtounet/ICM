@@ -25,7 +25,7 @@ namespace ICM.Utils
         {
             Logger.Debug("Open connection");
 
-            var newConnection = new SqlConnection(@"Data Source=160.98.60.35\MSSQLSERVER,1433;Initial Catalog=ICM;Integrated Security=False;User ID=icm_user;Password=International3;");
+            var newConnection = new SqlConnection(@"Data Source=127.0.0.1\SQLEXPRESS;Initial Catalog=ICM;Integrated Security=False;User ID=icm_user;Password=International3;");
 
             newConnection.Open();
 
